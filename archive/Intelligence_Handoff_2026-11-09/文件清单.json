@@ -1,0 +1,277 @@
+[
+  {
+    "file": "00_交接说明.md",
+    "bytes": 2379,
+    "sha256": "193f6af2a7eb07bac248549926be2b34ebef94fa5b74e3af8c4985b61b0b8209"
+  },
+  {
+    "file": "01_业务与研究/01_项目总览与决策.md",
+    "bytes": 3802,
+    "sha256": "f197861ad7da8998778220b96861ddae2a06684e6fd21580fbc6c5797b28ce9b"
+  },
+  {
+    "file": "01_业务与研究/02_产品与知识架构.md",
+    "bytes": 5130,
+    "sha256": "898c0d5c39c6e41992811818a52b401bb4d05479140b8000c2067ba608c8360c"
+  },
+  {
+    "file": "01_业务与研究/03_AI风险与商业机会.md",
+    "bytes": 4107,
+    "sha256": "4970e0008a4ae24a881370fb91d41ab650f86659545cb5b9424c5c2b76e36741"
+  },
+  {
+    "file": "01_业务与研究/04_竞品与资料入口.md",
+    "bytes": 2829,
+    "sha256": "5dcf815c7f0ff63afea780362dd9ab5c3824a1fbb1313f0c6e5ac19049411ad2"
+  },
+  {
+    "file": "01_业务与研究/05_后续工作与接手提示.md",
+    "bytes": 2578,
+    "sha256": "5e5ab184cab3efde27befc0fd19d0b746702113cf68b54c0b33bc11877606929"
+  },
+  {
+    "file": "02_讨论记录/审核范围与资料状态.csv",
+    "bytes": 2848,
+    "sha256": "eae92211ab75b57f49f9bf9d36bfe178b76350d2a948370d8fad66d7c0ef1c4e"
+  },
+  {
+    "file": "02_讨论记录/讨论记录.md",
+    "bytes": 19851,
+    "sha256": "fc7e39bc2d2c5087d3969ea785dbc2faf2e91543a3fe7f16a02b066efaf19b82"
+  },
+  {
+    "file": "02_讨论记录/记录.json",
+    "bytes": 25254,
+    "sha256": "a584593057f51e46ee8439f871d85860f65da46044508445240df6b7354d5f60"
+  },
+  {
+    "file": "02_讨论记录/逐条/B01.md",
+    "bytes": 102,
+    "sha256": "caf9478477602a27545e412ceaab8ffe76820a2b686b0ecb277b96acbceda182"
+  },
+  {
+    "file": "02_讨论记录/逐条/B03.md",
+    "bytes": 114,
+    "sha256": "4f822997e72cecb9fb35ffab912bac9e9666c884af942b502ae67d11c58bc183"
+  },
+  {
+    "file": "02_讨论记录/逐条/B05.md",
+    "bytes": 99,
+    "sha256": "94e3d8fcfcf7941d0488605c65c19a3de4f6c443252f2ecc1bd4e91b9b81c664"
+  },
+  {
+    "file": "02_讨论记录/逐条/B07.md",
+    "bytes": 65,
+    "sha256": "edd8b6f42ca7d56de616a24c06a00af38766c23116b81316467074d947593af8"
+  },
+  {
+    "file": "02_讨论记录/逐条/B09.md",
+    "bytes": 62,
+    "sha256": "0e594179a5f01076fa233be37b4dcad2f98f4da2aaabca9472643d3d256e0183"
+  },
+  {
+    "file": "02_讨论记录/逐条/B11.md",
+    "bytes": 118,
+    "sha256": "3e0647109c47f6af3b382f104e117e3f43e414216d77e5fe1a0314c5e01ad13b"
+  },
+  {
+    "file": "02_讨论记录/逐条/B13.md",
+    "bytes": 74,
+    "sha256": "a272332ab6071792ea3956421501198bf4521871c7b0e6fa6ce7a5e7cc468257"
+  },
+  {
+    "file": "02_讨论记录/逐条/C01.md",
+    "bytes": 351,
+    "sha256": "652e78872da8be4e4edf241969e2dbdde3d440ec53845f5f83b670ada2c3b290"
+  },
+  {
+    "file": "02_讨论记录/逐条/D01.md",
+    "bytes": 264,
+    "sha256": "cc6d790c7b62938942f4b2bbb8bbf3133b1a0adcea97b81210e9fb3e019d7a30"
+  },
+  {
+    "file": "02_讨论记录/逐条/D03.md",
+    "bytes": 62,
+    "sha256": "ae030808665310e47cc5bcfa910f31bf24a5736deaa7baeaf71012ad538f20c9"
+  },
+  {
+    "file": "02_讨论记录/逐条/D05.md",
+    "bytes": 118,
+    "sha256": "a13070a88466b6dd218004d4b7d2a42709ad4c9808172bac7e5f3f6aaab34621"
+  },
+  {
+    "file": "02_讨论记录/逐条/D07.md",
+    "bytes": 127,
+    "sha256": "2fbdaf2e4c9388655bd1fba269f74469cff87813f6d1d60eb7dd5db5534840f6"
+  },
+  {
+    "file": "02_讨论记录/逐条/D09.md",
+    "bytes": 137,
+    "sha256": "6fea556427918186e9a616f2b746af1ae78a8a141d2cefd581f53ef4658f124c"
+  },
+  {
+    "file": "02_讨论记录/逐条/D11.md",
+    "bytes": 137,
+    "sha256": "35e0e7db01ce43ce787bbc152580ff5b71c26c91a36a6509cf53a5fef7697222"
+  },
+  {
+    "file": "02_讨论记录/逐条/E01.md",
+    "bytes": 185,
+    "sha256": "04cc315de0e1b60bbc75f5c6407627f79b85aad34c139120ea3f2edd88caaa20"
+  },
+  {
+    "file": "02_讨论记录/逐条/E03.md",
+    "bytes": 165,
+    "sha256": "a0e6ae2e9021c7118e9909474f8a7374c082f0be8e9e5425f94f7b37884b35cf"
+  },
+  {
+    "file": "02_讨论记录/逐条/E05.md",
+    "bytes": 74,
+    "sha256": "10c8db396ff1ed42609a71cb80a8ae30293f4e39a246f2bed4bd59bd56129ad5"
+  },
+  {
+    "file": "02_讨论记录/逐条/E07.md",
+    "bytes": 63,
+    "sha256": "50a1859639797d40245b74cf0ed47dd64b1157e78c762017908aaa6b9611495d"
+  },
+  {
+    "file": "02_讨论记录/逐条/H001.md",
+    "bytes": 140,
+    "sha256": "31e0ceb6fd19dc882e2fdb901d8330b51a1c1305647d2bc9897251e3c72e3275"
+  },
+  {
+    "file": "02_讨论记录/逐条/H002.md",
+    "bytes": 135,
+    "sha256": "d1b6ef27a0ab90e8f50db4e1c2038b53f80547570714da2ed23e65d77b79d3ce"
+  },
+  {
+    "file": "02_讨论记录/逐条/H003.md",
+    "bytes": 150,
+    "sha256": "fe046f29032d887e2cd719a86cf520175cfb1bf3ee0a5dcec547fca3f247a575"
+  },
+  {
+    "file": "02_讨论记录/逐条/H004.md",
+    "bytes": 198,
+    "sha256": "0094478c5905f28846938f5126d946a586dd99e760bb823a7a250b8ca5aa682f"
+  },
+  {
+    "file": "02_讨论记录/逐条/H005.md",
+    "bytes": 178,
+    "sha256": "150d91d1fb8f91af8161374d62339bbed3b7a79f71b5be20a778b5506bcdadce"
+  },
+  {
+    "file": "02_讨论记录/逐条/H006.md",
+    "bytes": 87,
+    "sha256": "cb68ba8ba0028b71899c573760f64b903b79bfab1c5e14e528bc574d2dd25931"
+  },
+  {
+    "file": "02_讨论记录/逐条/H007.md",
+    "bytes": 76,
+    "sha256": "5f9d72e3f826f5112b0cc2cf07892dd8574a0735c65648f0cd6a6cc4546da832"
+  },
+  {
+    "file": "02_讨论记录/逐条/M003.md",
+    "bytes": 178,
+    "sha256": "2947bfe2c69c590836c74f2239466b6579fe0533be6760587bf2d85dc75146ac"
+  },
+  {
+    "file": "02_讨论记录/逐条/M004.md",
+    "bytes": 8490,
+    "sha256": "4efd434c466f1a9cfe7dc72cef7693e6696605a902e9230694cf6b346235f68d"
+  },
+  {
+    "file": "02_讨论记录/逐条/M005.md",
+    "bytes": 93,
+    "sha256": "318bda0e52fd1d037d1b7233d5758c1962b21d1517344a3bf7001cd0e967c1a0"
+  },
+  {
+    "file": "02_讨论记录/逐条/M006.md",
+    "bytes": 5052,
+    "sha256": "d99aa3d36b0bb51b3b2580da4038e06aafbe5b88c7e851b0e724755cbdb3b3da"
+  },
+  {
+    "file": "02_讨论记录/逐条/S001.md",
+    "bytes": 304,
+    "sha256": "30c6de1aad97bc55f3fc600dc4a03f73be402c627fa00b07213a46cb4a7224fb"
+  },
+  {
+    "file": "02_讨论记录/逐条/S002.md",
+    "bytes": 301,
+    "sha256": "189eb148c215388ed814a2d2f26ec554e825c232e7fa03596161d2b7d5512e86"
+  },
+  {
+    "file": "02_讨论记录/逐条/S003.md",
+    "bytes": 164,
+    "sha256": "1cb6518044fd5d4d601de0ace55c6e872805c954c3025289424c93a4fcbf849a"
+  },
+  {
+    "file": "02_讨论记录/逐条/S004.md",
+    "bytes": 255,
+    "sha256": "b336f2e096a2222d3274325838ef48963815686915017ee29bf37093b663b021"
+  },
+  {
+    "file": "02_讨论记录/逐条/S005.md",
+    "bytes": 321,
+    "sha256": "2780c2ca83710abd65b6b1518d4365a72322ebaf12283a469c5193927ddb0674"
+  },
+  {
+    "file": "02_讨论记录/逐条/S006.md",
+    "bytes": 292,
+    "sha256": "9deffab78a60de7327a7032b7ea02936906604314bbba0439c6b1f99a0529e5e"
+  },
+  {
+    "file": "02_讨论记录/逐条/S007.md",
+    "bytes": 170,
+    "sha256": "53b9445f94371cd9b95f5e73c502af43f6a35fb56673c4642c5e7d393bd1d393"
+  },
+  {
+    "file": "02_讨论记录/逐条/S008.md",
+    "bytes": 234,
+    "sha256": "af1db69711386252b3bcda0ffe76c2aa0ce9c0b67509b9ca2d3160fa8297e302"
+  },
+  {
+    "file": "02_讨论记录/逐条/S009.md",
+    "bytes": 287,
+    "sha256": "60fa44d7c980e57fa35a8b2a271a47c94c3452aa8789e2fc9b3c2b528b55a16a"
+  },
+  {
+    "file": "03_方案文档/01_产业科技智库_跨行业产品体系.docx",
+    "bytes": 70119,
+    "sha256": "a27f88aca016392de53eb3867a69159abcc035dcee5430b409ee648249234f66"
+  },
+  {
+    "file": "03_方案文档/02_膜分离行业_科技智库服务方案.docx",
+    "bytes": 68011,
+    "sha256": "2ecf1c753f22e9aa434c13dd86ed263c0a26d2dd10891d1b5b7f6fea09df7cf1"
+  },
+  {
+    "file": "03_方案文档/03_膜技术_研究与应用服务_历史稿.docx",
+    "bytes": 56071,
+    "sha256": "5490a39200d62f935f8649c64505fd6ceba83ce5fc62d9ae9341330c56687a67"
+  },
+  {
+    "file": "03_方案文档/04_膜技术_研究与应用服务_历史稿二.docx",
+    "bytes": 56071,
+    "sha256": "5490a39200d62f935f8649c64505fd6ceba83ce5fc62d9ae9341330c56687a67"
+  },
+  {
+    "file": "03_方案文档/05_膜科学与先进电化学技术_智库服务方案.docx",
+    "bytes": 48648,
+    "sha256": "23d3cfe5537041f94962ac2278173e813e1cb01e45f19e877ba807d610148345"
+  },
+  {
+    "file": "打开阅读.html",
+    "bytes": 25708,
+    "sha256": "98500103b361b153a55e6a546e753d7ac5077bc63f74c75209be44b649c1d34a"
+  },
+  {
+    "file": "项目交接总览.docx",
+    "bytes": 47940,
+    "sha256": "eb0ffea8df4b38edff9ddaa30e0a3cc285d92a2d475836f46fa09aff7b8bd592"
+  },
+  {
+    "file": "项目交接总览.md",
+    "bytes": 20831,
+    "sha256": "803365d5d82cd45fd090455e6e060164ec5b9c92bae3d7a7dc4174ad55239e4b"
+  }
+]
