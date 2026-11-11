@@ -1,0 +1,148 @@
+{
+  "source": {
+    "id": "<必填：SRC-000000>",
+    "source_type": "<必填：paper｜review｜supplement｜patent｜datasheet｜company_web｜filing｜institution_report｜metadata_db｜open_database｜standard｜policy｜paid_report｜news｜client_material｜other>",
+    "title": "<必填：题名>",
+    "creators": "<必填：作者或发布机构>",
+    "container": "<刊名或网站名>",
+    "published": "<必填：YYYY-MM-DD，可以只到年或月>",
+    "identifiers": {
+      "<键>": "<>"
+    },
+    "url": "<必填：实际访问的网址>",
+    "accessed_at": "<必填：YYYY-MM-DD>",
+    "version_label": "<必填：版本>",
+    "version_of": "<SRC-000000>",
+    "parent_id": "<SRC-000000>",
+    "publisher_id": "<ENT-000000>",
+    "language": "<必填：语言>",
+    "access_route": "<必填：oa_published｜preprint｜author_version｜public_web｜free_download｜public_abstract｜metadata｜purchased｜on_request｜client_provided>",
+    "access_scope": "<必填：full｜partial｜abstract_only｜metadata_only>",
+    "license": "<必填：许可的原文写法>",
+    "license_class": "<必填：open｜open_nc｜copyrighted｜restricted｜unstated｜unknown>",
+    "terms": {
+      "no_scraping": false,
+      "no_ai": false,
+      "note": "<条款要点>",
+      "terms_url": "<条款网址>",
+      "checked_at": "<必填：YYYY-MM-DD>"
+    },
+    "reading_mode": "<必填：ai_assisted｜human_only>",
+    "copy_kept": "<必填：none｜local_temp｜snapshot>",
+    "snapshot_ref": "<快照位置>",
+    "archive_url": "<存档链接>",
+    "external_use": "<必填：link_only｜facts｜redistributable>",
+    "handling": "<必填：我们怎么处理的>",
+    "use": "<必填：evidence｜lead｜further_reading｜background>",
+    "topics": [
+      {
+        "topic_id": "<必填：TOP-000000>",
+        "decision": "<必填：included｜excluded｜pending>",
+        "exclusion_reason": "<排除原因>",
+        "found_via": "<search｜citation｜expert_list｜other>"
+      }
+    ],
+    "status": "<必填：active｜corrected｜retracted｜superseded｜unreachable>",
+    "status_checked_at": "<必填：YYYY-MM-DD>",
+    "id_check": {
+      "result": "<必填：pass｜fail>",
+      "at": "<必填：YYYY-MM-DD>"
+    },
+    "registered_by": "<必填：kai｜yu｜claude｜script｜expert-01>",
+    "registered_at": "<必填：YYYY-MM-DD>",
+    "notes": "<备注>"
+  },
+  "evidence": [
+    {
+      "id": "<必填：EV-000000-000>",
+      "topic_id": "<必填：TOP-000000>",
+      "record_version": 0,
+      "created_by": "<必填：kai｜yu｜claude｜script｜expert-01>",
+      "created_at": "<必填：YYYY-MM-DD>",
+      "subject_id": "<必填：ENT-000000>",
+      "sample_label": "<原文里的样品名>",
+      "level": "<必填：material｜component｜system>",
+      "indicator": "<指标，英文小写加下划线>",
+      "content_kind": "<必填：numeric｜category｜statement>",
+      "value_reported": "<原文数值>",
+      "unit_reported": "<原文单位>",
+      "value_qualifier": "<eq｜lt｜le｜gt｜ge｜approx>",
+      "value_std": 0,
+      "range_low": 0,
+      "range_high": 0,
+      "uncertainty": 0,
+      "uncertainty_kind": "<sd｜se｜ci95｜range｜not_stated>",
+      "n": 0,
+      "category_value": "<分类值>",
+      "summary": "<转述>",
+      "conditions": {
+        "<键>": {
+          "reported": "<必填：原文写法>",
+          "value": 0,
+          "unit": "<单位>"
+        }
+      },
+      "conditions_locator": {
+        "page": "<页>",
+        "table": "<表>",
+        "figure": "<图>",
+        "section": "<节>",
+        "item": "<项>",
+        "text": "<必填：能读的一句话>"
+      },
+      "conditions_snippet": "<条件的原文片段>",
+      "series_label": "<同批测试标签>",
+      "baseline_ref": "<EV-000000-000>",
+      "evidence_type": "<必填：verified_fact｜company_claim｜third_party_analysis｜experimental｜model_simulation｜expert_judgment>",
+      "independent_validation": "<yes｜no｜unknown>",
+      "validated_by": [
+        "<EV-000000-000>"
+      ],
+      "source_id": "<必填：SRC-000000>",
+      "locator": {
+        "page": "<页>",
+        "table": "<表>",
+        "figure": "<图>",
+        "section": "<节>",
+        "item": "<项>",
+        "text": "<必填：能读的一句话>"
+      },
+      "snippet": "<原文片段>",
+      "obtained_from": "<必填：text｜table｜figure_read｜abstract_only｜data_file>",
+      "figure_read": {
+        "method": "<必填：读图的做法>",
+        "read_by": "<必填：kai｜yu｜claude｜script｜expert-01>",
+        "source_data_checked": "<必填：none_found｜not_checked>",
+        "reread_by": "<kai｜yu｜claude｜script｜expert-01>",
+        "reread_at": "<YYYY-MM-DD>",
+        "reread_value": 0,
+        "reading_error": 0
+      },
+      "entry_method": "<必填：ai｜human｜import>",
+      "double_extraction": "<必填：agree｜resolved｜single｜na>",
+      "obtained_at": "<必填：YYYY-MM-DD>",
+      "verification_status": "<必填：pending｜machine_checked｜human_verified｜expert_reviewed｜disputed｜void>",
+      "machine_check": {
+        "identifier": "<必填：pass｜fail｜na>",
+        "snippet": "<必填：pass｜fail｜na>",
+        "value_unit": "<必填：pass｜fail｜na>",
+        "at": "<必填：YYYY-MM-DD>"
+      },
+      "verified_by": "<kai｜yu｜claude｜script｜expert-01>",
+      "verified_at": "<YYYY-MM-DD>",
+      "expert_reviewed_by": "<kai｜yu｜claude｜script｜expert-01>",
+      "expert_reviewed_at": "<YYYY-MM-DD>",
+      "dispute_note": "<分歧说明>",
+      "conflicts_with": [
+        "<EV-000000-000>"
+      ],
+      "void_reason": "<作废原因>",
+      "superseded_by": "<EV-000000-000>",
+      "duplicate_of": "<EV-000000-000>",
+      "visibility": "<必填：internal｜external｜client>",
+      "client_code": "<客户代号>",
+      "scope_note": "<适用范围与限制>",
+      "internal_note": "<内部备注>"
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "id": "<必填：TOP-000000>",
+  "title": "<必填：题目>",
+  "direction": "<必填：academic｜enterprise>",
+  "status": "<必填：draft｜active｜closed>",
+  "questions": [
+    {
+      "key": "<必填：问题编号>",
+      "text": "<必填：问题>"
+    }
+  ],
+  "scope_in": "<必填：范围>",
+  "scope_out": "<必填：不包括什么>",
+  "levels": [
+    "<必填：material｜component｜system>"
+  ],
+  "time_window": {
+    "from": "<必填：YYYY-MM-DD，可以只到年或月>",
+    "earlier_rule": "<更早的文献怎么处理>"
+  },
+  "evidence_source_types": [
+    "<必填：paper｜review｜supplement｜patent｜datasheet｜company_web｜filing｜institution_report｜metadata_db｜open_database｜standard｜policy｜paid_report｜news｜client_material｜other>"
+  ],
+  "facets": [
+    {
+      "key": "<必填：键，英文小写加下划线>",
+      "name": "<必填：名称>",
+      "values": [
+        "<取值>"
+      ]
+    }
+  ],
+  "report_languages": [
+    "<必填：语言>"
+  ],
+  "cutoff_date": "<YYYY-MM-DD>",
+  "client_code": "<客户代号>",
+  "confirmed_by": "<kai｜yu｜claude｜script｜expert-01>",
+  "confirmed_at": "<YYYY-MM-DD>",
+  "notes": "<备注>"
+}

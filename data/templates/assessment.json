@@ -1,0 +1,21 @@
+{
+  "id": "<必填：ASM-000000>",
+  "topic_id": "<必填：TOP-000000>",
+  "question": "<对应的问题>",
+  "layer": "<必填：description｜judgment>",
+  "statement": "<必填：内容>",
+  "basis": [
+    "<必填：EV-000000-000>"
+  ],
+  "conditions": "<成立条件>",
+  "unknowns": "<不能判断的部分>",
+  "assumptions": "<假设>",
+  "disagreements": "<分歧>",
+  "status": "<必填：draft｜reviewed｜withdrawn>",
+  "drafted_by": "<必填：kai｜yu｜claude｜script｜expert-01>",
+  "reviewed_by": "<kai｜yu｜claude｜script｜expert-01>",
+  "reviewed_at": "<YYYY-MM-DD>",
+  "visibility": "<必填：internal｜external｜client>",
+  "client_code": "<客户代号>",
+  "record_version": 0
+}

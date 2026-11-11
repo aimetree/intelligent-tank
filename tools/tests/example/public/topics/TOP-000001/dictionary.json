@@ -1,0 +1,135 @@
+{
+  "topic_id": "TOP-000001",
+  "version": "0.1-example",
+  "status": "draft",
+  "conditions": [
+    {
+      "key": "current_density",
+      "name_zh": "电流密度",
+      "name_en": "Current density",
+      "value_kind": "numeric",
+      "unit_std": "mA/cm2"
+    },
+    {
+      "key": "vanadium_conc",
+      "name_zh": "钒离子浓度",
+      "name_en": "Vanadium concentration",
+      "value_kind": "numeric",
+      "unit_std": "mol/L"
+    },
+    {
+      "key": "acid_conc",
+      "name_zh": "硫酸浓度",
+      "name_en": "Sulfuric acid concentration",
+      "value_kind": "numeric",
+      "unit_std": "mol/L"
+    },
+    {
+      "key": "temperature",
+      "name_zh": "温度",
+      "name_en": "Temperature",
+      "value_kind": "numeric",
+      "unit_std": "degC"
+    },
+    {
+      "key": "thickness",
+      "name_zh": "膜厚",
+      "name_en": "Membrane thickness",
+      "value_kind": "numeric",
+      "unit_std": "um"
+    },
+    {
+      "key": "test_medium",
+      "name_zh": "测试介质",
+      "name_en": "Test medium",
+      "value_kind": "text"
+    }
+  ],
+  "indicators": [
+    {
+      "key": "energy_efficiency",
+      "name_zh": "能量效率",
+      "name_en": "Energy efficiency",
+      "aliases": [
+        "EE"
+      ],
+      "level": "component",
+      "value_kind": "numeric",
+      "unit_std": "%",
+      "units_accepted": [
+        {
+          "unit": "%",
+          "factor": 1
+        },
+        {
+          "unit": "1",
+          "factor": 100
+        }
+      ],
+      "required_conditions": [
+        "current_density",
+        "vanadium_conc",
+        "acid_conc",
+        "temperature"
+      ],
+      "optional_conditions": [
+        "thickness"
+      ],
+      "status": "draft"
+    },
+    {
+      "key": "area_resistance",
+      "name_zh": "面电阻",
+      "name_en": "Area resistance",
+      "aliases": [
+        "ASR"
+      ],
+      "level": "material",
+      "value_kind": "numeric",
+      "unit_std": "ohm*cm2",
+      "units_accepted": [
+        {
+          "unit": "ohm*cm2",
+          "factor": 1
+        },
+        {
+          "unit": "mohm*cm2",
+          "factor": 0.001
+        }
+      ],
+      "required_conditions": [
+        "test_medium",
+        "temperature",
+        "thickness"
+      ],
+      "optional_conditions": [],
+      "status": "draft"
+    }
+  ],
+  "rules": [
+    {
+      "key": "same_conditions",
+      "name": "条件一致才直接比",
+      "applies_to": [
+        "energy_efficiency"
+      ],
+      "level": "component",
+      "statement": "电流密度、电解液组成、温度一致",
+      "tier_if_met": "direct",
+      "normalization": "none",
+      "status": "draft"
+    },
+    {
+      "key": "ratio_to_baseline",
+      "name": "与同一来源里的基准膜之比",
+      "applies_to": [
+        "energy_efficiency"
+      ],
+      "level": "component",
+      "statement": "各来源先与本来源的基准膜相比，再跨来源比较比值",
+      "tier_if_met": "conditional",
+      "normalization": "ratio_to_baseline",
+      "status": "draft"
+    }
+  ]
+}

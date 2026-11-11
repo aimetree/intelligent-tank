@@ -1,0 +1,38 @@
+{
+  "id": "TOP-000001",
+  "title": "示例题目（虚构数据，仅用于说明字段）",
+  "direction": "academic",
+  "status": "draft",
+  "questions": [
+    {
+      "key": "Q1",
+      "text": "示例膜与示例商业膜在相同条件下的能量效率相差多少"
+    }
+  ],
+  "scope_in": "示例范围",
+  "scope_out": "示例范围之外的体系",
+  "levels": [
+    "material",
+    "component"
+  ],
+  "time_window": {
+    "from": "2021",
+    "earlier_rule": "更早的文献只引综述，标为第三方分析"
+  },
+  "evidence_source_types": [
+    "paper",
+    "review",
+    "supplement",
+    "metadata_db",
+    "patent",
+    "datasheet",
+    "institution_report",
+    "open_database"
+  ],
+  "report_languages": [
+    "zh",
+    "en"
+  ],
+  "cutoff_date": "2026-11-11",
+  "notes": "虚构"
+}

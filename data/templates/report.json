@@ -1,0 +1,24 @@
+{
+  "id": "<必填：RPT-000000>",
+  "topic_id": "<必填：TOP-000000>",
+  "title": "<必填：标题>",
+  "language": "<必填：语言>",
+  "version": "<必填：版本>",
+  "issued_at": "<YYYY-MM-DD>",
+  "recipient": "<给谁>",
+  "status": "<必填：draft｜issued｜superseded>",
+  "data_version": "<数据版本>",
+  "evidence_ids": [
+    "<EV-000000-000>"
+  ],
+  "rel_ids": [
+    "<REL-000000>"
+  ],
+  "cmp_ids": [
+    "<CMP-000000>"
+  ],
+  "asm_ids": [
+    "<ASM-000000>"
+  ],
+  "supersedes": "<RPT-000000>"
+}

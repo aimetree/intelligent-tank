@@ -1,0 +1,26 @@
+{
+  "id": "<必填：ENT-000000>",
+  "entity_type": "<必填：organization｜material_class｜sample｜product｜patent_family｜project｜standard_policy>",
+  "org_kind": "<company｜university｜institute｜team｜government｜funder｜other>",
+  "name": "<必填：名称>",
+  "name_en": "<英文名>",
+  "aliases": [
+    "<别名>"
+  ],
+  "identifiers": {
+    "<键>": "<>"
+  },
+  "class_id": "<ENT-000000>",
+  "facets": {
+    "<键>": "<>"
+  },
+  "defined_in": "<SRC-000000>",
+  "country": "<国家或地区>",
+  "identity_status": "<必填：candidate｜id_matched｜confirmed>",
+  "confirmed_by": "<kai｜yu｜claude｜script｜expert-01>",
+  "confirmed_at": "<YYYY-MM-DD>",
+  "merged_into": "<ENT-000000>",
+  "visibility": "<必填：internal｜external｜client>",
+  "client_code": "<客户代号>",
+  "notes": "<备注>"
+}

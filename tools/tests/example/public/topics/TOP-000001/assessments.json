@@ -1,0 +1,18 @@
+[
+  {
+    "id": "ASM-000001",
+    "topic_id": "TOP-000001",
+    "question": "Q1",
+    "layer": "description",
+    "statement": "在 CMP-000001 这一组里，示例膜 X-1 的能量效率比基准膜高 3.6 个百分点。",
+    "basis": [
+      "CMP-000001",
+      "EV-000001-001",
+      "EV-000001-002"
+    ],
+    "unknowns": "只有一个来源、一个电流密度",
+    "status": "draft",
+    "drafted_by": "claude",
+    "visibility": "internal"
+  }
+]

@@ -1,0 +1,28 @@
+{
+  "id": "<必填：CHG-000000>",
+  "date": "<必填：YYYY-MM-DD>",
+  "kind": "<必填：correction｜source_change｜new_evidence｜reclassify｜rule_change｜assessment_change｜other>",
+  "topic_id": "<TOP-000000>",
+  "target_id": "<必填：EV-000000-000>",
+  "field": "<哪个字段>",
+  "before": "<改之前>",
+  "after": "<改之后>",
+  "reason": "<必填：原因>",
+  "error_type": "<source_missing｜unsupported_citation｜value_unit｜condition_misattached｜level_mixed｜not_comparable｜duplicate｜entity_wrong｜outdated｜claim_as_fact｜omission｜overreach｜unsupported_text>",
+  "detected_by": "<machine｜ai｜human｜expert｜reviewer｜client>",
+  "trigger_source": "<SRC-000000>",
+  "affected": {
+    "cmp": [
+      "<CMP-000000>"
+    ],
+    "asm": [
+      "<ASM-000000>"
+    ],
+    "rpt": [
+      "<RPT-000000>"
+    ]
+  },
+  "impact": "<必填：none｜review｜changed>",
+  "impact_note": "<影响说明>",
+  "recorded_by": "<必填：kai｜yu｜claude｜script｜expert-01>"
+}

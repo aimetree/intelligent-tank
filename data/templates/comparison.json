@@ -1,0 +1,38 @@
+{
+  "id": "<必填：CMP-000000>",
+  "topic_id": "<必填：TOP-000000>",
+  "title": "<必填：名称>",
+  "question": "<对应题目卡的哪个问题>",
+  "level": "<必填：material｜component｜system>",
+  "indicators": [
+    "<必填：键名，英文小写加下划线>"
+  ],
+  "rule": "<用的可比规则，英文小写加下划线>",
+  "tier": "<必填：direct｜conditional｜reference｜insufficient>",
+  "tier_reason": "<必填：定档理由>",
+  "normalization": "<必填：none｜unit｜ratio_to_baseline｜other>",
+  "normalization_note": "<归一化说明>",
+  "condition_envelope": {
+    "<键>": {
+      "reported": "<必填：原文写法>",
+      "value": 0,
+      "unit": "<单位>"
+    }
+  },
+  "members": [
+    {
+      "evidence_id": "<必填：EV-000000-000>",
+      "role": "<必填：member｜baseline｜reference｜excluded>",
+      "note": "<说明>"
+    }
+  ],
+  "missing": "<缺什么>",
+  "status": "<必填：draft｜decided｜expert_reviewed>",
+  "decided_by": "<kai｜yu｜claude｜script｜expert-01>",
+  "decided_at": "<YYYY-MM-DD>",
+  "expert_reviewed_by": "<kai｜yu｜claude｜script｜expert-01>",
+  "expert_reviewed_at": "<YYYY-MM-DD>",
+  "visibility": "<必填：internal｜external｜client>",
+  "client_code": "<客户代号>",
+  "notes": "<备注>"
+}

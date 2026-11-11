@@ -1,0 +1,65 @@
+{
+  "topic_id": "<必填：TOP-000000>",
+  "version": "<必填：字典版本>",
+  "status": "<必填：draft｜confirmed>",
+  "confirmed_by": "<kai｜yu｜claude｜script｜expert-01>",
+  "conditions": [
+    {
+      "key": "<必填：键，英文小写加下划线>",
+      "name_zh": "<必填：中文名>",
+      "name_en": "<英文名>",
+      "value_kind": "<必填：numeric｜category｜text>",
+      "unit_std": "<标准单位>",
+      "allowed_values": [
+        "<取值>"
+      ],
+      "notes": "<备注>"
+    }
+  ],
+  "indicators": [
+    {
+      "key": "<必填：键，英文小写加下划线>",
+      "name_zh": "<必填：中文名>",
+      "name_en": "<英文名>",
+      "aliases": [
+        "<别名>"
+      ],
+      "level": "<必填：material｜component｜system>",
+      "value_kind": "<必填：numeric｜category｜statement>",
+      "unit_std": "<标准单位>",
+      "units_accepted": [
+        {
+          "unit": "<必填：单位>",
+          "factor": 0
+        }
+      ],
+      "allowed_values": [
+        "<取值>"
+      ],
+      "required_conditions": [
+        "<必填：键名，英文小写加下划线>"
+      ],
+      "optional_conditions": [
+        "<键名，英文小写加下划线>"
+      ],
+      "definition": "<定义>",
+      "status": "<draft｜confirmed>",
+      "notes": "<备注>"
+    }
+  ],
+  "rules": [
+    {
+      "key": "<必填：键，英文小写加下划线>",
+      "name": "<必填：名称>",
+      "applies_to": [
+        "<必填：键名，英文小写加下划线>"
+      ],
+      "level": "<必填：material｜component｜system>",
+      "statement": "<必填：规则内容>",
+      "tier_if_met": "<必填：direct｜conditional｜reference｜insufficient>",
+      "normalization": "<必填：none｜unit｜ratio_to_baseline｜other>",
+      "status": "<draft｜confirmed>",
+      "notes": "<备注>"
+    }
+  ]
+}

@@ -1,0 +1,247 @@
+{
+  "source": {
+    "id": "SRC-000001",
+    "language": "en",
+    "status": "active",
+    "status_checked_at": "2026-11-11",
+    "id_check": {
+      "result": "pass",
+      "at": "2026-11-11"
+    },
+    "registered_by": "claude",
+    "registered_at": "2026-11-11",
+    "topics": [
+      {
+        "topic_id": "TOP-000001",
+        "decision": "included",
+        "found_via": "search"
+      }
+    ],
+    "source_type": "paper",
+    "title": "示例论文 A（虚构）",
+    "creators": "示例作者 等",
+    "container": "示例期刊",
+    "published": "2023-05",
+    "identifiers": {
+      "doi": "10.0000/example.0001"
+    },
+    "url": "https://example.org/a",
+    "accessed_at": "2026-11-11",
+    "version_label": "出版版",
+    "access_route": "oa_published",
+    "access_scope": "full",
+    "license": "CC BY 4.0",
+    "license_class": "open",
+    "terms": {
+      "no_scraping": false,
+      "no_ai": false,
+      "checked_at": "2026-11-11"
+    },
+    "reading_mode": "ai_assisted",
+    "copy_kept": "none",
+    "external_use": "facts",
+    "handling": "开放获取出版版，AI 协助阅读，不留副本",
+    "use": "evidence"
+  },
+  "evidence": [
+    {
+      "id": "EV-000001-001",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "source_id": "SRC-000001",
+      "content_kind": "numeric",
+      "value_qualifier": "eq",
+      "entry_method": "ai",
+      "double_extraction": "agree",
+      "obtained_at": "2026-11-11",
+      "created_by": "claude",
+      "created_at": "2026-11-11",
+      "verification_status": "expert_reviewed",
+      "visibility": "external",
+      "subject_id": "ENT-000001",
+      "sample_label": "X-1",
+      "level": "component",
+      "indicator": "energy_efficiency",
+      "value_reported": "85.6",
+      "unit_reported": "%",
+      "value_std": 85.6,
+      "conditions": {
+        "current_density": {
+          "reported": "80 mA cm-2",
+          "value": 80,
+          "unit": "mA/cm2"
+        },
+        "vanadium_conc": {
+          "reported": "1.6 M",
+          "value": 1.6,
+          "unit": "mol/L"
+        },
+        "acid_conc": {
+          "reported": "3.0 M H2SO4",
+          "value": 3.0,
+          "unit": "mol/L"
+        },
+        "temperature": {
+          "reported": "25 °C",
+          "value": 25,
+          "unit": "degC"
+        }
+      },
+      "series_label": "S1",
+      "baseline_ref": "EV-000001-002",
+      "evidence_type": "experimental",
+      "obtained_from": "table",
+      "locator": {
+        "page": "6",
+        "table": "2",
+        "item": "第 3 行",
+        "text": "第 6 页，表 2，第 3 行"
+      },
+      "snippet": "X-1 98.1 87.3 85.6",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-11"
+      },
+      "verified_by": "yu",
+      "verified_at": "2026-11-11",
+      "expert_reviewed_by": "kai",
+      "expert_reviewed_at": "2026-11-11"
+    },
+    {
+      "id": "EV-000001-002",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "source_id": "SRC-000001",
+      "content_kind": "numeric",
+      "value_qualifier": "eq",
+      "entry_method": "ai",
+      "double_extraction": "agree",
+      "obtained_at": "2026-11-11",
+      "created_by": "claude",
+      "created_at": "2026-11-11",
+      "verification_status": "expert_reviewed",
+      "visibility": "external",
+      "subject_id": "ENT-000003",
+      "sample_label": "P-212",
+      "level": "component",
+      "indicator": "energy_efficiency",
+      "value_reported": "82.0",
+      "unit_reported": "%",
+      "value_std": 82.0,
+      "conditions": {
+        "current_density": {
+          "reported": "80 mA cm-2",
+          "value": 80,
+          "unit": "mA/cm2"
+        },
+        "vanadium_conc": {
+          "reported": "1.6 M",
+          "value": 1.6,
+          "unit": "mol/L"
+        },
+        "acid_conc": {
+          "reported": "3.0 M H2SO4",
+          "value": 3.0,
+          "unit": "mol/L"
+        },
+        "temperature": {
+          "reported": "25 °C",
+          "value": 25,
+          "unit": "degC"
+        }
+      },
+      "series_label": "S1",
+      "evidence_type": "experimental",
+      "obtained_from": "table",
+      "locator": {
+        "page": "6",
+        "table": "2",
+        "item": "第 1 行",
+        "text": "第 6 页，表 2，第 1 行"
+      },
+      "snippet": "P-212 96.0 85.4 82.0",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-11"
+      },
+      "verified_by": "yu",
+      "verified_at": "2026-11-11",
+      "expert_reviewed_by": "kai",
+      "expert_reviewed_at": "2026-11-11"
+    },
+    {
+      "id": "EV-000001-003",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "source_id": "SRC-000001",
+      "content_kind": "numeric",
+      "value_qualifier": "eq",
+      "entry_method": "ai",
+      "double_extraction": "na",
+      "obtained_at": "2026-11-11",
+      "created_by": "claude",
+      "created_at": "2026-11-11",
+      "verification_status": "human_verified",
+      "visibility": "external",
+      "subject_id": "ENT-000001",
+      "sample_label": "X-1",
+      "level": "component",
+      "indicator": "energy_efficiency",
+      "value_reported": "81.2",
+      "unit_reported": "%",
+      "value_std": 81.2,
+      "conditions": {
+        "current_density": {
+          "reported": "120 mA cm-2",
+          "value": 120,
+          "unit": "mA/cm2"
+        },
+        "vanadium_conc": {
+          "reported": "1.6 M",
+          "value": 1.6,
+          "unit": "mol/L"
+        },
+        "acid_conc": {
+          "reported": "3.0 M H2SO4",
+          "value": 3.0,
+          "unit": "mol/L"
+        },
+        "temperature": {
+          "reported": "25 °C",
+          "value": 25,
+          "unit": "degC"
+        }
+      },
+      "series_label": "S1",
+      "evidence_type": "experimental",
+      "obtained_from": "figure_read",
+      "locator": {
+        "page": "7",
+        "figure": "4b",
+        "item": "X-1 曲线，120 mA cm-2 处",
+        "text": "第 7 页，图 4b"
+      },
+      "figure_read": {
+        "method": "图上取点",
+        "read_by": "claude",
+        "source_data_checked": "none_found",
+        "reread_by": "yu",
+        "reread_at": "2026-11-11",
+        "reread_value": 81.0,
+        "reading_error": 0.5
+      },
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "na",
+        "value_unit": "na",
+        "at": "2026-11-11"
+      },
+      "verified_by": "yu",
+      "verified_at": "2026-11-11"
+    }
+  ]
+}

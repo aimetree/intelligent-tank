@@ -1,0 +1,34 @@
+{
+  "id": "<必填：LOG-000000>",
+  "date": "<必填：YYYY-MM-DD>",
+  "topic_id": "<必填：TOP-000000>",
+  "arm": "<必填：A1｜A2｜B｜C｜none>",
+  "step": "<必填：scoping｜search｜extraction｜linking｜verification｜comparison｜assessment｜change｜presentation｜licensing｜other>",
+  "actor_kind": "<必填：ai｜script｜human>",
+  "actor": "<必填：kai｜yu｜claude｜script｜expert-01>",
+  "summary": "<必填：做了什么>",
+  "minutes": 0,
+  "minutes_note": "<没记分钟数的说明>",
+  "ai": {
+    "model": "<必填：模型>",
+    "template": "<必填：模板或规则的版本>",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost": 0,
+    "currency": "<币种>"
+  },
+  "refs": [
+    "<编号>"
+  ],
+  "counts": {
+    "<键>": 0
+  },
+  "search": {
+    "where": "<必填：查了哪里>",
+    "query": "<必填：怎么查>",
+    "hits": 0,
+    "screened": 0,
+    "included": 0
+  },
+  "issues": "<发现的问题>"
+}

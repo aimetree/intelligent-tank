@@ -1,0 +1,33 @@
+{
+  "id": "<必填：REL-000000>",
+  "subject": "<必填：ENT-000000>",
+  "relation_type": "<必填：authored_by｜member_of｜applicant｜inventor_team｜family_member｜corresponds_to｜develops｜covers｜makes｜embodies｜licensed_to｜spun_out_of｜used_in｜cooperates_with｜funded_by｜other>",
+  "object": "<必填：ENT-000000>",
+  "basis": "<必填：sourced｜identifier｜inferred_ai｜inferred_human>",
+  "source_id": "<SRC-000000>",
+  "locator": {
+    "page": "<页>",
+    "table": "<表>",
+    "figure": "<图>",
+    "section": "<节>",
+    "item": "<项>",
+    "text": "<必填：能读的一句话>"
+  },
+  "summary": "<转述>",
+  "snippet": "<原文片段>",
+  "evidence_ids": [
+    "<EV-000000-000>"
+  ],
+  "inference_note": "<推断的依据>",
+  "valid_from": "<YYYY-MM-DD，可以只到年或月>",
+  "valid_to": "<YYYY-MM-DD，可以只到年或月>",
+  "as_of": "<YYYY-MM-DD，可以只到年或月>",
+  "is_key": false,
+  "confirmed_by": "<kai｜yu｜claude｜script｜expert-01>",
+  "verification_status": "<必填：pending｜machine_checked｜human_verified｜expert_reviewed｜disputed｜void>",
+  "verified_by": "<kai｜yu｜claude｜script｜expert-01>",
+  "verified_at": "<YYYY-MM-DD>",
+  "visibility": "<必填：internal｜external｜client>",
+  "client_code": "<客户代号>",
+  "notes": "<备注>"
+}

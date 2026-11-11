@@ -1,0 +1,43 @@
+[
+  {
+    "id": "REL-000001",
+    "subject": "ENT-000004",
+    "relation_type": "makes",
+    "object": "ENT-000003",
+    "basis": "sourced",
+    "source_id": "SRC-000002",
+    "locator": {
+      "page": "1",
+      "text": "第 1 页页眉"
+    },
+    "summary": "数据表页眉写明由该公司生产",
+    "is_key": true,
+    "confirmed_by": "kai",
+    "verification_status": "human_verified",
+    "verified_by": "kai",
+    "verified_at": "2026-11-11",
+    "visibility": "external"
+  },
+  {
+    "id": "REL-000002",
+    "subject": "SRC-000001",
+    "relation_type": "authored_by",
+    "object": "ENT-000005",
+    "basis": "identifier",
+    "summary": "论文元数据里的作者单位",
+    "is_key": false,
+    "verification_status": "machine_checked",
+    "visibility": "internal"
+  },
+  {
+    "id": "REL-000003",
+    "subject": "SRC-000001",
+    "relation_type": "corresponds_to",
+    "object": "ENT-000006",
+    "basis": "inferred_ai",
+    "inference_note": "作者与发明人重合、材料描述相近；没有文字出处",
+    "is_key": true,
+    "verification_status": "pending",
+    "visibility": "internal"
+  }
+]

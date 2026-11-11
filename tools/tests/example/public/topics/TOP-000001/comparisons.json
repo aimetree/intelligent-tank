@@ -1,0 +1,63 @@
+[
+  {
+    "id": "CMP-000001",
+    "topic_id": "TOP-000001",
+    "title": "同一来源、相同条件下的能量效率",
+    "question": "Q1",
+    "level": "component",
+    "indicators": [
+      "energy_efficiency"
+    ],
+    "rule": "same_conditions",
+    "tier": "direct",
+    "tier_reason": "同一篇论文、同一套电池、条件一致",
+    "normalization": "none",
+    "members": [
+      {
+        "evidence_id": "EV-000001-001",
+        "role": "member"
+      },
+      {
+        "evidence_id": "EV-000001-002",
+        "role": "baseline"
+      }
+    ],
+    "status": "expert_reviewed",
+    "decided_by": "kai",
+    "decided_at": "2026-11-11",
+    "expert_reviewed_by": "kai",
+    "expert_reviewed_at": "2026-11-11",
+    "visibility": "external"
+  },
+  {
+    "id": "CMP-000002",
+    "topic_id": "TOP-000001",
+    "title": "跨来源：与各自基准膜之比",
+    "question": "Q1",
+    "level": "component",
+    "indicators": [
+      "energy_efficiency"
+    ],
+    "rule": "ratio_to_baseline",
+    "tier": "conditional",
+    "tier_reason": "各来源条件不同，用与基准膜之比对齐",
+    "normalization": "ratio_to_baseline",
+    "members": [
+      {
+        "evidence_id": "EV-000001-001",
+        "role": "member"
+      },
+      {
+        "evidence_id": "EV-000001-002",
+        "role": "baseline"
+      },
+      {
+        "evidence_id": "EV-000003-001",
+        "role": "reference",
+        "note": "仅摘要，条件不全"
+      }
+    ],
+    "status": "draft",
+    "visibility": "internal"
+  }
+]

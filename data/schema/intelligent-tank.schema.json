@@ -1,0 +1,2627 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:intelligent-tank:schema:0.1",
+  "title": "Intelligent Tank 数据结构 v0.1",
+  "description": "对应 docs/03_技术与开发/数据结构_字段规格_v0.1.md。每类对象是 $defs 里的一项；各文件用哪一项见 data/README.md。这里只管字段名、类型、枚举和录入时就必填的字段；带条件的要求和跨记录的规则在 tools/validate.py 里。",
+  "$defs": {
+    "id_TOP": {
+      "type": "string",
+      "pattern": "^TOP-\\d{6}$"
+    },
+    "id_SRC": {
+      "type": "string",
+      "pattern": "^SRC-\\d{6}$"
+    },
+    "id_ENT": {
+      "type": "string",
+      "pattern": "^ENT-\\d{6}$"
+    },
+    "id_EV": {
+      "type": "string",
+      "pattern": "^EV-\\d{6}-\\d{3,}$"
+    },
+    "id_REL": {
+      "type": "string",
+      "pattern": "^REL-\\d{6}$"
+    },
+    "id_CMP": {
+      "type": "string",
+      "pattern": "^CMP-\\d{6}$"
+    },
+    "id_ASM": {
+      "type": "string",
+      "pattern": "^ASM-\\d{6}$"
+    },
+    "id_CHG": {
+      "type": "string",
+      "pattern": "^CHG-\\d{6}$"
+    },
+    "id_LOG": {
+      "type": "string",
+      "pattern": "^LOG-\\d{6}$"
+    },
+    "id_RPT": {
+      "type": "string",
+      "pattern": "^RPT-\\d{6}$"
+    },
+    "date": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "date_partial": {
+      "type": "string",
+      "pattern": "^(\\d{4}(-\\d{2}(-\\d{2})?)?|未注明)$"
+    },
+    "key": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$"
+    },
+    "actor": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "description": "成员写 kai、yu；外请的复核人用代号，如 expert-01；AI 写 claude；脚本写 script"
+    },
+    "enum_level": {
+      "enum": [
+        "material",
+        "component",
+        "system"
+      ]
+    },
+    "enum_evidence_type": {
+      "enum": [
+        "verified_fact",
+        "company_claim",
+        "third_party_analysis",
+        "experimental",
+        "model_simulation",
+        "expert_judgment"
+      ]
+    },
+    "enum_verification_status": {
+      "enum": [
+        "pending",
+        "machine_checked",
+        "human_verified",
+        "expert_reviewed",
+        "disputed",
+        "void"
+      ]
+    },
+    "enum_tier": {
+      "enum": [
+        "direct",
+        "conditional",
+        "reference",
+        "insufficient"
+      ]
+    },
+    "enum_visibility": {
+      "enum": [
+        "internal",
+        "external",
+        "client"
+      ]
+    },
+    "enum_source_type": {
+      "enum": [
+        "paper",
+        "review",
+        "supplement",
+        "patent",
+        "datasheet",
+        "company_web",
+        "filing",
+        "institution_report",
+        "metadata_db",
+        "open_database",
+        "standard",
+        "policy",
+        "paid_report",
+        "news",
+        "client_material",
+        "other"
+      ]
+    },
+    "enum_access_route": {
+      "enum": [
+        "oa_published",
+        "preprint",
+        "author_version",
+        "public_web",
+        "free_download",
+        "public_abstract",
+        "metadata",
+        "purchased",
+        "on_request",
+        "client_provided"
+      ]
+    },
+    "enum_access_scope": {
+      "enum": [
+        "full",
+        "partial",
+        "abstract_only",
+        "metadata_only"
+      ]
+    },
+    "enum_license_class": {
+      "enum": [
+        "open",
+        "open_nc",
+        "copyrighted",
+        "restricted",
+        "unstated",
+        "unknown"
+      ]
+    },
+    "enum_reading_mode": {
+      "enum": [
+        "ai_assisted",
+        "human_only"
+      ]
+    },
+    "enum_copy_kept": {
+      "enum": [
+        "none",
+        "local_temp",
+        "snapshot"
+      ]
+    },
+    "enum_external_use": {
+      "enum": [
+        "link_only",
+        "facts",
+        "redistributable"
+      ]
+    },
+    "enum_source_use": {
+      "enum": [
+        "evidence",
+        "lead",
+        "further_reading",
+        "background"
+      ]
+    },
+    "enum_source_status": {
+      "enum": [
+        "active",
+        "corrected",
+        "retracted",
+        "superseded",
+        "unreachable"
+      ]
+    },
+    "enum_screening_decision": {
+      "enum": [
+        "included",
+        "excluded",
+        "pending"
+      ]
+    },
+    "enum_found_via": {
+      "enum": [
+        "search",
+        "citation",
+        "expert_list",
+        "other"
+      ]
+    },
+    "enum_content_kind": {
+      "enum": [
+        "numeric",
+        "category",
+        "statement"
+      ]
+    },
+    "enum_value_qualifier": {
+      "enum": [
+        "eq",
+        "lt",
+        "le",
+        "gt",
+        "ge",
+        "approx"
+      ]
+    },
+    "enum_uncertainty_kind": {
+      "enum": [
+        "sd",
+        "se",
+        "ci95",
+        "range",
+        "not_stated"
+      ]
+    },
+    "enum_obtained_from": {
+      "enum": [
+        "text",
+        "table",
+        "figure_read",
+        "abstract_only",
+        "data_file"
+      ]
+    },
+    "enum_entry_method": {
+      "enum": [
+        "ai",
+        "human",
+        "import"
+      ]
+    },
+    "enum_double_extraction": {
+      "enum": [
+        "agree",
+        "resolved",
+        "single",
+        "na"
+      ]
+    },
+    "enum_check_result": {
+      "enum": [
+        "pass",
+        "fail",
+        "na"
+      ]
+    },
+    "enum_independent_validation": {
+      "enum": [
+        "yes",
+        "no",
+        "unknown"
+      ]
+    },
+    "enum_source_data_checked": {
+      "enum": [
+        "none_found",
+        "not_checked"
+      ]
+    },
+    "enum_condition_missing": {
+      "enum": [
+        "not_reported",
+        "not_applicable"
+      ]
+    },
+    "enum_entity_type": {
+      "enum": [
+        "organization",
+        "material_class",
+        "sample",
+        "product",
+        "patent_family",
+        "project",
+        "standard_policy"
+      ]
+    },
+    "enum_org_kind": {
+      "enum": [
+        "company",
+        "university",
+        "institute",
+        "team",
+        "government",
+        "funder",
+        "other"
+      ]
+    },
+    "enum_identity_status": {
+      "enum": [
+        "candidate",
+        "id_matched",
+        "confirmed"
+      ]
+    },
+    "enum_relation_type": {
+      "enum": [
+        "authored_by",
+        "member_of",
+        "applicant",
+        "inventor_team",
+        "family_member",
+        "corresponds_to",
+        "develops",
+        "covers",
+        "makes",
+        "embodies",
+        "licensed_to",
+        "spun_out_of",
+        "used_in",
+        "cooperates_with",
+        "funded_by",
+        "other"
+      ]
+    },
+    "enum_basis": {
+      "enum": [
+        "sourced",
+        "identifier",
+        "inferred_ai",
+        "inferred_human"
+      ]
+    },
+    "enum_member_role": {
+      "enum": [
+        "member",
+        "baseline",
+        "reference",
+        "excluded"
+      ]
+    },
+    "enum_normalization": {
+      "enum": [
+        "none",
+        "unit",
+        "ratio_to_baseline",
+        "other"
+      ]
+    },
+    "enum_cmp_status": {
+      "enum": [
+        "draft",
+        "decided",
+        "expert_reviewed"
+      ]
+    },
+    "enum_layer": {
+      "enum": [
+        "description",
+        "judgment"
+      ]
+    },
+    "enum_asm_status": {
+      "enum": [
+        "draft",
+        "reviewed",
+        "withdrawn"
+      ]
+    },
+    "enum_change_kind": {
+      "enum": [
+        "correction",
+        "source_change",
+        "new_evidence",
+        "reclassify",
+        "rule_change",
+        "assessment_change",
+        "other"
+      ]
+    },
+    "enum_error_type": {
+      "enum": [
+        "source_missing",
+        "unsupported_citation",
+        "value_unit",
+        "condition_misattached",
+        "level_mixed",
+        "not_comparable",
+        "duplicate",
+        "entity_wrong",
+        "outdated",
+        "claim_as_fact",
+        "omission",
+        "overreach",
+        "unsupported_text"
+      ]
+    },
+    "enum_detected_by": {
+      "enum": [
+        "machine",
+        "ai",
+        "human",
+        "expert",
+        "reviewer",
+        "client"
+      ]
+    },
+    "enum_impact": {
+      "enum": [
+        "none",
+        "review",
+        "changed"
+      ]
+    },
+    "enum_arm": {
+      "enum": [
+        "A1",
+        "A2",
+        "B",
+        "C",
+        "none"
+      ]
+    },
+    "enum_step": {
+      "enum": [
+        "scoping",
+        "search",
+        "extraction",
+        "linking",
+        "verification",
+        "comparison",
+        "assessment",
+        "change",
+        "presentation",
+        "licensing",
+        "other"
+      ]
+    },
+    "enum_actor_kind": {
+      "enum": [
+        "ai",
+        "script",
+        "human"
+      ]
+    },
+    "enum_direction": {
+      "enum": [
+        "academic",
+        "enterprise"
+      ]
+    },
+    "enum_topic_status": {
+      "enum": [
+        "draft",
+        "active",
+        "closed"
+      ]
+    },
+    "enum_dict_status": {
+      "enum": [
+        "draft",
+        "confirmed"
+      ]
+    },
+    "enum_condition_value_kind": {
+      "enum": [
+        "numeric",
+        "category",
+        "text"
+      ]
+    },
+    "enum_report_status": {
+      "enum": [
+        "draft",
+        "issued",
+        "superseded"
+      ]
+    },
+    "locator": {
+      "type": "object",
+      "title": "出处位置",
+      "description": "page、table、figure、section、item 至少一项（规则 V-26）",
+      "properties": {
+        "page": {
+          "type": "string",
+          "title": "页",
+          "minLength": 1
+        },
+        "table": {
+          "type": "string",
+          "title": "表",
+          "minLength": 1
+        },
+        "figure": {
+          "type": "string",
+          "title": "图",
+          "minLength": 1
+        },
+        "section": {
+          "type": "string",
+          "title": "节",
+          "minLength": 1
+        },
+        "item": {
+          "type": "string",
+          "title": "项",
+          "minLength": 1,
+          "description": "行、列、曲线、段落号、权利要求号、记录号"
+        },
+        "text": {
+          "type": "string",
+          "title": "能读的一句话",
+          "minLength": 1,
+          "description": "例：第 6 页，表 2，第 3 行"
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "additionalProperties": false
+    },
+    "condition_value": {
+      "title": "条件的取值",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/enum_condition_missing"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "reported": {
+              "type": "string",
+              "title": "原文写法",
+              "minLength": 1,
+              "description": "原样抄；“室温”这类写法不换成数字"
+            },
+            "value": {
+              "type": [
+                "number",
+                "string"
+              ],
+              "title": "解析出的值",
+              "description": "能解析才填"
+            },
+            "unit": {
+              "type": "string",
+              "title": "单位",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "reported"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "meta": {
+      "type": "object",
+      "title": "meta.json",
+      "properties": {
+        "spec_version": {
+          "type": "string",
+          "title": "规格版本",
+          "minLength": 1
+        },
+        "note": {
+          "type": "string",
+          "title": "说明",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "spec_version"
+      ],
+      "additionalProperties": false
+    },
+    "source": {
+      "type": "object",
+      "title": "来源",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id_SRC",
+          "title": "来源编号"
+        },
+        "source_type": {
+          "$ref": "#/$defs/enum_source_type",
+          "title": "来源类别"
+        },
+        "title": {
+          "type": "string",
+          "title": "题名",
+          "minLength": 1
+        },
+        "creators": {
+          "type": "string",
+          "title": "作者或发布机构",
+          "minLength": 1
+        },
+        "container": {
+          "type": "string",
+          "title": "刊名或网站名",
+          "minLength": 1
+        },
+        "published": {
+          "$ref": "#/$defs/date_partial",
+          "title": "发布日期",
+          "description": "可以只到年月；页面没写填“未注明”"
+        },
+        "identifiers": {
+          "type": "object",
+          "title": "标识",
+          "propertyNames": {
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "doi、patent_number、standard_number、openalex 等"
+        },
+        "url": {
+          "type": "string",
+          "title": "实际访问的网址",
+          "minLength": 1
+        },
+        "accessed_at": {
+          "$ref": "#/$defs/date",
+          "title": "取得日期"
+        },
+        "version_label": {
+          "type": "string",
+          "title": "版本",
+          "minLength": 1,
+          "description": "出版版、预印本第几版、作者接受稿、规格书的版本号；没写填“未注明”"
+        },
+        "version_of": {
+          "$ref": "#/$defs/id_SRC",
+          "title": "同一作品的另一版本"
+        },
+        "parent_id": {
+          "$ref": "#/$defs/id_SRC",
+          "title": "所属的主文件",
+          "description": "补充材料必填"
+        },
+        "publisher_id": {
+          "$ref": "#/$defs/id_ENT",
+          "title": "发布机构"
+        },
+        "language": {
+          "type": "string",
+          "title": "语言",
+          "minLength": 1,
+          "description": "如 en、zh"
+        },
+        "access_route": {
+          "$ref": "#/$defs/enum_access_route",
+          "title": "取得途径"
+        },
+        "access_scope": {
+          "$ref": "#/$defs/enum_access_scope",
+          "title": "读到的范围"
+        },
+        "license": {
+          "type": "string",
+          "title": "许可的原文写法",
+          "minLength": 1
+        },
+        "license_class": {
+          "$ref": "#/$defs/enum_license_class",
+          "title": "许可类别"
+        },
+        "terms": {
+          "type": "object",
+          "title": "条款要点",
+          "properties": {
+            "no_scraping": {
+              "type": "boolean",
+              "title": "条款禁止自动抓取"
+            },
+            "no_ai": {
+              "type": "boolean",
+              "title": "条款禁止用于 AI"
+            },
+            "note": {
+              "type": "string",
+              "title": "条款要点",
+              "minLength": 1
+            },
+            "terms_url": {
+              "type": "string",
+              "title": "条款网址",
+              "minLength": 1
+            },
+            "checked_at": {
+              "$ref": "#/$defs/date",
+              "title": "查看日期"
+            }
+          },
+          "required": [
+            "no_scraping",
+            "no_ai",
+            "checked_at"
+          ],
+          "additionalProperties": false
+        },
+        "reading_mode": {
+          "$ref": "#/$defs/enum_reading_mode",
+          "title": "阅读方式"
+        },
+        "copy_kept": {
+          "$ref": "#/$defs/enum_copy_kept",
+          "title": "是否留副本"
+        },
+        "snapshot_ref": {
+          "type": "string",
+          "title": "快照位置",
+          "minLength": 1
+        },
+        "archive_url": {
+          "type": "string",
+          "title": "存档链接",
+          "minLength": 1
+        },
+        "external_use": {
+          "$ref": "#/$defs/enum_external_use",
+          "title": "对外能给到什么程度"
+        },
+        "handling": {
+          "type": "string",
+          "title": "我们怎么处理的",
+          "minLength": 1
+        },
+        "use": {
+          "$ref": "#/$defs/enum_source_use",
+          "title": "用途"
+        },
+        "topics": {
+          "type": "array",
+          "title": "在各题目里的筛选结果",
+          "items": {
+            "type": "object",
+            "properties": {
+              "topic_id": {
+                "$ref": "#/$defs/id_TOP",
+                "title": "题目"
+              },
+              "decision": {
+                "$ref": "#/$defs/enum_screening_decision",
+                "title": "筛选结果"
+              },
+              "exclusion_reason": {
+                "type": "string",
+                "title": "排除原因",
+                "minLength": 1
+              },
+              "found_via": {
+                "$ref": "#/$defs/enum_found_via",
+                "title": "怎么找到的"
+              }
+            },
+            "required": [
+              "topic_id",
+              "decision"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1
+        },
+        "status": {
+          "$ref": "#/$defs/enum_source_status",
+          "title": "来源状态"
+        },
+        "status_checked_at": {
+          "$ref": "#/$defs/date",
+          "title": "状态查看日期"
+        },
+        "id_check": {
+          "type": "object",
+          "title": "标识能否解析",
+          "description": "由脚本生成",
+          "properties": {
+            "result": {
+              "enum": [
+                "pass",
+                "fail"
+              ],
+              "title": "结果"
+            },
+            "at": {
+              "$ref": "#/$defs/date",
+              "title": "检查日期"
+            }
+          },
+          "required": [
+            "result",
+            "at"
+          ],
+          "additionalProperties": false
+        },
+        "registered_by": {
+          "$ref": "#/$defs/actor",
+          "title": "登记人"
+        },
+        "registered_at": {
+          "$ref": "#/$defs/date",
+          "title": "登记日期"
+        },
+        "notes": {
+          "type": "string",
+          "title": "备注",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "id",
+        "source_type",
+        "title",
+        "creators",
+        "published",
+        "url",
+        "accessed_at",
+        "version_label",
+        "language",
+        "access_route",
+        "access_scope",
+        "license",
+        "license_class",
+        "terms",
+        "reading_mode",
+        "copy_kept",
+        "external_use",
+        "handling",
+        "use",
+        "topics",
+        "status",
+        "status_checked_at",
+        "registered_by",
+        "registered_at"
+      ],
+      "additionalProperties": false
+    },
+    "evidence": {
+      "type": "object",
+      "title": "证据",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id_EV",
+          "title": "证据编号"
+        },
+        "topic_id": {
+          "$ref": "#/$defs/id_TOP",
+          "title": "所属题目"
+        },
+        "record_version": {
+          "type": "integer",
+          "title": "记录版本",
+          "minimum": 1,
+          "description": "从 1 起，内容每改一次加一"
+        },
+        "created_by": {
+          "$ref": "#/$defs/actor",
+          "title": "录入人"
+        },
+        "created_at": {
+          "$ref": "#/$defs/date",
+          "title": "录入日期"
+        },
+        "subject_id": {
+          "$ref": "#/$defs/id_ENT",
+          "title": "描述的实体",
+          "description": "商业膜指向产品；实验室样品指向所属的材料类别"
+        },
+        "sample_label": {
+          "type": "string",
+          "title": "原文里的样品名",
+          "minLength": 1,
+          "description": "来源里不止一个样品时必填，原样抄"
+        },
+        "level": {
+          "$ref": "#/$defs/enum_level",
+          "title": "层级",
+          "description": "必须等于指标的层级（V-21）"
+        },
+        "indicator": {
+          "$ref": "#/$defs/key",
+          "title": "指标",
+          "description": "数值型、分类型必填"
+        },
+        "content_kind": {
+          "$ref": "#/$defs/enum_content_kind",
+          "title": "内容类别"
+        },
+        "value_reported": {
+          "type": "string",
+          "title": "原文数值",
+          "minLength": 1,
+          "description": "字符串，原样抄，保留有效数字"
+        },
+        "unit_reported": {
+          "type": "string",
+          "title": "原文单位",
+          "minLength": 1
+        },
+        "value_qualifier": {
+          "$ref": "#/$defs/enum_value_qualifier",
+          "title": "限定符",
+          "description": "默认 eq"
+        },
+        "value_std": {
+          "type": "number",
+          "title": "标准单位下的值",
+          "description": "由脚本算"
+        },
+        "range_low": {
+          "type": "number",
+          "title": "范围下限"
+        },
+        "range_high": {
+          "type": "number",
+          "title": "范围上限"
+        },
+        "uncertainty": {
+          "type": "number",
+          "title": "误差"
+        },
+        "uncertainty_kind": {
+          "$ref": "#/$defs/enum_uncertainty_kind",
+          "title": "误差类别"
+        },
+        "n": {
+          "type": "integer",
+          "title": "样本数",
+          "minimum": 1
+        },
+        "category_value": {
+          "type": "string",
+          "title": "分类值",
+          "minLength": 1,
+          "description": "分类型必填"
+        },
+        "summary": {
+          "type": "string",
+          "title": "转述",
+          "minLength": 1,
+          "description": "我们自己的话，对外附录用。陈述型必填；数值型不填时由脚本按字段拼出"
+        },
+        "conditions": {
+          "type": "object",
+          "title": "测试条件",
+          "propertyNames": {
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/condition_value"
+          },
+          "description": "指标要求的条件每一项都要出现（V-22）"
+        },
+        "conditions_locator": {
+          "$ref": "#/$defs/locator",
+          "title": "条件的出处位置"
+        },
+        "conditions_snippet": {
+          "type": "string",
+          "title": "条件的原文片段",
+          "minLength": 1,
+          "description": "只留内部"
+        },
+        "series_label": {
+          "type": "string",
+          "title": "同批测试标签",
+          "minLength": 1
+        },
+        "baseline_ref": {
+          "$ref": "#/$defs/id_EV",
+          "title": "同文基准",
+          "description": "同一来源、同一指标、相同条件下基准膜的那条证据"
+        },
+        "evidence_type": {
+          "$ref": "#/$defs/enum_evidence_type",
+          "title": "证据类型"
+        },
+        "independent_validation": {
+          "$ref": "#/$defs/enum_independent_validation",
+          "title": "是否有独立验证"
+        },
+        "validated_by": {
+          "type": "array",
+          "title": "由哪些证据验证",
+          "items": {
+            "$ref": "#/$defs/id_EV"
+          }
+        },
+        "source_id": {
+          "$ref": "#/$defs/id_SRC",
+          "title": "来源"
+        },
+        "locator": {
+          "$ref": "#/$defs/locator",
+          "title": "出处位置"
+        },
+        "snippet": {
+          "type": "string",
+          "title": "原文片段",
+          "minLength": 1,
+          "description": "逐字抄的一句话或表格的一行。图上读数之外必填。只留内部，不对外"
+        },
+        "obtained_from": {
+          "$ref": "#/$defs/enum_obtained_from",
+          "title": "取得方式"
+        },
+        "figure_read": {
+          "type": "object",
+          "title": "图上读数的记录",
+          "description": "图上读数时必填；对外之前还要有复读人和读数误差（V-62）",
+          "properties": {
+            "method": {
+              "type": "string",
+              "title": "读图的做法",
+              "minLength": 1
+            },
+            "read_by": {
+              "$ref": "#/$defs/actor",
+              "title": "读图的人或 AI"
+            },
+            "source_data_checked": {
+              "$ref": "#/$defs/enum_source_data_checked",
+              "title": "找没找过源数据表或补充材料"
+            },
+            "reread_by": {
+              "$ref": "#/$defs/actor",
+              "title": "复读人"
+            },
+            "reread_at": {
+              "$ref": "#/$defs/date",
+              "title": "复读日期"
+            },
+            "reread_value": {
+              "type": "number",
+              "title": "复读的值"
+            },
+            "reading_error": {
+              "type": "number",
+              "title": "读数误差",
+              "minimum": 0,
+              "description": "与原文数值同单位"
+            }
+          },
+          "required": [
+            "method",
+            "read_by",
+            "source_data_checked"
+          ],
+          "additionalProperties": false
+        },
+        "entry_method": {
+          "$ref": "#/$defs/enum_entry_method",
+          "title": "录入方式"
+        },
+        "double_extraction": {
+          "$ref": "#/$defs/enum_double_extraction",
+          "title": "两遍抽取"
+        },
+        "obtained_at": {
+          "$ref": "#/$defs/date",
+          "title": "取得日期"
+        },
+        "verification_status": {
+          "$ref": "#/$defs/enum_verification_status",
+          "title": "核验状态"
+        },
+        "machine_check": {
+          "type": "object",
+          "title": "机器核对结果",
+          "description": "由脚本生成",
+          "properties": {
+            "identifier": {
+              "$ref": "#/$defs/enum_check_result",
+              "title": "标识能解析"
+            },
+            "snippet": {
+              "$ref": "#/$defs/enum_check_result",
+              "title": "原文片段逐字找得到"
+            },
+            "value_unit": {
+              "$ref": "#/$defs/enum_check_result",
+              "title": "数值、单位与片段一致"
+            },
+            "at": {
+              "$ref": "#/$defs/date",
+              "title": "检查日期"
+            }
+          },
+          "required": [
+            "identifier",
+            "snippet",
+            "value_unit",
+            "at"
+          ],
+          "additionalProperties": false
+        },
+        "verified_by": {
+          "$ref": "#/$defs/actor",
+          "title": "人工核对人"
+        },
+        "verified_at": {
+          "$ref": "#/$defs/date",
+          "title": "人工核对日期"
+        },
+        "expert_reviewed_by": {
+          "$ref": "#/$defs/actor",
+          "title": "专业复核人"
+        },
+        "expert_reviewed_at": {
+          "$ref": "#/$defs/date",
+          "title": "专业复核日期"
+        },
+        "dispute_note": {
+          "type": "string",
+          "title": "分歧说明",
+          "minLength": 1,
+          "description": "存疑时必填"
+        },
+        "conflicts_with": {
+          "type": "array",
+          "title": "与之矛盾的证据",
+          "items": {
+            "$ref": "#/$defs/id_EV"
+          }
+        },
+        "void_reason": {
+          "type": "string",
+          "title": "作废原因",
+          "minLength": 1,
+          "description": "作废时必填"
+        },
+        "superseded_by": {
+          "$ref": "#/$defs/id_EV",
+          "title": "被哪条取代"
+        },
+        "duplicate_of": {
+          "$ref": "#/$defs/id_EV",
+          "title": "重复数据指向",
+          "description": "同一组数据在别的来源里又出现时，指向最早的那条"
+        },
+        "visibility": {
+          "$ref": "#/$defs/enum_visibility",
+          "title": "可见范围"
+        },
+        "client_code": {
+          "type": "string",
+          "title": "客户代号",
+          "minLength": 1
+        },
+        "scope_note": {
+          "type": "string",
+          "title": "适用范围与限制",
+          "minLength": 1,
+          "description": "可对外"
+        },
+        "internal_note": {
+          "type": "string",
+          "title": "内部备注",
+          "minLength": 1,
+          "description": "只留内部"
+        }
+      },
+      "required": [
+        "id",
+        "topic_id",
+        "record_version",
+        "created_by",
+        "created_at",
+        "subject_id",
+        "level",
+        "content_kind",
+        "evidence_type",
+        "source_id",
+        "locator",
+        "obtained_from",
+        "entry_method",
+        "double_extraction",
+        "obtained_at",
+        "verification_status",
+        "visibility"
+      ],
+      "patternProperties": {
+        "_en$": {
+          "type": "string",
+          "title": "英文版（出英文报告时补）"
+        }
+      },
+      "additionalProperties": false
+    },
+    "source_file": {
+      "type": "object",
+      "title": "一个来源一个文件：来源登记，加从它取出的全部证据",
+      "properties": {
+        "source": {
+          "$ref": "#/$defs/source"
+        },
+        "evidence": {
+          "type": "array",
+          "title": "从这个来源取出的证据",
+          "items": {
+            "$ref": "#/$defs/evidence"
+          }
+        }
+      },
+      "required": [
+        "source",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "entity": {
+      "type": "object",
+      "title": "实体",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id_ENT",
+          "title": "实体编号"
+        },
+        "entity_type": {
+          "$ref": "#/$defs/enum_entity_type",
+          "title": "实体类别"
+        },
+        "org_kind": {
+          "$ref": "#/$defs/enum_org_kind",
+          "title": "机构类别",
+          "description": "机构必填"
+        },
+        "name": {
+          "type": "string",
+          "title": "名称",
+          "minLength": 1
+        },
+        "name_en": {
+          "type": "string",
+          "title": "英文名",
+          "minLength": 1
+        },
+        "aliases": {
+          "type": "array",
+          "title": "别名",
+          "items": {
+            "type": "string",
+            "title": "别名",
+            "minLength": 1
+          }
+        },
+        "identifiers": {
+          "type": "object",
+          "title": "标识",
+          "propertyNames": {
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "ROR 或官网、专利族号、产品型号、标准号"
+        },
+        "class_id": {
+          "$ref": "#/$defs/id_ENT",
+          "title": "所属类别",
+          "description": "产品和样品指向材料类别"
+        },
+        "facets": {
+          "type": "object",
+          "title": "分类属性",
+          "propertyNames": {
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "键在题目卡的 facets 里定义"
+        },
+        "defined_in": {
+          "$ref": "#/$defs/id_SRC",
+          "title": "首次描述它的来源",
+          "description": "sample 必填"
+        },
+        "country": {
+          "type": "string",
+          "title": "国家或地区",
+          "minLength": 1
+        },
+        "identity_status": {
+          "$ref": "#/$defs/enum_identity_status",
+          "title": "身份状态"
+        },
+        "confirmed_by": {
+          "$ref": "#/$defs/actor",
+          "title": "确认人"
+        },
+        "confirmed_at": {
+          "$ref": "#/$defs/date",
+          "title": "确认日期"
+        },
+        "merged_into": {
+          "$ref": "#/$defs/id_ENT",
+          "title": "并入哪个实体"
+        },
+        "visibility": {
+          "$ref": "#/$defs/enum_visibility",
+          "title": "可见范围"
+        },
+        "client_code": {
+          "type": "string",
+          "title": "客户代号",
+          "minLength": 1
+        },
+        "notes": {
+          "type": "string",
+          "title": "备注",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "id",
+        "entity_type",
+        "name",
+        "identity_status",
+        "visibility"
+      ],
+      "additionalProperties": false
+    },
+    "relation": {
+      "type": "object",
+      "title": "关系",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id_REL",
+          "title": "关系编号"
+        },
+        "subject": {
+          "title": "主语",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id_ENT"
+            },
+            {
+              "$ref": "#/$defs/id_SRC"
+            }
+          ],
+          "description": "实体或来源"
+        },
+        "relation_type": {
+          "$ref": "#/$defs/enum_relation_type",
+          "title": "关系类型"
+        },
+        "object": {
+          "title": "宾语",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id_ENT"
+            },
+            {
+              "$ref": "#/$defs/id_SRC"
+            }
+          ],
+          "description": "实体或来源"
+        },
+        "basis": {
+          "$ref": "#/$defs/enum_basis",
+          "title": "依据"
+        },
+        "source_id": {
+          "$ref": "#/$defs/id_SRC",
+          "title": "来源",
+          "description": "有出处的关系必填"
+        },
+        "locator": {
+          "$ref": "#/$defs/locator",
+          "title": "出处位置"
+        },
+        "summary": {
+          "type": "string",
+          "title": "转述",
+          "minLength": 1
+        },
+        "snippet": {
+          "type": "string",
+          "title": "原文片段",
+          "minLength": 1,
+          "description": "只留内部"
+        },
+        "evidence_ids": {
+          "type": "array",
+          "title": "支持它的证据",
+          "items": {
+            "$ref": "#/$defs/id_EV"
+          }
+        },
+        "inference_note": {
+          "type": "string",
+          "title": "推断的依据",
+          "minLength": 1,
+          "description": "推断的关系必填"
+        },
+        "valid_from": {
+          "$ref": "#/$defs/date_partial",
+          "title": "起"
+        },
+        "valid_to": {
+          "$ref": "#/$defs/date_partial",
+          "title": "止"
+        },
+        "as_of": {
+          "$ref": "#/$defs/date_partial",
+          "title": "截至何时成立"
+        },
+        "is_key": {
+          "type": "boolean",
+          "title": "是否关键关系"
+        },
+        "confirmed_by": {
+          "$ref": "#/$defs/actor",
+          "title": "确认人",
+          "description": "关键关系由人确认"
+        },
+        "verification_status": {
+          "$ref": "#/$defs/enum_verification_status",
+          "title": "核验状态"
+        },
+        "verified_by": {
+          "$ref": "#/$defs/actor",
+          "title": "核验人"
+        },
+        "verified_at": {
+          "$ref": "#/$defs/date",
+          "title": "核验日期"
+        },
+        "visibility": {
+          "$ref": "#/$defs/enum_visibility",
+          "title": "可见范围"
+        },
+        "client_code": {
+          "type": "string",
+          "title": "客户代号",
+          "minLength": 1
+        },
+        "notes": {
+          "type": "string",
+          "title": "备注",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "id",
+        "subject",
+        "relation_type",
+        "object",
+        "basis",
+        "is_key",
+        "verification_status",
+        "visibility"
+      ],
+      "patternProperties": {
+        "_en$": {
+          "type": "string",
+          "title": "英文版（出英文报告时补）"
+        }
+      },
+      "additionalProperties": false
+    },
+    "topic": {
+      "type": "object",
+      "title": "题目卡",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id_TOP",
+          "title": "题目编号"
+        },
+        "title": {
+          "type": "string",
+          "title": "题目",
+          "minLength": 1
+        },
+        "direction": {
+          "$ref": "#/$defs/enum_direction",
+          "title": "方向"
+        },
+        "status": {
+          "$ref": "#/$defs/enum_topic_status",
+          "title": "状态"
+        },
+        "questions": {
+          "type": "array",
+          "title": "要回答的问题",
+          "items": {
+            "type": "object",
+            "properties": {
+              "key": {
+                "type": "string",
+                "pattern": "^Q\\d+$",
+                "title": "问题编号"
+              },
+              "text": {
+                "type": "string",
+                "title": "问题",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "key",
+              "text"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1
+        },
+        "scope_in": {
+          "type": "string",
+          "title": "范围",
+          "minLength": 1
+        },
+        "scope_out": {
+          "type": "string",
+          "title": "不包括什么",
+          "minLength": 1
+        },
+        "levels": {
+          "type": "array",
+          "title": "涉及的层级",
+          "items": {
+            "$ref": "#/$defs/enum_level"
+          },
+          "minItems": 1
+        },
+        "time_window": {
+          "type": "object",
+          "title": "时间窗",
+          "properties": {
+            "from": {
+              "$ref": "#/$defs/date_partial",
+              "title": "从什么时候起逐篇核对"
+            },
+            "earlier_rule": {
+              "type": "string",
+              "title": "更早的文献怎么处理",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "from"
+          ],
+          "additionalProperties": false
+        },
+        "evidence_source_types": {
+          "type": "array",
+          "title": "哪些来源类别算证据",
+          "items": {
+            "$ref": "#/$defs/enum_source_type"
+          },
+          "minItems": 1
+        },
+        "facets": {
+          "type": "array",
+          "title": "实体的分类维度",
+          "items": {
+            "type": "object",
+            "properties": {
+              "key": {
+                "$ref": "#/$defs/key",
+                "title": "键"
+              },
+              "name": {
+                "type": "string",
+                "title": "名称",
+                "minLength": 1
+              },
+              "values": {
+                "type": "array",
+                "title": "允许的取值",
+                "items": {
+                  "type": "string",
+                  "title": "取值",
+                  "minLength": 1
+                }
+              }
+            },
+            "required": [
+              "key",
+              "name"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "report_languages": {
+          "type": "array",
+          "title": "报告语言",
+          "items": {
+            "type": "string",
+            "title": "语言",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "cutoff_date": {
+          "$ref": "#/$defs/date",
+          "title": "截至日期",
+          "description": "出看板和报告时必填"
+        },
+        "client_code": {
+          "type": "string",
+          "title": "客户代号",
+          "minLength": 1,
+          "description": "自己定题的样品不填"
+        },
+        "confirmed_by": {
+          "$ref": "#/$defs/actor",
+          "title": "确认人",
+          "description": "题目属于方案类，由 Kai 确认"
+        },
+        "confirmed_at": {
+          "$ref": "#/$defs/date",
+          "title": "确认日期"
+        },
+        "notes": {
+          "type": "string",
+          "title": "备注",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "direction",
+        "status",
+        "questions",
+        "scope_in",
+        "scope_out",
+        "levels",
+        "evidence_source_types",
+        "report_languages"
+      ],
+      "patternProperties": {
+        "_en$": {
+          "type": "string",
+          "title": "英文版（出英文报告时补）"
+        }
+      },
+      "additionalProperties": false
+    },
+    "dictionary": {
+      "type": "object",
+      "title": "指标字典",
+      "properties": {
+        "topic_id": {
+          "$ref": "#/$defs/id_TOP",
+          "title": "题目"
+        },
+        "version": {
+          "type": "string",
+          "title": "字典版本",
+          "minLength": 1
+        },
+        "status": {
+          "$ref": "#/$defs/enum_dict_status",
+          "title": "状态"
+        },
+        "confirmed_by": {
+          "$ref": "#/$defs/actor",
+          "title": "确认人"
+        },
+        "conditions": {
+          "type": "array",
+          "title": "条件项",
+          "items": {
+            "type": "object",
+            "properties": {
+              "key": {
+                "$ref": "#/$defs/key",
+                "title": "键"
+              },
+              "name_zh": {
+                "type": "string",
+                "title": "中文名",
+                "minLength": 1
+              },
+              "name_en": {
+                "type": "string",
+                "title": "英文名",
+                "minLength": 1
+              },
+              "value_kind": {
+                "$ref": "#/$defs/enum_condition_value_kind",
+                "title": "取值类别"
+              },
+              "unit_std": {
+                "type": "string",
+                "title": "标准单位",
+                "minLength": 1
+              },
+              "allowed_values": {
+                "type": "array",
+                "title": "允许的取值",
+                "items": {
+                  "type": "string",
+                  "title": "取值",
+                  "minLength": 1
+                }
+              },
+              "notes": {
+                "type": "string",
+                "title": "备注",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "key",
+              "name_zh",
+              "value_kind"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "indicators": {
+          "type": "array",
+          "title": "指标",
+          "items": {
+            "type": "object",
+            "properties": {
+              "key": {
+                "$ref": "#/$defs/key",
+                "title": "键"
+              },
+              "name_zh": {
+                "type": "string",
+                "title": "中文名",
+                "minLength": 1
+              },
+              "name_en": {
+                "type": "string",
+                "title": "英文名",
+                "minLength": 1
+              },
+              "aliases": {
+                "type": "array",
+                "title": "别名",
+                "items": {
+                  "type": "string",
+                  "title": "别名",
+                  "minLength": 1
+                }
+              },
+              "level": {
+                "$ref": "#/$defs/enum_level",
+                "title": "层级"
+              },
+              "value_kind": {
+                "$ref": "#/$defs/enum_content_kind",
+                "title": "取值类别"
+              },
+              "unit_std": {
+                "type": "string",
+                "title": "标准单位",
+                "minLength": 1
+              },
+              "units_accepted": {
+                "type": "array",
+                "title": "允许的单位",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "unit": {
+                      "type": "string",
+                      "title": "单位",
+                      "minLength": 1
+                    },
+                    "factor": {
+                      "type": "number",
+                      "title": "换算到标准单位要乘的系数"
+                    }
+                  },
+                  "required": [
+                    "unit",
+                    "factor"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "allowed_values": {
+                "type": "array",
+                "title": "允许的取值",
+                "items": {
+                  "type": "string",
+                  "title": "取值",
+                  "minLength": 1
+                }
+              },
+              "required_conditions": {
+                "type": "array",
+                "title": "必须同时记录的条件",
+                "items": {
+                  "$ref": "#/$defs/key"
+                }
+              },
+              "optional_conditions": {
+                "type": "array",
+                "title": "可选的条件",
+                "items": {
+                  "$ref": "#/$defs/key"
+                }
+              },
+              "definition": {
+                "type": "string",
+                "title": "定义",
+                "minLength": 1
+              },
+              "status": {
+                "$ref": "#/$defs/enum_dict_status",
+                "title": "状态"
+              },
+              "notes": {
+                "type": "string",
+                "title": "备注",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "key",
+              "name_zh",
+              "level",
+              "value_kind",
+              "required_conditions"
+            ],
+            "additionalProperties": false,
+            "if": {
+              "properties": {
+                "value_kind": {
+                  "const": "numeric"
+                }
+              },
+              "required": [
+                "value_kind"
+              ]
+            },
+            "then": {
+              "required": [
+                "unit_std",
+                "units_accepted"
+              ]
+            }
+          }
+        },
+        "rules": {
+          "type": "array",
+          "title": "可比规则",
+          "items": {
+            "type": "object",
+            "properties": {
+              "key": {
+                "$ref": "#/$defs/key",
+                "title": "键"
+              },
+              "name": {
+                "type": "string",
+                "title": "名称",
+                "minLength": 1
+              },
+              "applies_to": {
+                "type": "array",
+                "title": "适用的指标",
+                "items": {
+                  "$ref": "#/$defs/key"
+                },
+                "minItems": 1
+              },
+              "level": {
+                "$ref": "#/$defs/enum_level",
+                "title": "层级"
+              },
+              "statement": {
+                "type": "string",
+                "title": "规则内容",
+                "minLength": 1
+              },
+              "tier_if_met": {
+                "$ref": "#/$defs/enum_tier",
+                "title": "满足时的可比档"
+              },
+              "normalization": {
+                "$ref": "#/$defs/enum_normalization",
+                "title": "归一化方法"
+              },
+              "status": {
+                "$ref": "#/$defs/enum_dict_status",
+                "title": "状态"
+              },
+              "notes": {
+                "type": "string",
+                "title": "备注",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "key",
+              "name",
+              "applies_to",
+              "level",
+              "statement",
+              "tier_if_met",
+              "normalization"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "topic_id",
+        "version",
+        "status",
+        "conditions",
+        "indicators",
+        "rules"
+      ],
+      "additionalProperties": false
+    },
+    "comparison": {
+      "type": "object",
+      "title": "可比组",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id_CMP",
+          "title": "可比组编号"
+        },
+        "topic_id": {
+          "$ref": "#/$defs/id_TOP",
+          "title": "题目"
+        },
+        "title": {
+          "type": "string",
+          "title": "名称",
+          "minLength": 1
+        },
+        "question": {
+          "type": "string",
+          "pattern": "^Q\\d+$",
+          "title": "对应题目卡的哪个问题"
+        },
+        "level": {
+          "$ref": "#/$defs/enum_level",
+          "title": "层级",
+          "description": "所有成员必须同一层级"
+        },
+        "indicators": {
+          "type": "array",
+          "title": "指标",
+          "items": {
+            "$ref": "#/$defs/key"
+          },
+          "minItems": 1,
+          "maxItems": 2
+        },
+        "rule": {
+          "$ref": "#/$defs/key",
+          "title": "用的可比规则"
+        },
+        "tier": {
+          "$ref": "#/$defs/enum_tier",
+          "title": "可比档"
+        },
+        "tier_reason": {
+          "type": "string",
+          "title": "定档理由",
+          "minLength": 1
+        },
+        "normalization": {
+          "$ref": "#/$defs/enum_normalization",
+          "title": "归一化方法"
+        },
+        "normalization_note": {
+          "type": "string",
+          "title": "归一化说明",
+          "minLength": 1
+        },
+        "condition_envelope": {
+          "type": "object",
+          "title": "这一组共同的条件",
+          "propertyNames": {
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/condition_value"
+          }
+        },
+        "members": {
+          "type": "array",
+          "title": "成员",
+          "items": {
+            "type": "object",
+            "properties": {
+              "evidence_id": {
+                "$ref": "#/$defs/id_EV",
+                "title": "证据"
+              },
+              "role": {
+                "$ref": "#/$defs/enum_member_role",
+                "title": "角色"
+              },
+              "note": {
+                "type": "string",
+                "title": "说明",
+                "minLength": 1,
+                "description": "排除的要写原因"
+              }
+            },
+            "required": [
+              "evidence_id",
+              "role"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1
+        },
+        "missing": {
+          "type": "string",
+          "title": "缺什么",
+          "minLength": 1,
+          "description": "档别是数据不足时必填"
+        },
+        "status": {
+          "$ref": "#/$defs/enum_cmp_status",
+          "title": "状态",
+          "description": "AI 只能建到 draft"
+        },
+        "decided_by": {
+          "$ref": "#/$defs/actor",
+          "title": "定档人"
+        },
+        "decided_at": {
+          "$ref": "#/$defs/date",
+          "title": "定档日期"
+        },
+        "expert_reviewed_by": {
+          "$ref": "#/$defs/actor",
+          "title": "专业复核人"
+        },
+        "expert_reviewed_at": {
+          "$ref": "#/$defs/date",
+          "title": "专业复核日期"
+        },
+        "visibility": {
+          "$ref": "#/$defs/enum_visibility",
+          "title": "可见范围"
+        },
+        "client_code": {
+          "type": "string",
+          "title": "客户代号",
+          "minLength": 1
+        },
+        "notes": {
+          "type": "string",
+          "title": "备注",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "id",
+        "topic_id",
+        "title",
+        "level",
+        "indicators",
+        "tier",
+        "tier_reason",
+        "normalization",
+        "members",
+        "status",
+        "visibility"
+      ],
+      "patternProperties": {
+        "_en$": {
+          "type": "string",
+          "title": "英文版（出英文报告时补）"
+        }
+      },
+      "additionalProperties": false
+    },
+    "assessment": {
+      "type": "object",
+      "title": "判断（可选）",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id_ASM",
+          "title": "判断编号"
+        },
+        "topic_id": {
+          "$ref": "#/$defs/id_TOP",
+          "title": "题目"
+        },
+        "question": {
+          "type": "string",
+          "pattern": "^Q\\d+$",
+          "title": "对应的问题"
+        },
+        "layer": {
+          "$ref": "#/$defs/enum_layer",
+          "title": "层",
+          "description": "description 只陈述数据说了什么；judgment 是评价和建议"
+        },
+        "statement": {
+          "type": "string",
+          "title": "内容",
+          "minLength": 1
+        },
+        "basis": {
+          "type": "array",
+          "title": "依据清单",
+          "items": {
+            "title": "依据",
+            "anyOf": [
+              {
+                "$ref": "#/$defs/id_EV"
+              },
+              {
+                "$ref": "#/$defs/id_CMP"
+              },
+              {
+                "$ref": "#/$defs/id_REL"
+              }
+            ]
+          },
+          "minItems": 1
+        },
+        "conditions": {
+          "type": "string",
+          "title": "成立条件",
+          "minLength": 1,
+          "description": "judgment 必填"
+        },
+        "unknowns": {
+          "type": "string",
+          "title": "不能判断的部分",
+          "minLength": 1,
+          "description": "judgment 必填"
+        },
+        "assumptions": {
+          "type": "string",
+          "title": "假设",
+          "minLength": 1
+        },
+        "disagreements": {
+          "type": "string",
+          "title": "分歧",
+          "minLength": 1
+        },
+        "status": {
+          "$ref": "#/$defs/enum_asm_status",
+          "title": "状态"
+        },
+        "drafted_by": {
+          "$ref": "#/$defs/actor",
+          "title": "起草人"
+        },
+        "reviewed_by": {
+          "$ref": "#/$defs/actor",
+          "title": "复核人"
+        },
+        "reviewed_at": {
+          "$ref": "#/$defs/date",
+          "title": "复核日期"
+        },
+        "visibility": {
+          "$ref": "#/$defs/enum_visibility",
+          "title": "可见范围"
+        },
+        "client_code": {
+          "type": "string",
+          "title": "客户代号",
+          "minLength": 1
+        },
+        "record_version": {
+          "type": "integer",
+          "title": "记录版本",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "id",
+        "topic_id",
+        "layer",
+        "statement",
+        "basis",
+        "status",
+        "drafted_by",
+        "visibility"
+      ],
+      "patternProperties": {
+        "_en$": {
+          "type": "string",
+          "title": "英文版（出英文报告时补）"
+        }
+      },
+      "additionalProperties": false
+    },
+    "change": {
+      "type": "object",
+      "title": "变化记录",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id_CHG",
+          "title": "变化编号"
+        },
+        "date": {
+          "$ref": "#/$defs/date",
+          "title": "日期"
+        },
+        "kind": {
+          "$ref": "#/$defs/enum_change_kind",
+          "title": "变化类别"
+        },
+        "topic_id": {
+          "$ref": "#/$defs/id_TOP",
+          "title": "题目"
+        },
+        "target_id": {
+          "title": "改的是哪条记录",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id_EV"
+            },
+            {
+              "$ref": "#/$defs/id_SRC"
+            },
+            {
+              "$ref": "#/$defs/id_ENT"
+            },
+            {
+              "$ref": "#/$defs/id_REL"
+            },
+            {
+              "$ref": "#/$defs/id_CMP"
+            },
+            {
+              "$ref": "#/$defs/id_ASM"
+            },
+            {
+              "$ref": "#/$defs/id_TOP"
+            }
+          ]
+        },
+        "field": {
+          "type": "string",
+          "title": "哪个字段",
+          "minLength": 1
+        },
+        "before": {
+          "title": "改之前"
+        },
+        "after": {
+          "title": "改之后"
+        },
+        "reason": {
+          "type": "string",
+          "title": "原因",
+          "minLength": 1
+        },
+        "error_type": {
+          "$ref": "#/$defs/enum_error_type",
+          "title": "错误类型",
+          "description": "核验更正时必填"
+        },
+        "detected_by": {
+          "$ref": "#/$defs/enum_detected_by",
+          "title": "谁发现的"
+        },
+        "trigger_source": {
+          "$ref": "#/$defs/id_SRC",
+          "title": "引起变化的来源"
+        },
+        "affected": {
+          "type": "object",
+          "title": "受影响的可比组、判断、报告",
+          "description": "由脚本反查",
+          "properties": {
+            "cmp": {
+              "type": "array",
+              "title": "可比组",
+              "items": {
+                "$ref": "#/$defs/id_CMP"
+              }
+            },
+            "asm": {
+              "type": "array",
+              "title": "判断",
+              "items": {
+                "$ref": "#/$defs/id_ASM"
+              }
+            },
+            "rpt": {
+              "type": "array",
+              "title": "报告",
+              "items": {
+                "$ref": "#/$defs/id_RPT"
+              }
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "impact": {
+          "$ref": "#/$defs/enum_impact",
+          "title": "影响"
+        },
+        "impact_note": {
+          "type": "string",
+          "title": "影响说明",
+          "minLength": 1
+        },
+        "recorded_by": {
+          "$ref": "#/$defs/actor",
+          "title": "记录人"
+        }
+      },
+      "required": [
+        "id",
+        "date",
+        "kind",
+        "target_id",
+        "reason",
+        "impact",
+        "recorded_by"
+      ],
+      "additionalProperties": false
+    },
+    "worklog": {
+      "type": "object",
+      "title": "工作记录",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id_LOG",
+          "title": "工作记录编号"
+        },
+        "date": {
+          "$ref": "#/$defs/date",
+          "title": "日期"
+        },
+        "topic_id": {
+          "$ref": "#/$defs/id_TOP",
+          "title": "题目"
+        },
+        "arm": {
+          "$ref": "#/$defs/enum_arm",
+          "title": "对照组别"
+        },
+        "step": {
+          "$ref": "#/$defs/enum_step",
+          "title": "流程步骤"
+        },
+        "actor_kind": {
+          "$ref": "#/$defs/enum_actor_kind",
+          "title": "操作人类别"
+        },
+        "actor": {
+          "$ref": "#/$defs/actor",
+          "title": "操作人"
+        },
+        "summary": {
+          "type": "string",
+          "title": "做了什么",
+          "minLength": 1
+        },
+        "minutes": {
+          "type": "number",
+          "title": "人工分钟数",
+          "minimum": 0,
+          "description": "实记，不估算、不补记"
+        },
+        "minutes_note": {
+          "type": "string",
+          "title": "没记分钟数的说明",
+          "minLength": 1
+        },
+        "ai": {
+          "type": "object",
+          "title": "AI 的调用情况",
+          "properties": {
+            "model": {
+              "type": "string",
+              "title": "模型",
+              "minLength": 1
+            },
+            "template": {
+              "type": "string",
+              "title": "模板或规则的版本",
+              "minLength": 1
+            },
+            "input_tokens": {
+              "type": "integer",
+              "title": "输入 token 数",
+              "minimum": 0
+            },
+            "output_tokens": {
+              "type": "integer",
+              "title": "输出 token 数",
+              "minimum": 0
+            },
+            "cost": {
+              "type": "number",
+              "title": "费用",
+              "minimum": 0
+            },
+            "currency": {
+              "type": "string",
+              "title": "币种",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "model",
+            "template"
+          ],
+          "additionalProperties": false
+        },
+        "refs": {
+          "type": "array",
+          "title": "涉及的记录",
+          "items": {
+            "type": "string",
+            "title": "编号",
+            "minLength": 1
+          }
+        },
+        "counts": {
+          "type": "object",
+          "title": "数量",
+          "propertyNames": {
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "description": "如 sources_registered、evidence_created、evidence_verified、corrections"
+        },
+        "search": {
+          "type": "object",
+          "title": "检索记录",
+          "description": "step 是 search 时必填",
+          "properties": {
+            "where": {
+              "type": "string",
+              "title": "查了哪里",
+              "minLength": 1
+            },
+            "query": {
+              "type": "string",
+              "title": "怎么查",
+              "minLength": 1
+            },
+            "hits": {
+              "type": "integer",
+              "title": "命中",
+              "minimum": 0
+            },
+            "screened": {
+              "type": "integer",
+              "title": "初筛",
+              "minimum": 0
+            },
+            "included": {
+              "type": "integer",
+              "title": "纳入",
+              "minimum": 0
+            }
+          },
+          "required": [
+            "where",
+            "query",
+            "hits"
+          ],
+          "additionalProperties": false
+        },
+        "issues": {
+          "type": "string",
+          "title": "发现的问题",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "id",
+        "date",
+        "topic_id",
+        "arm",
+        "step",
+        "actor_kind",
+        "actor",
+        "summary"
+      ],
+      "additionalProperties": false
+    },
+    "report": {
+      "type": "object",
+      "title": "报告登记",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id_RPT",
+          "title": "报告编号"
+        },
+        "topic_id": {
+          "$ref": "#/$defs/id_TOP",
+          "title": "题目"
+        },
+        "title": {
+          "type": "string",
+          "title": "标题",
+          "minLength": 1
+        },
+        "language": {
+          "type": "string",
+          "title": "语言",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "title": "版本",
+          "minLength": 1
+        },
+        "issued_at": {
+          "$ref": "#/$defs/date",
+          "title": "发出日期"
+        },
+        "recipient": {
+          "type": "string",
+          "title": "给谁",
+          "minLength": 1,
+          "description": "客户代号或“盲评”"
+        },
+        "status": {
+          "$ref": "#/$defs/enum_report_status",
+          "title": "状态"
+        },
+        "data_version": {
+          "type": "string",
+          "title": "数据版本",
+          "minLength": 1,
+          "description": "生成时的提交号"
+        },
+        "evidence_ids": {
+          "type": "array",
+          "title": "引用的证据",
+          "items": {
+            "$ref": "#/$defs/id_EV"
+          }
+        },
+        "rel_ids": {
+          "type": "array",
+          "title": "引用的关系",
+          "items": {
+            "$ref": "#/$defs/id_REL"
+          }
+        },
+        "cmp_ids": {
+          "type": "array",
+          "title": "引用的可比组",
+          "items": {
+            "$ref": "#/$defs/id_CMP"
+          }
+        },
+        "asm_ids": {
+          "type": "array",
+          "title": "引用的判断",
+          "items": {
+            "$ref": "#/$defs/id_ASM"
+          }
+        },
+        "supersedes": {
+          "$ref": "#/$defs/id_RPT",
+          "title": "取代了哪一份"
+        }
+      },
+      "required": [
+        "id",
+        "topic_id",
+        "title",
+        "language",
+        "version",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "entities_file": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/entity"
+      }
+    },
+    "relations_file": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/relation"
+      }
+    },
+    "comparisons_file": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/comparison"
+      }
+    },
+    "assessments_file": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/assessment"
+      }
+    },
+    "reports_file": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/report"
+      }
+    }
+  }
+}

@@ -1,0 +1,73 @@
+[
+  {
+    "id": "ENT-000001",
+    "entity_type": "material_class",
+    "name": "示例非氟膜类别 N（虚构）",
+    "aliases": [],
+    "facets": {
+      "fluorine": "non_fluorinated"
+    },
+    "identity_status": "confirmed",
+    "confirmed_by": "kai",
+    "confirmed_at": "2026-11-11",
+    "visibility": "external"
+  },
+  {
+    "id": "ENT-000002",
+    "entity_type": "material_class",
+    "name": "示例全氟膜类别 F（虚构）",
+    "aliases": [],
+    "facets": {
+      "fluorine": "pfsa"
+    },
+    "identity_status": "confirmed",
+    "confirmed_by": "kai",
+    "confirmed_at": "2026-11-11",
+    "visibility": "external"
+  },
+  {
+    "id": "ENT-000003",
+    "entity_type": "product",
+    "name": "示例商业膜 P（虚构）",
+    "aliases": [
+      "P-212"
+    ],
+    "class_id": "ENT-000002",
+    "identifiers": {
+      "model": "P-212"
+    },
+    "identity_status": "confirmed",
+    "confirmed_by": "kai",
+    "confirmed_at": "2026-11-11",
+    "visibility": "external"
+  },
+  {
+    "id": "ENT-000004",
+    "entity_type": "organization",
+    "org_kind": "company",
+    "name": "示例膜公司（虚构）",
+    "aliases": [],
+    "identity_status": "id_matched",
+    "visibility": "external"
+  },
+  {
+    "id": "ENT-000005",
+    "entity_type": "organization",
+    "org_kind": "team",
+    "name": "示例课题组（虚构）",
+    "aliases": [],
+    "identity_status": "candidate",
+    "visibility": "internal"
+  },
+  {
+    "id": "ENT-000006",
+    "entity_type": "patent_family",
+    "name": "示例专利族（虚构）",
+    "aliases": [],
+    "identifiers": {
+      "family_id": "00000000"
+    },
+    "identity_status": "id_matched",
+    "visibility": "external"
+  }
+]

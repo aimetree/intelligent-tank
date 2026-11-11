@@ -1,0 +1,95 @@
+{
+  "source": {
+    "id": "SRC-000003",
+    "language": "en",
+    "status": "active",
+    "status_checked_at": "2026-11-11",
+    "id_check": {
+      "result": "pass",
+      "at": "2026-11-11"
+    },
+    "registered_by": "claude",
+    "registered_at": "2026-11-11",
+    "topics": [
+      {
+        "topic_id": "TOP-000001",
+        "decision": "included",
+        "found_via": "search"
+      }
+    ],
+    "source_type": "paper",
+    "title": "示例论文 B（虚构）",
+    "creators": "示例作者二 等",
+    "container": "示例期刊二",
+    "published": "2024",
+    "identifiers": {
+      "doi": "10.0000/example.0002"
+    },
+    "url": "https://example.org/b",
+    "accessed_at": "2026-11-11",
+    "version_label": "出版版",
+    "access_route": "public_abstract",
+    "access_scope": "abstract_only",
+    "license": "版权所有",
+    "license_class": "copyrighted",
+    "terms": {
+      "no_scraping": false,
+      "no_ai": false,
+      "checked_at": "2026-11-11"
+    },
+    "reading_mode": "ai_assisted",
+    "copy_kept": "none",
+    "external_use": "facts",
+    "handling": "订阅期刊，只用公开摘要",
+    "use": "evidence"
+  },
+  "evidence": [
+    {
+      "id": "EV-000003-001",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "source_id": "SRC-000003",
+      "content_kind": "numeric",
+      "value_qualifier": "gt",
+      "entry_method": "ai",
+      "double_extraction": "agree",
+      "obtained_at": "2026-11-11",
+      "created_by": "claude",
+      "created_at": "2026-11-11",
+      "verification_status": "human_verified",
+      "visibility": "external",
+      "subject_id": "ENT-000001",
+      "sample_label": "Y-2",
+      "level": "component",
+      "indicator": "energy_efficiency",
+      "value_reported": "84",
+      "unit_reported": "%",
+      "value_std": 84,
+      "conditions": {
+        "current_density": {
+          "reported": "80 mA cm-2",
+          "value": 80,
+          "unit": "mA/cm2"
+        },
+        "vanadium_conc": "not_reported",
+        "acid_conc": "not_reported",
+        "temperature": "not_reported"
+      },
+      "evidence_type": "experimental",
+      "obtained_from": "abstract_only",
+      "locator": {
+        "section": "摘要",
+        "text": "摘要"
+      },
+      "snippet": "an energy efficiency above 84% at 80 mA cm-2",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-11"
+      },
+      "verified_by": "yu",
+      "verified_at": "2026-11-11"
+    }
+  ]
+}
