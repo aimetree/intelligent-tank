@@ -1,0 +1,201 @@
+{
+  "source": {
+    "id": "SRC-000004",
+    "language": "en",
+    "status": "active",
+    "status_checked_at": "2026-11-11",
+    "id_check": {
+      "result": "pass",
+      "at": "2026-11-11"
+    },
+    "registered_by": "claude",
+    "registered_at": "2026-11-11",
+    "topics": [
+      {
+        "topic_id": "TOP-000001",
+        "decision": "included",
+        "found_via": "search"
+      }
+    ],
+    "source_type": "patent",
+    "title": "示例专利：一种示例膜及其用途（虚构）",
+    "creators": "示例大学（虚构）",
+    "published": "2023-10-24",
+    "identifiers": {
+      "patent_number": "US0000000B2"
+    },
+    "url": "https://example.org/patent",
+    "accessed_at": "2026-11-11",
+    "version_label": "授权公告",
+    "jurisdiction": "us",
+    "access_route": "public_web",
+    "access_scope": "full",
+    "license": "专利文献公开，页面没有许可声明",
+    "license_class": "unstated",
+    "handling": "专利数据库的公开页面，AI 协助阅读，不留副本",
+    "doc": {
+      "kind": "grant",
+      "application_number": "US00/000,000",
+      "filed": "2019-09-13",
+      "priority_date": "2018-09-14",
+      "granted": "2023-10-24",
+      "applicants": [
+        "示例大学（虚构）"
+      ],
+      "inventors": [
+        "示例发明人甲",
+        "示例发明人乙"
+      ],
+      "family_id": "示例数据库 00000000",
+      "family_members": [
+        "US0000000B2",
+        "CN000000000B",
+        "EP0000000A1",
+        "WO2020000000A1"
+      ],
+      "classifications": [
+        "IPC H01M 8/1023",
+        "CPC H01M 8/188"
+      ],
+      "status": {
+        "stated": "Active（数据库注明是推定）",
+        "checked_in": "示例专利数据库",
+        "checked_at": "2026-11-11"
+      }
+    },
+    "record_verified_by": "yu",
+    "record_verified_at": "2026-11-11",
+    "terms": {
+      "no_scraping": false,
+      "no_ai": false,
+      "checked_at": "2026-11-11"
+    },
+    "reading_mode": "ai_assisted",
+    "copy_kept": "none",
+    "external_use": "facts",
+    "use": "evidence",
+    "fetched_by": "ai_tool"
+  },
+  "samples": [
+    {
+      "label": "实施例 1",
+      "role": "studied",
+      "subject_id": "ENT-000001",
+      "facets": {
+        "fluorine_class": "non_fluorinated",
+        "conduction_type": "acid_doped"
+      }
+    }
+  ],
+  "evidence": [
+    {
+      "id": "EV-000004-001",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "created_by": "claude",
+      "created_at": "2026-11-11",
+      "content_kind": "statement",
+      "verification_status": "human_verified",
+      "subject_id": "ENT-000001",
+      "level": "none",
+      "fact": "patent_claim",
+      "questions": [
+        "Q2"
+      ],
+      "summary": "独立权利要求保护一种示例膜和用它的液流电池（虚构）",
+      "evidence_type": "verified_fact",
+      "obtained_from": "text",
+      "locator": {
+        "item": "权利要求 1",
+        "text": "权利要求 1"
+      },
+      "snippet": "1. A membrane comprising ... (fictional)",
+      "risk": {
+        "tier": "low",
+        "reasons": [],
+        "set_by": "claude",
+        "set_at": "2026-11-11"
+      },
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-11"
+      },
+      "verified_by": "yu",
+      "verified_at": "2026-11-11",
+      "source_id": "SRC-000004",
+      "entry_method": "ai",
+      "double_extraction": "agree",
+      "obtained_at": "2026-11-11",
+      "visibility": "external"
+    },
+    {
+      "id": "EV-000004-002",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "created_by": "claude",
+      "created_at": "2026-11-11",
+      "content_kind": "numeric",
+      "value_qualifier": "eq",
+      "verification_status": "machine_checked",
+      "subject_id": "ENT-000001",
+      "sample_label": "实施例 1",
+      "level": "component",
+      "indicator": "energy_efficiency",
+      "questions": [
+        "Q2"
+      ],
+      "value_reported": "84.0",
+      "unit_reported": "%",
+      "value_std": 84.0,
+      "conditions": {
+        "current_density": {
+          "reported": "80 mA cm-2",
+          "value": 80,
+          "unit": "mA/cm2"
+        },
+        "vanadium_conc": {
+          "reported": "1.6 M",
+          "value": 1.6,
+          "unit": "mol/L"
+        },
+        "acid_conc": {
+          "reported": "3.0 M H2SO4",
+          "value": 3.0,
+          "unit": "mol/L"
+        },
+        "temperature": {
+          "reported": "25 °C",
+          "value": 25,
+          "unit": "degC"
+        }
+      },
+      "series_label": "E1",
+      "evidence_type": "experimental",
+      "obtained_from": "text",
+      "locator": {
+        "section": "实施例 1",
+        "text": "说明书，实施例 1"
+      },
+      "snippet": "an energy efficiency of 84.0% (fictional)",
+      "risk": {
+        "tier": "low",
+        "reasons": [],
+        "set_by": "claude",
+        "set_at": "2026-11-11"
+      },
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-11"
+      },
+      "source_id": "SRC-000004",
+      "entry_method": "ai",
+      "double_extraction": "agree",
+      "obtained_at": "2026-11-11",
+      "visibility": "external"
+    }
+  ]
+}

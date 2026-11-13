@@ -1,0 +1,88 @@
+{
+  "source": {
+    "id": "SRC-000006",
+    "language": "zh",
+    "status": "active",
+    "status_checked_at": "2026-11-11",
+    "id_check": {
+      "result": "pass",
+      "at": "2026-11-11"
+    },
+    "registered_by": "claude",
+    "registered_at": "2026-11-11",
+    "topics": [
+      {
+        "topic_id": "TOP-000001",
+        "decision": "included",
+        "found_via": "search"
+      }
+    ],
+    "source_type": "grant_record",
+    "title": "示例项目：示例膜的研究（虚构）",
+    "creators": "示例基金（虚构）",
+    "published": "2022",
+    "url": "https://example.org/grant",
+    "accessed_at": "2026-11-11",
+    "version_label": "未注明",
+    "jurisdiction": "cn",
+    "access_route": "public_web",
+    "access_scope": "full",
+    "fetched_by": "member_lookup",
+    "license": "页面没有许可声明",
+    "license_class": "unstated",
+    "handling": "成员在官方系统里查后抄录（虚构）",
+    "doc": {
+      "funder": "示例基金（虚构）",
+      "programme": "面上项目（虚构）",
+      "project_number": "00000000",
+      "host": "示例大学（虚构）",
+      "pi": "示例负责人",
+      "amount": 580000,
+      "amount_stated": "58 万元",
+      "currency": "CNY",
+      "start": "2022",
+      "end": "2025"
+    },
+    "record_verified_by": "yu",
+    "record_verified_at": "2026-11-11",
+    "terms": {
+      "no_scraping": false,
+      "no_ai": false,
+      "checked_at": "2026-11-11"
+    },
+    "reading_mode": "ai_assisted",
+    "copy_kept": "none",
+    "external_use": "facts",
+    "use": "evidence"
+  },
+  "evidence": [
+    {
+      "id": "EV-000006-001",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "created_by": "claude",
+      "created_at": "2026-11-11",
+      "content_kind": "statement",
+      "verification_status": "pending",
+      "visibility": "internal",
+      "subject_id": "ENT-000001",
+      "level": "none",
+      "fact": "grant_content",
+      "questions": [
+        "Q5"
+      ],
+      "summary": "项目摘要写到研究示例膜在液流电池里的应用（虚构）",
+      "evidence_type": "verified_fact",
+      "obtained_from": "text",
+      "locator": {
+        "section": "项目摘要",
+        "text": "项目页，摘要"
+      },
+      "snippet": "示例摘要（虚构）",
+      "source_id": "SRC-000006",
+      "entry_method": "ai",
+      "double_extraction": "agree",
+      "obtained_at": "2026-11-11"
+    }
+  ]
+}

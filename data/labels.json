@@ -1,5 +1,5 @@
 {
-  "note": "字段和枚举值的显示名。enums 与 schema 里的枚举一一对应；fields 是对外证据表的列名；units 是单位的显示写法，先放了几个常用的，随指标字典补。",
+  "note": "字段和枚举值的显示名。enums 与 schema 里的枚举一一对应；fields 是对外证据表的列名；flags 是对外显示的标注（validate.display_flags 给出）；units 是单位的显示写法，先放了几个常用的，随指标字典补。",
   "enums": {
     "level": {
       "material": {
@@ -13,6 +13,18 @@
       "system": {
         "zh": "系统",
         "en": "System"
+      },
+      "product_supply": {
+        "zh": "产品与供应",
+        "en": "Product and supply"
+      },
+      "compliance": {
+        "zh": "合规",
+        "en": "Compliance"
+      },
+      "none": {
+        "zh": "不分层",
+        "en": "Not applicable"
       }
     },
     "evidence_type": {
@@ -108,9 +120,21 @@
         "zh": "综述",
         "en": "Review article"
       },
+      "preprint": {
+        "zh": "预印本",
+        "en": "Preprint"
+      },
+      "thesis": {
+        "zh": "学位论文",
+        "en": "Thesis or dissertation"
+      },
       "supplement": {
         "zh": "补充材料",
         "en": "Supplementary material"
+      },
+      "erratum": {
+        "zh": "更正声明",
+        "en": "Correction notice"
       },
       "patent": {
         "zh": "专利文献",
@@ -128,9 +152,33 @@
         "zh": "上市申报与披露文件",
         "en": "Regulatory filing or disclosure"
       },
+      "policy": {
+        "zh": "政策法规",
+        "en": "Law, regulation or policy document"
+      },
+      "standard": {
+        "zh": "标准",
+        "en": "Standard"
+      },
+      "consultancy_report": {
+        "zh": "咨询公司的报告",
+        "en": "Consultancy report"
+      },
+      "government_report": {
+        "zh": "政府部门的报告",
+        "en": "Government or agency report"
+      },
+      "funder_report": {
+        "zh": "基金的报告",
+        "en": "Funder report"
+      },
+      "grant_record": {
+        "zh": "资助记录",
+        "en": "Grant record"
+      },
       "institution_report": {
-        "zh": "机构报告",
-        "en": "Institutional report"
+        "zh": "其他机构的报告",
+        "en": "Other institutional report"
       },
       "metadata_db": {
         "zh": "论文元数据库",
@@ -139,18 +187,6 @@
       "open_database": {
         "zh": "开放数据库",
         "en": "Open database"
-      },
-      "standard": {
-        "zh": "标准",
-        "en": "Standard"
-      },
-      "policy": {
-        "zh": "政策文件",
-        "en": "Policy document"
-      },
-      "paid_report": {
-        "zh": "付费行业报告",
-        "en": "Paid industry report"
       },
       "news": {
         "zh": "新闻与行业资讯",
@@ -264,11 +300,15 @@
     "copy_kept": {
       "none": {
         "zh": "不留",
-        "en": "None kept"
+        "en": "Not kept"
       },
       "local_temp": {
         "zh": "只在本机临时留，不入库",
-        "en": "Temporary local copy only"
+        "en": "Temporary local copy, not stored"
+      },
+      "project_files": {
+        "zh": "放在 Project 的文件区，不入库",
+        "en": "Kept in the Project file area, not stored"
       },
       "snapshot": {
         "zh": "许可允许，留了快照",
@@ -901,6 +941,10 @@
       "none": {
         "zh": "不属于对照",
         "en": "Not part of the comparison"
+      },
+      "BC": {
+        "zh": "B、C 两组共用",
+        "en": "Shared by B and C"
       }
     },
     "step": {
@@ -911,6 +955,10 @@
       "search": {
         "zh": "检索与来源登记",
         "en": "Search and source registration"
+      },
+      "acquisition": {
+        "zh": "来源获取",
+        "en": "Source acquisition"
       },
       "extraction": {
         "zh": "抽取",
@@ -923,6 +971,10 @@
       "verification": {
         "zh": "核验",
         "en": "Verification"
+      },
+      "expert_review": {
+        "zh": "专业复核",
+        "en": "Expert review"
       },
       "comparison": {
         "zh": "可比性与对标",
@@ -943,6 +995,10 @@
       "licensing": {
         "zh": "许可与隔离",
         "en": "Licensing and isolation"
+      },
+      "internal_check": {
+        "zh": "内部核查",
+        "en": "Internal check"
       },
       "other": {
         "zh": "其他",
@@ -1009,6 +1065,10 @@
       "text": {
         "zh": "文本",
         "en": "Text"
+      },
+      "numeric_range": {
+        "zh": "两端的数值",
+        "en": "Numeric range"
       }
     },
     "report_status": {
@@ -1023,6 +1083,336 @@
       "superseded": {
         "zh": "已被取代",
         "en": "Superseded"
+      }
+    },
+    "fetched_by": {
+      "ai_tool": {
+        "zh": "读取工具直接读",
+        "en": "Read directly by the AI reading tool"
+      },
+      "api": {
+        "zh": "脚本经接口取",
+        "en": "Retrieved by script via API"
+      },
+      "member_download": {
+        "zh": "成员下载后上传",
+        "en": "Downloaded by a team member and uploaded"
+      },
+      "member_lookup": {
+        "zh": "成员在官方系统里代查",
+        "en": "Looked up by a team member in the official system"
+      }
+    },
+    "jurisdiction": {
+      "cn": {
+        "zh": "中国",
+        "en": "China"
+      },
+      "uk": {
+        "zh": "英国",
+        "en": "United Kingdom"
+      },
+      "eu": {
+        "zh": "欧盟",
+        "en": "European Union"
+      },
+      "us": {
+        "zh": "美国",
+        "en": "United States"
+      },
+      "intl": {
+        "zh": "国际组织和多国",
+        "en": "International"
+      },
+      "other": {
+        "zh": "其他",
+        "en": "Other"
+      }
+    },
+    "patent_kind": {
+      "application": {
+        "zh": "申请公开",
+        "en": "Published application"
+      },
+      "grant": {
+        "zh": "授权公告",
+        "en": "Granted patent"
+      },
+      "utility_model": {
+        "zh": "实用新型",
+        "en": "Utility model"
+      }
+    },
+    "doc_stage": {
+      "draft": {
+        "zh": "草案或征求意见稿",
+        "en": "Draft"
+      },
+      "in_review": {
+        "zh": "在审",
+        "en": "Under consideration"
+      },
+      "adopted": {
+        "zh": "已通过，未生效",
+        "en": "Adopted, not yet in force"
+      },
+      "in_force": {
+        "zh": "现行或生效",
+        "en": "In force"
+      },
+      "superseded": {
+        "zh": "被代替",
+        "en": "Superseded"
+      },
+      "repealed": {
+        "zh": "废止或失效",
+        "en": "Repealed or expired"
+      },
+      "withdrawn": {
+        "zh": "撤回",
+        "en": "Withdrawn"
+      }
+    },
+    "sample_role": {
+      "studied": {
+        "zh": "研究对象",
+        "en": "Studied membrane"
+      },
+      "baseline": {
+        "zh": "同文基准",
+        "en": "In-paper benchmark"
+      },
+      "control": {
+        "zh": "同文对照（未改性的原膜）",
+        "en": "Unmodified parent membrane"
+      },
+      "other_reference": {
+        "zh": "作者另拿来对照的膜",
+        "en": "Other reference membrane"
+      }
+    },
+    "baseline_form": {
+      "as_received": {
+        "zh": "原样",
+        "en": "As received"
+      },
+      "pretreated": {
+        "zh": "预处理过",
+        "en": "Pretreated"
+      },
+      "recast": {
+        "zh": "重铸",
+        "en": "Recast"
+      },
+      "not_reported": {
+        "zh": "原文没写",
+        "en": "Not reported"
+      }
+    },
+    "baseline_class": {
+      "commercial": {
+        "zh": "商业膜（原样或预处理过）",
+        "en": "Commercial membrane"
+      },
+      "recast": {
+        "zh": "重铸的全氟磺酸膜",
+        "en": "Recast PFSA membrane"
+      }
+    },
+    "core_check": {
+      "found": {
+        "zh": "找到了",
+        "en": "Found"
+      },
+      "not_reported": {
+        "zh": "原文没有报告",
+        "en": "Not reported"
+      },
+      "not_applicable": {
+        "zh": "不适用",
+        "en": "Not applicable"
+      }
+    },
+    "indicator_origin": {
+      "conventional": {
+        "zh": "传统公认",
+        "en": "Conventional"
+      },
+      "policy_trend": {
+        "zh": "政策、规范与行业新趋势",
+        "en": "Policy, standards and industry trends"
+      },
+      "search_found": {
+        "zh": "检索里出现",
+        "en": "Emerging in the literature"
+      },
+      "prior_decision": {
+        "zh": "已定内容",
+        "en": "Previously decided content"
+      }
+    },
+    "indicator_grade": {
+      "core": {
+        "zh": "核心",
+        "en": "Core"
+      },
+      "extended": {
+        "zh": "扩展",
+        "en": "Extended"
+      }
+    },
+    "indicator_entry": {
+      "evidence": {
+        "zh": "录成证据",
+        "en": "Recorded as evidence"
+      },
+      "derived": {
+        "zh": "由脚本算出，不录入",
+        "en": "Derived by script"
+      },
+      "relations": {
+        "zh": "用实体和关系表达",
+        "en": "Expressed as entities and relations"
+      }
+    },
+    "facet_scope": {
+      "membrane": {
+        "zh": "每一张膜",
+        "en": "Each membrane"
+      },
+      "material_class": {
+        "zh": "材料族",
+        "en": "Material family"
+      }
+    },
+    "risk_tier": {
+      "high": {
+        "zh": "高",
+        "en": "High"
+      },
+      "medium": {
+        "zh": "中",
+        "en": "Medium"
+      },
+      "low": {
+        "zh": "低",
+        "en": "Low"
+      }
+    },
+    "risk_reason": {
+      "figure_read": {
+        "zh": "图上读数",
+        "en": "Read from a figure"
+      },
+      "extraction_mismatch": {
+        "zh": "两遍抽取不一致",
+        "en": "Two extractions disagreed"
+      },
+      "machine_check_failed": {
+        "zh": "机器核对没通过",
+        "en": "Machine check failed"
+      },
+      "outlier": {
+        "zh": "数值离群",
+        "en": "Outlier"
+      },
+      "unit_converted": {
+        "zh": "经过单位换算",
+        "en": "Unit converted"
+      },
+      "conditions_elsewhere": {
+        "zh": "条件和数值不在原文的同一处",
+        "en": "Conditions stated elsewhere"
+      },
+      "multiple_samples_or_tables": {
+        "zh": "同一来源里有多个样品或多张表",
+        "en": "Several samples or tables in the source"
+      },
+      "from_supplement": {
+        "zh": "取自补充材料",
+        "en": "From supplementary material"
+      },
+      "qualified_value": {
+        "zh": "原文用了“约”“高于”这类限定",
+        "en": "Qualified value (approx., above, below)"
+      },
+      "other": {
+        "zh": "其他",
+        "en": "Other"
+      }
+    },
+    "review_status": {
+      "draft": {
+        "zh": "起草中",
+        "en": "Draft"
+      },
+      "sent": {
+        "zh": "已交复核人",
+        "en": "With reviewer"
+      },
+      "closed": {
+        "zh": "已复核",
+        "en": "Reviewed"
+      }
+    },
+    "review_reason": {
+      "missing_condition": {
+        "zh": "条件缺失或含糊",
+        "en": "Missing or ambiguous condition"
+      },
+      "tier_ambiguous": {
+        "zh": "可比档有两种归法",
+        "en": "Tier could go either way"
+      },
+      "misassigned": {
+        "zh": "层级或对象可能归错",
+        "en": "Level or object may be wrong"
+      },
+      "baseline_anomaly": {
+        "zh": "基准膜的数值异常",
+        "en": "Benchmark value looks unusual"
+      },
+      "outlier": {
+        "zh": "数值离群",
+        "en": "Outlier"
+      },
+      "conflict": {
+        "zh": "来源之间矛盾",
+        "en": "Sources disagree"
+      },
+      "definition_mismatch": {
+        "zh": "定义不一致",
+        "en": "Definition differs"
+      },
+      "classification_uncertain": {
+        "zh": "分类拿不准",
+        "en": "Classification uncertain"
+      },
+      "claim_without_conditions": {
+        "zh": "企业声明没有条件",
+        "en": "Company claim without conditions"
+      },
+      "overview": {
+        "zh": "数据概览的陈述",
+        "en": "Data overview statement"
+      },
+      "other": {
+        "zh": "其他",
+        "en": "Other"
+      }
+    },
+    "review_decision": {
+      "confirm": {
+        "zh": "同意",
+        "en": "Confirmed"
+      },
+      "modify": {
+        "zh": "改",
+        "en": "Modified"
+      },
+      "pending": {
+        "zh": "未定",
+        "en": "Pending"
       }
     }
   },
@@ -1110,6 +1500,56 @@
     "comparison": {
       "zh": "所在可比组和档别",
       "en": "Comparison set and tier"
+    },
+    "source_type": {
+      "zh": "来源类别",
+      "en": "Source type"
+    },
+    "jurisdiction": {
+      "zh": "法域",
+      "en": "Jurisdiction"
+    },
+    "questions": {
+      "zh": "对应的问题",
+      "en": "Question"
+    },
+    "fact": {
+      "zh": "事实项",
+      "en": "Item"
+    },
+    "flags": {
+      "zh": "标注",
+      "en": "Notes"
+    }
+  },
+  "flags": {
+    "preprint": {
+      "zh": "预印本，未经同行评议",
+      "en": "Preprint, not peer reviewed"
+    },
+    "patent_example": {
+      "zh": "专利实施例，未经同行评议",
+      "en": "Patent example, not peer reviewed"
+    },
+    "company_claim": {
+      "zh": "企业声明",
+      "en": "Company claim"
+    },
+    "figure_read": {
+      "zh": "图上读数",
+      "en": "Read from figure"
+    },
+    "abstract_only": {
+      "zh": "仅摘要",
+      "en": "Abstract only"
+    },
+    "thesis": {
+      "zh": "学位论文",
+      "en": "Thesis"
+    },
+    "not_purchased": {
+      "zh": "付费来源，只用了公开部分",
+      "en": "Paid source, public part only"
     }
   },
   "units": {
@@ -1124,6 +1564,11 @@
     "S/cm": "S cm⁻¹",
     "ohm*cm2": "Ω cm²",
     "mohm*cm2": "mΩ cm²",
-    "cm2/min": "cm² min⁻¹"
+    "cm2/min": "cm² min⁻¹",
+    "GWh": "GWh",
+    "h": "h",
+    "V": "V",
+    "mL": "mL",
+    "mL/min": "mL min⁻¹"
   }
 }

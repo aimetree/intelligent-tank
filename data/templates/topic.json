@@ -12,19 +12,32 @@
   "scope_in": "<必填：范围>",
   "scope_out": "<必填：不包括什么>",
   "levels": [
-    "<必填：material｜component｜system>"
+    "<必填：material｜component｜system｜product_supply｜compliance｜none>"
   ],
   "time_window": {
     "from": "<必填：YYYY-MM-DD，可以只到年或月>",
-    "earlier_rule": "<更早的文献怎么处理>"
+    "earlier_rule": "<更早的文献怎么处理>",
+    "exceptions": [
+      {
+        "applies_to": "<必填：对哪一部分>",
+        "rule": "<必填：怎么算>"
+      }
+    ]
   },
   "evidence_source_types": [
-    "<必填：paper｜review｜supplement｜patent｜datasheet｜company_web｜filing｜institution_report｜metadata_db｜open_database｜standard｜policy｜paid_report｜news｜client_material｜other>"
+    "<必填：paper｜review｜preprint｜thesis｜supplement｜erratum｜patent｜datasheet｜company_web｜filing｜policy｜standard｜consultancy_report｜government_report｜funder_report｜grant_record｜institution_report｜metadata_db｜open_database｜news｜client_material｜other>"
   ],
   "facets": [
     {
       "key": "<必填：键，英文小写加下划线>",
       "name": "<必填：名称>",
+      "applies_to": "<必填：membrane｜material_class>",
+      "required": false,
+      "only_when": {
+        "<键>": [
+          "<>"
+        ]
+      },
       "values": [
         "<取值>"
       ]

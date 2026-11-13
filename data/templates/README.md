@@ -11,11 +11,12 @@
 |---|---|---|---|
 | `topic.json` | 题目卡 | `public/topics/TOP-编号/topic.json` | `id`、`title`、`direction`、`status`、`questions`、`scope_in`、`scope_out`、`levels`、`evidence_source_types`、`report_languages` |
 | `dictionary.json` | 指标字典 | `public/topics/TOP-编号/dictionary.json` | `topic_id`、`version`、`status`、`conditions`、`indicators`、`rules` |
-| `source_file.json` | 来源文件（来源登记加它的证据） | `public/sources/SRC-编号.json` | 来源：`id`、`source_type`、`title`、`creators`、`published`、`url`、`accessed_at`、`version_label`、`language`、`access_route`、`access_scope`、`license`、`license_class`、`terms`、`reading_mode`、`copy_kept`、`external_use`、`handling`、`use`、`topics`、`status`、`status_checked_at`、`registered_by`、`registered_at`<br>证据：`id`、`topic_id`、`record_version`、`created_by`、`created_at`、`subject_id`、`level`、`content_kind`、`evidence_type`、`source_id`、`locator`、`obtained_from`、`entry_method`、`double_extraction`、`obtained_at`、`verification_status`、`visibility` |
+| `source_file.json` | 来源文件（来源登记、样品登记和它的证据） | `public/sources/SRC-编号.json` | 来源：`id`、`source_type`、`title`、`creators`、`published`、`url`、`accessed_at`、`version_label`、`language`、`access_route`、`access_scope`、`fetched_by`、`license`、`license_class`、`terms`、`reading_mode`、`copy_kept`、`external_use`、`handling`、`use`、`topics`、`status`、`status_checked_at`、`registered_by`、`registered_at`<br>样品登记：`label`、`role`、`subject_id`<br>证据：`id`、`topic_id`、`record_version`、`created_by`、`created_at`、`subject_id`、`level`、`content_kind`、`evidence_type`、`source_id`、`locator`、`obtained_from`、`entry_method`、`double_extraction`、`obtained_at`、`verification_status`、`visibility` |
 | `entity.json` | 实体 | `public/entities.json（数组里的一项）` | `id`、`entity_type`、`name`、`identity_status`、`visibility` |
 | `relation.json` | 关系 | `public/relations.json（数组里的一项）` | `id`、`subject`、`relation_type`、`object`、`basis`、`is_key`、`verification_status`、`visibility` |
 | `comparison.json` | 可比组 | `public/topics/TOP-编号/comparisons.json（数组里的一项）` | `id`、`topic_id`、`title`、`level`、`indicators`、`tier`、`tier_reason`、`normalization`、`members`、`status`、`visibility` |
 | `assessment.json` | 判断（可选） | `public/topics/TOP-编号/assessments.json（数组里的一项）` | `id`、`topic_id`、`layer`、`statement`、`basis`、`status`、`drafted_by`、`visibility` |
+| `review.json` | 复核单 | `public/topics/TOP-编号/reviews.json（数组里的一项）` | `id`、`topic_id`、`title`、`status`、`created_by`、`created_at`、`items` |
 | `report.json` | 报告登记 | `public/topics/TOP-编号/reports.json（数组里的一项）` | `id`、`topic_id`、`title`、`language`、`version`、`status` |
 | `change.json` | 变化记录 | `changes.jsonl（一行一条）` | `id`、`date`、`kind`、`target_id`、`reason`、`impact`、`recorded_by` |
 | `worklog.json` | 工作记录 | `worklog.jsonl（一行一条）` | `id`、`date`、`topic_id`、`arm`、`step`、`actor_kind`、`actor`、`summary` |

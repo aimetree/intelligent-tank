@@ -8,6 +8,10 @@
   "recipient": "<给谁>",
   "status": "<必填：draft｜issued｜superseded>",
   "data_version": "<数据版本>",
+  "dictionary_version": "<指标字典的版本>",
+  "skill_version": "<所用报告 skill 的版本>",
+  "file": "<报告文件在仓库里的位置>",
+  "evidence_file": "<随报告给的全部证据数据文件>",
   "evidence_ids": [
     "<EV-000000-000>"
   ],
@@ -20,5 +24,7 @@
   "asm_ids": [
     "<ASM-000000>"
   ],
-  "supersedes": "<RPT-000000>"
+  "supersedes": "<RPT-000000>",
+  "change_note": "<与上一版相比的变化>",
+  "other_language": "<RPT-000000>"
 }

@@ -3,12 +3,17 @@
   "version": "<必填：字典版本>",
   "status": "<必填：draft｜confirmed>",
   "confirmed_by": "<kai｜yu｜claude｜script｜expert-01>",
+  "level_conditions": {
+    "<键>": [
+      "<键名，英文小写加下划线>"
+    ]
+  },
   "conditions": [
     {
       "key": "<必填：键，英文小写加下划线>",
       "name_zh": "<必填：中文名>",
       "name_en": "<英文名>",
-      "value_kind": "<必填：numeric｜category｜text>",
+      "value_kind": "<必填：numeric｜numeric_range｜category｜text>",
       "unit_std": "<标准单位>",
       "allowed_values": [
         "<取值>"
@@ -19,12 +24,45 @@
   "indicators": [
     {
       "key": "<必填：键，英文小写加下划线>",
+      "list_no": "<指标清单里的编号>",
       "name_zh": "<必填：中文名>",
       "name_en": "<英文名>",
       "aliases": [
         "<别名>"
       ],
-      "level": "<必填：material｜component｜system>",
+      "level": "<必填：material｜component｜system｜product_supply｜compliance｜none>",
+      "origin": "<必填：conventional｜policy_trend｜search_found｜prior_decision>",
+      "grade": "<必填：core｜extended>",
+      "entry": "<evidence｜derived｜relations>",
+      "value_kind": "<必填：numeric｜category｜statement>",
+      "unit_std": "<标准单位>",
+      "units_accepted": [
+        {
+          "unit": "<必填：单位>",
+          "factor": 0
+        }
+      ],
+      "allowed_values": [
+        "<取值>"
+      ],
+      "required_conditions": [
+        "<必填：键名，英文小写加下划线>"
+      ],
+      "optional_conditions": [
+        "<键名，英文小写加下划线>"
+      ],
+      "definition": "<定义>",
+      "status": "<draft｜confirmed>",
+      "notes": "<备注>"
+    }
+  ],
+  "facts": [
+    {
+      "key": "<必填：键，英文小写加下划线>",
+      "name_zh": "<必填：中文名>",
+      "name_en": "<英文名>",
+      "question": "<必填：对应的问题>",
+      "level": "<必填：material｜component｜system｜product_supply｜compliance｜none>",
       "value_kind": "<必填：numeric｜category｜statement>",
       "unit_std": "<标准单位>",
       "units_accepted": [
@@ -54,8 +92,11 @@
       "applies_to": [
         "<必填：键名，英文小写加下划线>"
       ],
-      "level": "<必填：material｜component｜system>",
+      "level": "<必填：material｜component｜system｜product_supply｜compliance｜none>",
       "statement": "<必填：规则内容>",
+      "key_conditions": [
+        "<键名，英文小写加下划线>"
+      ],
       "tier_if_met": "<必填：direct｜conditional｜reference｜insufficient>",
       "normalization": "<必填：none｜unit｜ratio_to_baseline｜other>",
       "status": "<draft｜confirmed>",

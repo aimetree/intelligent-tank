@@ -1,7 +1,15 @@
 {
   "topic_id": "TOP-000001",
-  "version": "0.1-example",
+  "version": "0.2-example",
   "status": "draft",
+  "level_conditions": {
+    "component": [
+      "current_density",
+      "vanadium_conc",
+      "acid_conc",
+      "temperature"
+    ]
+  },
   "conditions": [
     {
       "key": "current_density",
@@ -39,21 +47,49 @@
       "unit_std": "um"
     },
     {
+      "key": "cutoff_voltage",
+      "name_zh": "充放电截止电压",
+      "name_en": "Cut-off voltages",
+      "value_kind": "numeric_range",
+      "unit_std": "V"
+    },
+    {
       "key": "test_medium",
       "name_zh": "测试介质",
       "name_en": "Test medium",
+      "value_kind": "text"
+    },
+    {
+      "key": "year",
+      "name_zh": "年份",
+      "name_en": "Year",
+      "value_kind": "text"
+    },
+    {
+      "key": "region",
+      "name_zh": "范围",
+      "name_en": "Region",
+      "value_kind": "text"
+    },
+    {
+      "key": "basis",
+      "name_zh": "口径",
+      "name_en": "Basis",
       "value_kind": "text"
     }
   ],
   "indicators": [
     {
       "key": "energy_efficiency",
+      "list_no": "IN-12",
       "name_zh": "能量效率",
       "name_en": "Energy efficiency",
       "aliases": [
         "EE"
       ],
       "level": "component",
+      "origin": "conventional",
+      "grade": "core",
       "value_kind": "numeric",
       "unit_std": "%",
       "units_accepted": [
@@ -73,18 +109,22 @@
         "temperature"
       ],
       "optional_conditions": [
-        "thickness"
+        "thickness",
+        "cutoff_voltage"
       ],
       "status": "draft"
     },
     {
       "key": "area_resistance",
+      "list_no": "IN-02",
       "name_zh": "面电阻",
       "name_en": "Area resistance",
       "aliases": [
         "ASR"
       ],
       "level": "material",
+      "origin": "conventional",
+      "grade": "core",
       "value_kind": "numeric",
       "unit_std": "ohm*cm2",
       "units_accepted": [
@@ -104,17 +144,121 @@
       ],
       "optional_conditions": [],
       "status": "draft"
+    },
+    {
+      "key": "max_current_density",
+      "list_no": "IN-16",
+      "name_zh": "最高测试电流密度",
+      "name_en": "Highest tested current density",
+      "level": "component",
+      "origin": "policy_trend",
+      "grade": "core",
+      "entry": "derived",
+      "value_kind": "numeric",
+      "unit_std": "mA/cm2",
+      "units_accepted": [
+        {
+          "unit": "mA/cm2",
+          "factor": 1
+        }
+      ],
+      "required_conditions": [
+        "current_density",
+        "vanadium_conc",
+        "acid_conc",
+        "temperature"
+      ],
+      "status": "draft",
+      "notes": "不单独录入，由脚本从同一批测试的效率里取电流密度最大的那一条（示例）"
+    },
+    {
+      "key": "pfas_scope",
+      "list_no": "IN-39",
+      "name_zh": "是否在 PFAS 限制提案范围内",
+      "name_en": "Within the PFAS restriction proposal",
+      "level": "compliance",
+      "origin": "policy_trend",
+      "grade": "extended",
+      "value_kind": "category",
+      "allowed_values": [
+        "in_scope",
+        "out_of_scope",
+        "to_check"
+      ],
+      "required_conditions": [],
+      "status": "draft",
+      "notes": "逐个按结构判断，不由含氟类别推出；判断不了的记 to_check（示例）"
+    }
+  ],
+  "facts": [
+    {
+      "key": "patent_claim",
+      "name_zh": "专利保护的材料和做法",
+      "name_en": "What the patent claims",
+      "question": "Q2",
+      "level": "none",
+      "value_kind": "statement",
+      "required_conditions": [],
+      "status": "draft"
+    },
+    {
+      "key": "policy_clause",
+      "name_zh": "政策法规和标准的有关条款",
+      "name_en": "Relevant clause",
+      "question": "Q3",
+      "level": "none",
+      "value_kind": "statement",
+      "required_conditions": [],
+      "status": "draft"
+    },
+    {
+      "key": "deployment",
+      "name_zh": "装机",
+      "name_en": "Deployment",
+      "question": "Q4",
+      "level": "none",
+      "value_kind": "numeric",
+      "unit_std": "GWh",
+      "units_accepted": [
+        {
+          "unit": "GWh",
+          "factor": 1
+        },
+        {
+          "unit": "MWh",
+          "factor": 0.001
+        }
+      ],
+      "required_conditions": [
+        "year",
+        "region",
+        "basis"
+      ],
+      "status": "draft"
+    },
+    {
+      "key": "grant_content",
+      "name_zh": "资助项目里与膜有关的内容",
+      "name_en": "Membrane-related content of the grant",
+      "question": "Q5",
+      "level": "none",
+      "value_kind": "statement",
+      "required_conditions": [],
+      "status": "draft"
     }
   ],
   "rules": [
     {
       "key": "same_conditions",
-      "name": "条件一致才直接比",
+      "name": "同文同批、条件一致才直接比",
       "applies_to": [
         "energy_efficiency"
       ],
       "level": "component",
-      "statement": "电流密度、电解液组成、温度一致",
+      "statement": "同一来源、同一批测试，电流密度、电解液组成、温度一致",
+      "key_conditions": [
+        "current_density"
+      ],
       "tier_if_met": "direct",
       "normalization": "none",
       "status": "draft"
@@ -126,9 +270,24 @@
         "energy_efficiency"
       ],
       "level": "component",
-      "statement": "各来源先与本来源的基准膜相比，再跨来源比较比值",
+      "statement": "各来源先与本来源的基准膜相比，按基准膜型号分组，再跨来源比较比值",
       "tier_if_met": "conditional",
       "normalization": "ratio_to_baseline",
+      "status": "draft"
+    },
+    {
+      "key": "cross_source",
+      "name": "跨来源并排",
+      "applies_to": [
+        "energy_efficiency"
+      ],
+      "level": "component",
+      "statement": "不同来源，电流密度相同的可以并排，其余条件的差异列出",
+      "key_conditions": [
+        "current_density"
+      ],
+      "tier_if_met": "conditional",
+      "normalization": "none",
       "status": "draft"
     }
   ]

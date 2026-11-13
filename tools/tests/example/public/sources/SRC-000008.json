@@ -1,0 +1,52 @@
+{
+  "source": {
+    "id": "SRC-000008",
+    "language": "en",
+    "status": "active",
+    "status_checked_at": "2026-11-11",
+    "id_check": {
+      "result": "pass",
+      "at": "2026-11-11"
+    },
+    "registered_by": "claude",
+    "registered_at": "2026-11-11",
+    "topics": [
+      {
+        "topic_id": "TOP-000001",
+        "decision": "excluded",
+        "found_via": "citation",
+        "exclusion_reason": "E7 同一工作的另一个版本：照预印本取数，正式版只登记题录（示例）"
+      }
+    ],
+    "source_type": "paper",
+    "title": "示例预印本的正式版（虚构）",
+    "creators": "示例作者三 等",
+    "container": "示例期刊三",
+    "published": "2024-04",
+    "identifiers": {
+      "doi": "10.0000/example.0008"
+    },
+    "url": "https://doi.org/10.0000/example.0008",
+    "accessed_at": "2026-11-11",
+    "version_label": "出版版",
+    "version_of": [
+      "SRC-000007"
+    ],
+    "access_route": "metadata",
+    "access_scope": "metadata_only",
+    "fetched_by": "api",
+    "license": "不开放",
+    "license_class": "copyrighted",
+    "external_use": "link_only",
+    "handling": "不开放，只登记题录；数据照预印本取（示例）",
+    "terms": {
+      "no_scraping": false,
+      "no_ai": false,
+      "checked_at": "2026-11-11"
+    },
+    "reading_mode": "ai_assisted",
+    "copy_kept": "none",
+    "use": "evidence"
+  },
+  "evidence": []
+}

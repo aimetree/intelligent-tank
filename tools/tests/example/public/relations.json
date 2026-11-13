@@ -39,5 +39,21 @@
     "is_key": true,
     "verification_status": "pending",
     "visibility": "internal"
+  },
+  {
+    "id": "REL-000004",
+    "subject": "SRC-000001",
+    "relation_type": "funded_by",
+    "object": "SRC-000006",
+    "basis": "sourced",
+    "source_id": "SRC-000001",
+    "locator": {
+      "section": "致谢",
+      "text": "致谢"
+    },
+    "summary": "论文致谢写明受这个项目资助（虚构）",
+    "is_key": false,
+    "verification_status": "pending",
+    "visibility": "internal"
   }
 ]

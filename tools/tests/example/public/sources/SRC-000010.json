@@ -1,0 +1,49 @@
+{
+  "source": {
+    "id": "SRC-000010",
+    "language": "en",
+    "status": "active",
+    "status_checked_at": "2026-11-11",
+    "id_check": {
+      "result": "pass",
+      "at": "2026-11-11"
+    },
+    "registered_by": "claude",
+    "registered_at": "2026-11-11",
+    "topics": [
+      {
+        "topic_id": "TOP-000001",
+        "decision": "included",
+        "found_via": "citation"
+      }
+    ],
+    "source_type": "erratum",
+    "title": "示例论文 B 的更正声明（虚构）",
+    "creators": "示例作者二 等",
+    "container": "示例期刊二",
+    "published": "2025",
+    "identifiers": {
+      "doi": "10.0000/example.0010"
+    },
+    "url": "https://example.org/b-corr",
+    "accessed_at": "2026-11-11",
+    "version_label": "更正声明",
+    "corrects": "SRC-000003",
+    "access_route": "public_web",
+    "access_scope": "full",
+    "license": "版权所有",
+    "license_class": "copyrighted",
+    "handling": "出版方页面上的更正声明，AI 协助阅读",
+    "terms": {
+      "no_scraping": false,
+      "no_ai": false,
+      "checked_at": "2026-11-11"
+    },
+    "reading_mode": "ai_assisted",
+    "copy_kept": "none",
+    "external_use": "facts",
+    "use": "evidence",
+    "fetched_by": "ai_tool"
+  },
+  "evidence": []
+}

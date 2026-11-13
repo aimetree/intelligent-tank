@@ -17,11 +17,12 @@ OUT = os.path.join(REPO, "data", "templates")
 OBJECTS = [
     ("topic", "题目卡", "topic.json", "public/topics/TOP-编号/topic.json"),
     ("dictionary", "指标字典", "dictionary.json", "public/topics/TOP-编号/dictionary.json"),
-    ("source_file", "来源文件（来源登记加它的证据）", "source_file.json", "public/sources/SRC-编号.json"),
+    ("source_file", "来源文件（来源登记、样品登记和它的证据）", "source_file.json", "public/sources/SRC-编号.json"),
     ("entity", "实体", "entity.json", "public/entities.json（数组里的一项）"),
     ("relation", "关系", "relation.json", "public/relations.json（数组里的一项）"),
     ("comparison", "可比组", "comparison.json", "public/topics/TOP-编号/comparisons.json（数组里的一项）"),
     ("assessment", "判断（可选）", "assessment.json", "public/topics/TOP-编号/assessments.json（数组里的一项）"),
+    ("review", "复核单", "review.json", "public/topics/TOP-编号/reviews.json（数组里的一项）"),
     ("report", "报告登记", "report.json", "public/topics/TOP-编号/reports.json（数组里的一项）"),
     ("change", "变化记录", "change.json", "changes.jsonl（一行一条）"),
     ("worklog", "工作记录", "worklog.json", "worklog.jsonl（一行一条）"),
@@ -79,7 +80,9 @@ def build(schema):
     for name, label, fname, where in OBJECTS:
         files[fname] = json.dumps(placeholder(defs[name], defs), ensure_ascii=False, indent=2) + "\n"
         if name == "source_file":
-            req = "来源：" + "、".join(f"`{k}`" for k in defs["source"]["required"]) + "<br>证据：" + "、".join(f"`{k}`" for k in defs["evidence"]["required"])
+            req = ("来源：" + "、".join(f"`{k}`" for k in defs["source"]["required"])
+                   + "<br>样品登记：" + "、".join(f"`{k}`" for k in defs["sample"]["required"])
+                   + "<br>证据：" + "、".join(f"`{k}`" for k in defs["evidence"]["required"]))
         else:
             req = "、".join(f"`{k}`" for k in defs[name]["required"])
         rows.append(f"| `{fname}` | {label} | `{where}` | {req} |")

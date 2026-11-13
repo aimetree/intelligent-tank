@@ -2,10 +2,10 @@
   {
     "id": "ENT-000001",
     "entity_type": "material_class",
-    "name": "示例非氟膜类别 N（虚构）",
+    "name": "示例非氟材料族 N（虚构）",
     "aliases": [],
     "facets": {
-      "fluorine": "non_fluorinated"
+      "material_family": "pbi"
     },
     "identity_status": "confirmed",
     "confirmed_by": "kai",
@@ -15,10 +15,10 @@
   {
     "id": "ENT-000002",
     "entity_type": "material_class",
-    "name": "示例全氟膜类别 F（虚构）",
+    "name": "示例全氟磺酸族 F（虚构）",
     "aliases": [],
     "facets": {
-      "fluorine": "pfsa"
+      "material_family": "pfsa"
     },
     "identity_status": "confirmed",
     "confirmed_by": "kai",
@@ -36,6 +36,10 @@
     "identifiers": {
       "model": "P-212"
     },
+    "facets": {
+      "fluorine_class": "perfluorinated",
+      "conduction_type": "cation_exchange"
+    },
     "identity_status": "confirmed",
     "confirmed_by": "kai",
     "confirmed_at": "2026-11-11",
@@ -44,18 +48,18 @@
   {
     "id": "ENT-000004",
     "entity_type": "organization",
-    "org_kind": "company",
     "name": "示例膜公司（虚构）",
     "aliases": [],
+    "org_kind": "company",
     "identity_status": "id_matched",
     "visibility": "external"
   },
   {
     "id": "ENT-000005",
     "entity_type": "organization",
-    "org_kind": "team",
     "name": "示例课题组（虚构）",
     "aliases": [],
+    "org_kind": "team",
     "identity_status": "candidate",
     "visibility": "internal"
   },
@@ -67,6 +71,37 @@
     "identifiers": {
       "family_id": "00000000"
     },
+    "identity_status": "id_matched",
+    "visibility": "external"
+  },
+  {
+    "id": "ENT-000007",
+    "entity_type": "material_class",
+    "name": "示例磺化聚酰亚胺族 S（虚构）",
+    "aliases": [],
+    "facets": {
+      "material_family": "sulfonated_polyimide"
+    },
+    "identity_status": "confirmed",
+    "confirmed_by": "kai",
+    "confirmed_at": "2026-11-11",
+    "visibility": "external"
+  },
+  {
+    "id": "ENT-000008",
+    "entity_type": "material_class",
+    "name": "示例技术类别：示例液流电池（虚构）",
+    "aliases": [],
+    "notes": "技术类别，用作报告数字和政策条文的对象",
+    "identity_status": "id_matched",
+    "visibility": "external"
+  },
+  {
+    "id": "ENT-000009",
+    "entity_type": "organization",
+    "name": "示例基金（虚构）",
+    "aliases": [],
+    "org_kind": "funder",
     "identity_status": "id_matched",
     "visibility": "external"
   }

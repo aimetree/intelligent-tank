@@ -1,0 +1,38 @@
+[
+  {
+    "id": "RVW-000001",
+    "topic_id": "TOP-000001",
+    "comparison_id": "CMP-000001",
+    "title": "CMP-000001 的复核单（示例）",
+    "status": "closed",
+    "created_by": "claude",
+    "created_at": "2026-11-11",
+    "reviewer": "kai",
+    "reviewed_at": "2026-11-11",
+    "items": [
+      {
+        "target_id": "CMP-000001",
+        "reason": "tier_ambiguous",
+        "why": "同一批测试，条件齐全（虚构）",
+        "suggestion": "定为直接可比",
+        "decision": "confirm"
+      },
+      {
+        "target_id": "EV-000001-002",
+        "reason": "baseline_anomaly",
+        "why": "基准膜的数比同型号常见的值偏低（虚构）",
+        "suggestion": "比值照列，组上注明",
+        "decision": "confirm"
+      }
+    ],
+    "batch": {
+      "evidence_ids": [
+        "EV-000001-001"
+      ],
+      "sampled": [
+        "EV-000001-001"
+      ],
+      "decision": "confirm"
+    }
+  }
+]

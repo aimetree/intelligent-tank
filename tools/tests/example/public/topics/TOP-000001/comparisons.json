@@ -2,7 +2,7 @@
   {
     "id": "CMP-000001",
     "topic_id": "TOP-000001",
-    "title": "同一来源、相同条件下的能量效率",
+    "title": "同一来源、同一批测试的能量效率",
     "question": "Q1",
     "level": "component",
     "indicators": [
@@ -32,7 +32,7 @@
   {
     "id": "CMP-000002",
     "topic_id": "TOP-000001",
-    "title": "跨来源：与各自基准膜之比",
+    "title": "跨来源：与各自基准膜之比（相对 P-212）",
     "question": "Q1",
     "level": "component",
     "indicators": [
@@ -40,8 +40,10 @@
     ],
     "rule": "ratio_to_baseline",
     "tier": "conditional",
-    "tier_reason": "各来源条件不同，用与基准膜之比对齐",
+    "tier_reason": "各来源条件不同，用与同型号基准膜之比对齐",
     "normalization": "ratio_to_baseline",
+    "baseline_subject_id": "ENT-000003",
+    "baseline_class": "commercial",
     "members": [
       {
         "evidence_id": "EV-000001-001",
@@ -52,9 +54,50 @@
         "role": "baseline"
       },
       {
+        "evidence_id": "EV-000007-001",
+        "role": "member"
+      },
+      {
+        "evidence_id": "EV-000007-002",
+        "role": "baseline"
+      },
+      {
         "evidence_id": "EV-000003-001",
         "role": "reference",
         "note": "仅摘要，条件不全"
+      }
+    ],
+    "status": "draft",
+    "visibility": "internal"
+  },
+  {
+    "id": "CMP-000003",
+    "topic_id": "TOP-000001",
+    "title": "跨来源：80 mA cm-2 下的能量效率",
+    "question": "Q1",
+    "level": "component",
+    "indicators": [
+      "energy_efficiency"
+    ],
+    "rule": "cross_source",
+    "tier": "conditional",
+    "tier_reason": "电流密度相同，其余条件的差异列出",
+    "normalization": "none",
+    "condition_envelope": {
+      "current_density": {
+        "reported": "80 mA cm-2",
+        "value": 80,
+        "unit": "mA/cm2"
+      }
+    },
+    "members": [
+      {
+        "evidence_id": "EV-000001-001",
+        "role": "member"
+      },
+      {
+        "evidence_id": "EV-000004-002",
+        "role": "member"
       }
     ],
     "status": "draft",

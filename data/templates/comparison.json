@@ -3,7 +3,7 @@
   "topic_id": "<必填：TOP-000000>",
   "title": "<必填：名称>",
   "question": "<对应题目卡的哪个问题>",
-  "level": "<必填：material｜component｜system>",
+  "level": "<必填：material｜component｜system｜product_supply｜compliance｜none>",
   "indicators": [
     "<必填：键名，英文小写加下划线>"
   ],
@@ -12,13 +12,21 @@
   "tier_reason": "<必填：定档理由>",
   "normalization": "<必填：none｜unit｜ratio_to_baseline｜other>",
   "normalization_note": "<归一化说明>",
+  "baseline_subject_id": "<ENT-000000>",
+  "baseline_class": "<commercial｜recast>",
   "condition_envelope": {
     "<键>": {
       "reported": "<必填：原文写法>",
       "value": 0,
-      "unit": "<单位>"
+      "unit": "<单位>",
+      "low": 0,
+      "high": 0
     }
   },
+  "missing_conditions": [
+    "<键名，英文小写加下划线>"
+  ],
+  "same_setup_note": "<同一套条件的依据>",
   "members": [
     {
       "evidence_id": "<必填：EV-000000-000>",

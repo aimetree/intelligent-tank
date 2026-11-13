@@ -1,0 +1,95 @@
+{
+  "source": {
+    "id": "SRC-000011",
+    "language": "en",
+    "status": "active",
+    "status_checked_at": "2026-11-11",
+    "id_check": {
+      "result": "pass",
+      "at": "2026-11-11"
+    },
+    "registered_by": "claude",
+    "registered_at": "2026-11-11",
+    "topics": [
+      {
+        "topic_id": "TOP-000001",
+        "decision": "included",
+        "found_via": "search"
+      }
+    ],
+    "source_type": "consultancy_report",
+    "title": "示例行业报告（虚构）",
+    "creators": "示例咨询公司（虚构）",
+    "published": "2026-03",
+    "url": "https://example.org/report",
+    "accessed_at": "2026-11-11",
+    "version_label": "未注明",
+    "jurisdiction": "intl",
+    "access_route": "public_abstract",
+    "access_scope": "abstract_only",
+    "license": "版权所有",
+    "license_class": "copyrighted",
+    "handling": "付费报告，没买，只用公开的新闻稿（示例）",
+    "paid": {
+      "purchased": false,
+      "assessment": "《阶段1_样品验证方案_补充1_范围扩大》第 6 节（示例）"
+    },
+    "terms": {
+      "no_scraping": false,
+      "no_ai": false,
+      "checked_at": "2026-11-11"
+    },
+    "reading_mode": "ai_assisted",
+    "copy_kept": "none",
+    "external_use": "facts",
+    "use": "evidence",
+    "fetched_by": "ai_tool"
+  },
+  "evidence": [
+    {
+      "id": "EV-000011-001",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "created_by": "claude",
+      "created_at": "2026-11-11",
+      "content_kind": "numeric",
+      "value_qualifier": "gt",
+      "verification_status": "pending",
+      "visibility": "internal",
+      "subject_id": "ENT-000008",
+      "level": "none",
+      "fact": "deployment",
+      "questions": [
+        "Q4"
+      ],
+      "value_reported": "15",
+      "unit_reported": "GWh",
+      "value_std": 15,
+      "conditions": {
+        "year": {
+          "reported": "2025",
+          "value": "2025"
+        },
+        "region": {
+          "reported": "全球",
+          "value": "global"
+        },
+        "basis": {
+          "reported": "新增装机",
+          "value": "new_installations"
+        }
+      },
+      "evidence_type": "third_party_analysis",
+      "obtained_from": "abstract_only",
+      "locator": {
+        "section": "新闻稿",
+        "text": "新闻稿第 2 段"
+      },
+      "snippet": "more than 15 GWh (fictional)",
+      "source_id": "SRC-000011",
+      "entry_method": "ai",
+      "double_extraction": "agree",
+      "obtained_at": "2026-11-11"
+    }
+  ]
+}

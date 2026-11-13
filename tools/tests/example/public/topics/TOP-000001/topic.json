@@ -7,27 +7,141 @@
     {
       "key": "Q1",
       "text": "示例膜与示例商业膜在相同条件下的能量效率相差多少"
+    },
+    {
+      "key": "Q2",
+      "text": "示例：有哪些相关专利，保护什么材料和做法"
+    },
+    {
+      "key": "Q3",
+      "text": "示例：有哪些相关的政策法规和标准，走到哪一步"
+    },
+    {
+      "key": "Q4",
+      "text": "示例：报告给了哪些产业和市场的数字，口径是什么"
+    },
+    {
+      "key": "Q5",
+      "text": "示例：有哪些相关的资助项目"
     }
   ],
   "scope_in": "示例范围",
   "scope_out": "示例范围之外的体系",
   "levels": [
     "material",
-    "component"
+    "component",
+    "compliance",
+    "none"
   ],
   "time_window": {
     "from": "2021",
-    "earlier_rule": "更早的文献只引综述，标为第三方分析"
+    "earlier_rule": "更早的文献只引综述，标为第三方分析",
+    "exceptions": [
+      {
+        "applies_to": "商业膜一侧",
+        "rule": "不设时间窗（示例）"
+      },
+      {
+        "applies_to": "专利",
+        "rule": "按公开日，2021 年起（示例）"
+      }
+    ]
   },
   "evidence_source_types": [
     "paper",
     "review",
+    "preprint",
+    "thesis",
     "supplement",
+    "erratum",
     "metadata_db",
     "patent",
     "datasheet",
+    "company_web",
+    "filing",
+    "policy",
+    "standard",
+    "consultancy_report",
+    "government_report",
+    "funder_report",
+    "grant_record",
     "institution_report",
     "open_database"
+  ],
+  "facets": [
+    {
+      "key": "material_family",
+      "name": "材料族",
+      "applies_to": "material_class",
+      "required": true,
+      "values": [
+        "sulfonated_paek",
+        "sulfonated_polyimide",
+        "paes_psf",
+        "pbi",
+        "ppo",
+        "ether_free_aromatic",
+        "microporous_polymer",
+        "framework",
+        "porous_substrate",
+        "fluorinated_backbone",
+        "pfsa",
+        "other",
+        "unclear"
+      ]
+    },
+    {
+      "key": "fluorine_class",
+      "name": "含氟类别",
+      "applies_to": "membrane",
+      "required": true,
+      "values": [
+        "perfluorinated",
+        "partially_fluorinated",
+        "non_fluorinated",
+        "unclear"
+      ]
+    },
+    {
+      "key": "partial_fluorine_kind",
+      "name": "部分含氟的子类",
+      "applies_to": "membrane",
+      "only_when": {
+        "fluorine_class": [
+          "partially_fluorinated"
+        ]
+      },
+      "values": [
+        "pfsa_blend",
+        "fluorinated_backbone_or_side_group",
+        "fluorinated_support"
+      ]
+    },
+    {
+      "key": "fluorine_basis",
+      "name": "含氟类别的依据",
+      "applies_to": "membrane",
+      "values": [
+        "structure",
+        "manufacturer_statement",
+        "title_abstract"
+      ]
+    },
+    {
+      "key": "conduction_type",
+      "name": "传导类型",
+      "applies_to": "membrane",
+      "required": true,
+      "values": [
+        "cation_exchange",
+        "anion_exchange",
+        "amphoteric",
+        "porous_sieving",
+        "acid_doped",
+        "composite_multilayer",
+        "unclear"
+      ]
+    }
   ],
   "report_languages": [
     "zh",

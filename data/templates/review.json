@@ -1,0 +1,34 @@
+{
+  "id": "<必填：RVW-000000>",
+  "topic_id": "<必填：TOP-000000>",
+  "comparison_id": "<CMP-000000>",
+  "title": "<必填：名称>",
+  "status": "<必填：draft｜sent｜closed>",
+  "created_by": "<必填：kai｜yu｜claude｜script｜expert-01>",
+  "created_at": "<必填：YYYY-MM-DD>",
+  "reviewer": "<kai｜yu｜claude｜script｜expert-01>",
+  "reviewed_at": "<YYYY-MM-DD>",
+  "items": [
+    {
+      "target_id": "<必填：EV-000000-000>",
+      "reason": "<必填：missing_condition｜tier_ambiguous｜misassigned｜baseline_anomaly｜outlier｜conflict｜definition_mismatch｜classification_uncertain｜claim_without_conditions｜overview｜other>",
+      "why": "<必填：具体说明>",
+      "suggestion": "<必填：参考判断>",
+      "decision": "<必填：confirm｜modify｜pending>",
+      "change_ids": [
+        "<CHG-000000>"
+      ],
+      "note": "<复核人的话>"
+    }
+  ],
+  "batch": {
+    "evidence_ids": [
+      "<必填：EV-000000-000>"
+    ],
+    "sampled": [
+      "<EV-000000-000>"
+    ],
+    "decision": "<必填：confirm｜modify｜pending>"
+  },
+  "notes": "<备注>"
+}

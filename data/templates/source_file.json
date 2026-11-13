@@ -1,7 +1,7 @@
 {
   "source": {
     "id": "<必填：SRC-000000>",
-    "source_type": "<必填：paper｜review｜supplement｜patent｜datasheet｜company_web｜filing｜institution_report｜metadata_db｜open_database｜standard｜policy｜paid_report｜news｜client_material｜other>",
+    "source_type": "<必填：paper｜review｜preprint｜thesis｜supplement｜erratum｜patent｜datasheet｜company_web｜filing｜policy｜standard｜consultancy_report｜government_report｜funder_report｜grant_record｜institution_report｜metadata_db｜open_database｜news｜client_material｜other>",
     "title": "<必填：题名>",
     "creators": "<必填：作者或发布机构>",
     "container": "<刊名或网站名>",
@@ -12,12 +12,17 @@
     "url": "<必填：实际访问的网址>",
     "accessed_at": "<必填：YYYY-MM-DD>",
     "version_label": "<必填：版本>",
-    "version_of": "<SRC-000000>",
+    "version_of": [
+      "<SRC-000000>"
+    ],
     "parent_id": "<SRC-000000>",
+    "corrects": "<SRC-000000>",
     "publisher_id": "<ENT-000000>",
     "language": "<必填：语言>",
+    "jurisdiction": "<cn｜uk｜eu｜us｜intl｜other>",
     "access_route": "<必填：oa_published｜preprint｜author_version｜public_web｜free_download｜public_abstract｜metadata｜purchased｜on_request｜client_provided>",
     "access_scope": "<必填：full｜partial｜abstract_only｜metadata_only>",
+    "fetched_by": "<必填：ai_tool｜api｜member_download｜member_lookup>",
     "license": "<必填：许可的原文写法>",
     "license_class": "<必填：open｜open_nc｜copyrighted｜restricted｜unstated｜unknown>",
     "terms": {
@@ -28,18 +33,89 @@
       "checked_at": "<必填：YYYY-MM-DD>"
     },
     "reading_mode": "<必填：ai_assisted｜human_only>",
-    "copy_kept": "<必填：none｜local_temp｜snapshot>",
+    "copy_kept": "<必填：none｜local_temp｜project_files｜snapshot>",
     "snapshot_ref": "<快照位置>",
     "archive_url": "<存档链接>",
     "external_use": "<必填：link_only｜facts｜redistributable>",
     "handling": "<必填：我们怎么处理的>",
     "use": "<必填：evidence｜lead｜further_reading｜background>",
+    "paid": {
+      "purchased": false,
+      "assessment": "<评估单在哪里>"
+    },
+    "doc": {
+      "kind": "<application｜grant｜utility_model>",
+      "application_number": "<申请号>",
+      "filed": "<YYYY-MM-DD，可以只到年或月>",
+      "priority_date": "<YYYY-MM-DD，可以只到年或月>",
+      "granted": "<YYYY-MM-DD，可以只到年或月>",
+      "applicants": [
+        "<照文献原样写>"
+      ],
+      "inventors": [
+        "<照文献原样写>"
+      ],
+      "family_id": "<同族编号>",
+      "family_members": [
+        "<公开号，前缀是专利局代码（CN、US、EP、WO、JP、KR 等）>"
+      ],
+      "classifications": [
+        "<写明体系，如 IPC H01M 8/1023、CPC H01M 8/188>"
+      ],
+      "issuer": "<发布机关、归口单位或发布机构>",
+      "doc_number": "<文号、标准号或报告编号>",
+      "issued": "<YYYY-MM-DD，可以只到年或月>",
+      "effective": "<YYYY-MM-DD，可以只到年或月>",
+      "replaces": [
+        "<标准号或来源编号>"
+      ],
+      "replaced_by": "<被哪个版本代替>",
+      "scope": "<适用范围>",
+      "commissioned_by": "<委托方>",
+      "pages": 0,
+      "funder": "<资助机构>",
+      "programme": "<资助类别或计划>",
+      "project_number": "<项目号>",
+      "host": "<承担单位>",
+      "pi": "<负责人>",
+      "amount": 0,
+      "amount_stated": "<金额的原文写法>",
+      "currency": "<币种>",
+      "start": "<YYYY-MM-DD，可以只到年或月>",
+      "end": "<YYYY-MM-DD，可以只到年或月>",
+      "status": {
+        "stated": "<必填：原样写的状态>",
+        "stage": "<draft｜in_review｜adopted｜in_force｜superseded｜repealed｜withdrawn>",
+        "checked_in": "<必填：在哪里查的>",
+        "checked_at": "<必填：YYYY-MM-DD>",
+        "events": [
+          {
+            "date": "<必填：YYYY-MM-DD，可以只到年或月>",
+            "summary": "<必填：事项>",
+            "locator": "<必填：出处位置>"
+          }
+        ],
+        "next_step": {
+          "summary": "<必填：下一步是什么>",
+          "expected": "<YYYY-MM-DD，可以只到年或月>",
+          "locator": "<必填：出处位置>"
+        }
+      }
+    },
+    "parts": "<取用的部分>",
+    "watch": "<以后要查的>",
     "topics": [
       {
         "topic_id": "<必填：TOP-000000>",
         "decision": "<必填：included｜excluded｜pending>",
         "exclusion_reason": "<排除原因>",
-        "found_via": "<search｜citation｜expert_list｜other>"
+        "found_via": "<search｜citation｜expert_list｜other>",
+        "facets": {
+          "<键>": "<>"
+        },
+        "core_check": {
+          "<键>": "<found｜not_reported｜not_applicable>"
+        }
       }
     ],
     "status": "<必填：active｜corrected｜retracted｜superseded｜unreachable>",
@@ -50,8 +126,22 @@
     },
     "registered_by": "<必填：kai｜yu｜claude｜script｜expert-01>",
     "registered_at": "<必填：YYYY-MM-DD>",
+    "record_verified_by": "<kai｜yu｜claude｜script｜expert-01>",
+    "record_verified_at": "<YYYY-MM-DD>",
     "notes": "<备注>"
   },
+  "samples": [
+    {
+      "label": "<必填：原文里的样品名>",
+      "role": "<必填：studied｜baseline｜control｜other_reference>",
+      "subject_id": "<必填：ENT-000000>",
+      "baseline_form": "<as_received｜pretreated｜recast｜not_reported>",
+      "facets": {
+        "<键>": "<>"
+      },
+      "notes": "<备注>"
+    }
+  ],
   "evidence": [
     {
       "id": "<必填：EV-000000-000>",
@@ -61,8 +151,12 @@
       "created_at": "<必填：YYYY-MM-DD>",
       "subject_id": "<必填：ENT-000000>",
       "sample_label": "<原文里的样品名>",
-      "level": "<必填：material｜component｜system>",
+      "level": "<必填：material｜component｜system｜product_supply｜compliance｜none>",
       "indicator": "<指标，英文小写加下划线>",
+      "fact": "<事实项，英文小写加下划线>",
+      "questions": [
+        "<>"
+      ],
       "content_kind": "<必填：numeric｜category｜statement>",
       "value_reported": "<原文数值>",
       "unit_reported": "<原文单位>",
@@ -79,7 +173,9 @@
         "<键>": {
           "reported": "<必填：原文写法>",
           "value": 0,
-          "unit": "<单位>"
+          "unit": "<单位>",
+          "low": 0,
+          "high": 0
         }
       },
       "conditions_locator": {
@@ -93,6 +189,7 @@
       "conditions_snippet": "<条件的原文片段>",
       "series_label": "<同批测试标签>",
       "baseline_ref": "<EV-000000-000>",
+      "control_ref": "<EV-000000-000>",
       "evidence_type": "<必填：verified_fact｜company_claim｜third_party_analysis｜experimental｜model_simulation｜expert_judgment>",
       "independent_validation": "<yes｜no｜unknown>",
       "validated_by": [
@@ -122,6 +219,15 @@
       "double_extraction": "<必填：agree｜resolved｜single｜na>",
       "obtained_at": "<必填：YYYY-MM-DD>",
       "verification_status": "<必填：pending｜machine_checked｜human_verified｜expert_reviewed｜disputed｜void>",
+      "risk": {
+        "tier": "<必填：high｜medium｜low>",
+        "reasons": [
+          "<必填：figure_read｜extraction_mismatch｜machine_check_failed｜outlier｜unit_converted｜conditions_elsewhere｜multiple_samples_or_tables｜from_supplement｜qualified_value｜other>"
+        ],
+        "note": "<说明>",
+        "set_by": "<必填：kai｜yu｜claude｜script｜expert-01>",
+        "set_at": "<必填：YYYY-MM-DD>"
+      },
       "machine_check": {
         "identifier": "<必填：pass｜fail｜na>",
         "snippet": "<必填：pass｜fail｜na>",

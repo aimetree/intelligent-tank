@@ -1,0 +1,213 @@
+{
+  "source": {
+    "id": "SRC-000007",
+    "language": "en",
+    "status": "active",
+    "status_checked_at": "2026-11-11",
+    "id_check": {
+      "result": "pass",
+      "at": "2026-11-11"
+    },
+    "registered_by": "claude",
+    "registered_at": "2026-11-11",
+    "topics": [
+      {
+        "topic_id": "TOP-000001",
+        "decision": "included",
+        "found_via": "search",
+        "core_check": {
+          "energy_efficiency": "found",
+          "area_resistance": "not_reported"
+        }
+      }
+    ],
+    "source_type": "preprint",
+    "title": "示例预印本（虚构）",
+    "creators": "示例作者三 等",
+    "container": "示例预印本平台",
+    "published": "2023-11",
+    "identifiers": {
+      "doi": "10.0000/example.pre1"
+    },
+    "url": "https://example.org/pre1",
+    "accessed_at": "2026-11-11",
+    "version_label": "预印本第 1 版，未经同行评议",
+    "version_of": [
+      "SRC-000008"
+    ],
+    "access_route": "preprint",
+    "access_scope": "full",
+    "fetched_by": "member_download",
+    "license": "页面没有许可声明",
+    "license_class": "unstated",
+    "terms": {
+      "no_scraping": true,
+      "no_ai": true,
+      "note": "示例：平台条款禁止自动查询和用于 AI（虚构）",
+      "checked_at": "2026-11-11"
+    },
+    "copy_kept": "project_files",
+    "handling": "成员下载后上传，AI 阅读；条款照实登记（示例）",
+    "watch": "正式版不开放，只登记题录；数据照预印本取（示例）",
+    "reading_mode": "ai_assisted",
+    "external_use": "facts",
+    "use": "evidence"
+  },
+  "samples": [
+    {
+      "label": "Z-1",
+      "role": "studied",
+      "subject_id": "ENT-000007",
+      "facets": {
+        "fluorine_class": "partially_fluorinated",
+        "partial_fluorine_kind": "pfsa_blend",
+        "conduction_type": "cation_exchange"
+      }
+    },
+    {
+      "label": "N-212",
+      "role": "baseline",
+      "subject_id": "ENT-000003",
+      "baseline_form": "pretreated"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "EV-000007-001",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "created_by": "claude",
+      "created_at": "2026-11-11",
+      "content_kind": "numeric",
+      "value_qualifier": "eq",
+      "verification_status": "machine_checked",
+      "visibility": "internal",
+      "subject_id": "ENT-000007",
+      "sample_label": "Z-1",
+      "level": "component",
+      "indicator": "energy_efficiency",
+      "value_reported": "80.5",
+      "unit_reported": "%",
+      "value_std": 80.5,
+      "conditions": {
+        "current_density": {
+          "reported": "80 mA cm-2",
+          "value": 80,
+          "unit": "mA/cm2"
+        },
+        "vanadium_conc": {
+          "reported": "1.6 M",
+          "value": 1.6,
+          "unit": "mol/L"
+        },
+        "acid_conc": {
+          "reported": "3.0 M H2SO4",
+          "value": 3.0,
+          "unit": "mol/L"
+        },
+        "temperature": {
+          "reported": "25 °C",
+          "value": 25,
+          "unit": "degC"
+        }
+      },
+      "series_label": "S1",
+      "baseline_ref": "EV-000007-002",
+      "evidence_type": "experimental",
+      "obtained_from": "table",
+      "locator": {
+        "page": "9",
+        "table": "2",
+        "item": "第 2 行",
+        "text": "第 9 页，表 2，第 2 行"
+      },
+      "snippet": "Z-1 97.0 83.0 80.5",
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "claude",
+        "set_at": "2026-11-11"
+      },
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-11"
+      },
+      "source_id": "SRC-000007",
+      "entry_method": "ai",
+      "double_extraction": "agree",
+      "obtained_at": "2026-11-11"
+    },
+    {
+      "id": "EV-000007-002",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "created_by": "claude",
+      "created_at": "2026-11-11",
+      "content_kind": "numeric",
+      "value_qualifier": "eq",
+      "verification_status": "machine_checked",
+      "visibility": "internal",
+      "subject_id": "ENT-000003",
+      "sample_label": "N-212",
+      "level": "component",
+      "indicator": "energy_efficiency",
+      "value_reported": "79.9",
+      "unit_reported": "%",
+      "value_std": 79.9,
+      "conditions": {
+        "current_density": {
+          "reported": "80 mA cm-2",
+          "value": 80,
+          "unit": "mA/cm2"
+        },
+        "vanadium_conc": {
+          "reported": "1.6 M",
+          "value": 1.6,
+          "unit": "mol/L"
+        },
+        "acid_conc": {
+          "reported": "3.0 M H2SO4",
+          "value": 3.0,
+          "unit": "mol/L"
+        },
+        "temperature": {
+          "reported": "25 °C",
+          "value": 25,
+          "unit": "degC"
+        }
+      },
+      "series_label": "S1",
+      "evidence_type": "experimental",
+      "obtained_from": "table",
+      "locator": {
+        "page": "9",
+        "table": "2",
+        "item": "第 1 行",
+        "text": "第 9 页，表 2，第 1 行"
+      },
+      "snippet": "N-212 95.8 83.4 79.9",
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "claude",
+        "set_at": "2026-11-11"
+      },
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-11"
+      },
+      "source_id": "SRC-000007",
+      "entry_method": "ai",
+      "double_extraction": "agree",
+      "obtained_at": "2026-11-11"
+    }
+  ]
+}

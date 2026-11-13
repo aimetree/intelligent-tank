@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:intelligent-tank:schema:0.1",
-  "title": "Intelligent Tank 数据结构 v0.1",
-  "description": "对应 docs/03_技术与开发/数据结构_字段规格_v0.1.md。每类对象是 $defs 里的一项；各文件用哪一项见 data/README.md。这里只管字段名、类型、枚举和录入时就必填的字段；带条件的要求和跨记录的规则在 tools/validate.py 里。",
+  "$id": "urn:intelligent-tank:schema:0.2",
+  "title": "Intelligent Tank 数据结构 v0.2",
+  "description": "对应 docs/03_技术与开发/数据结构_字段规格_v0.2.md。每类对象是 $defs 里的一项；各文件用哪一项见 data/README.md。这里只管字段名、类型、枚举和录入时就必填的字段；带条件的要求和跨记录的规则在 tools/validate.py 里。",
   "$defs": {
     "id_TOP": {
       "type": "string",
@@ -44,6 +44,10 @@
       "type": "string",
       "pattern": "^RPT-\\d{6}$"
     },
+    "id_RVW": {
+      "type": "string",
+      "pattern": "^RVW-\\d{6}$"
+    },
     "date": {
       "type": "string",
       "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
@@ -65,7 +69,10 @@
       "enum": [
         "material",
         "component",
-        "system"
+        "system",
+        "product_supply",
+        "compliance",
+        "none"
       ]
     },
     "enum_evidence_type": {
@@ -107,17 +114,23 @@
       "enum": [
         "paper",
         "review",
+        "preprint",
+        "thesis",
         "supplement",
+        "erratum",
         "patent",
         "datasheet",
         "company_web",
         "filing",
+        "policy",
+        "standard",
+        "consultancy_report",
+        "government_report",
+        "funder_report",
+        "grant_record",
         "institution_report",
         "metadata_db",
         "open_database",
-        "standard",
-        "policy",
-        "paid_report",
         "news",
         "client_material",
         "other"
@@ -165,6 +178,7 @@
       "enum": [
         "none",
         "local_temp",
+        "project_files",
         "snapshot"
       ]
     },
@@ -427,6 +441,7 @@
         "A2",
         "B",
         "C",
+        "BC",
         "none"
       ]
     },
@@ -434,14 +449,17 @@
       "enum": [
         "scoping",
         "search",
+        "acquisition",
         "extraction",
         "linking",
         "verification",
+        "expert_review",
         "comparison",
         "assessment",
         "change",
         "presentation",
         "licensing",
+        "internal_check",
         "other"
       ]
     },
@@ -474,6 +492,7 @@
     "enum_condition_value_kind": {
       "enum": [
         "numeric",
+        "numeric_range",
         "category",
         "text"
       ]
@@ -483,6 +502,148 @@
         "draft",
         "issued",
         "superseded"
+      ]
+    },
+    "enum_fetched_by": {
+      "enum": [
+        "ai_tool",
+        "api",
+        "member_download",
+        "member_lookup"
+      ]
+    },
+    "enum_jurisdiction": {
+      "enum": [
+        "cn",
+        "uk",
+        "eu",
+        "us",
+        "intl",
+        "other"
+      ]
+    },
+    "enum_patent_kind": {
+      "enum": [
+        "application",
+        "grant",
+        "utility_model"
+      ]
+    },
+    "enum_doc_stage": {
+      "enum": [
+        "draft",
+        "in_review",
+        "adopted",
+        "in_force",
+        "superseded",
+        "repealed",
+        "withdrawn"
+      ]
+    },
+    "enum_sample_role": {
+      "enum": [
+        "studied",
+        "baseline",
+        "control",
+        "other_reference"
+      ]
+    },
+    "enum_baseline_form": {
+      "enum": [
+        "as_received",
+        "pretreated",
+        "recast",
+        "not_reported"
+      ]
+    },
+    "enum_baseline_class": {
+      "enum": [
+        "commercial",
+        "recast"
+      ]
+    },
+    "enum_core_check": {
+      "enum": [
+        "found",
+        "not_reported",
+        "not_applicable"
+      ]
+    },
+    "enum_indicator_origin": {
+      "enum": [
+        "conventional",
+        "policy_trend",
+        "search_found",
+        "prior_decision"
+      ]
+    },
+    "enum_indicator_grade": {
+      "enum": [
+        "core",
+        "extended"
+      ]
+    },
+    "enum_indicator_entry": {
+      "enum": [
+        "evidence",
+        "derived",
+        "relations"
+      ]
+    },
+    "enum_facet_scope": {
+      "enum": [
+        "membrane",
+        "material_class"
+      ]
+    },
+    "enum_risk_tier": {
+      "enum": [
+        "high",
+        "medium",
+        "low"
+      ]
+    },
+    "enum_risk_reason": {
+      "enum": [
+        "figure_read",
+        "extraction_mismatch",
+        "machine_check_failed",
+        "outlier",
+        "unit_converted",
+        "conditions_elsewhere",
+        "multiple_samples_or_tables",
+        "from_supplement",
+        "qualified_value",
+        "other"
+      ]
+    },
+    "enum_review_status": {
+      "enum": [
+        "draft",
+        "sent",
+        "closed"
+      ]
+    },
+    "enum_review_reason": {
+      "enum": [
+        "missing_condition",
+        "tier_ambiguous",
+        "misassigned",
+        "baseline_anomaly",
+        "outlier",
+        "conflict",
+        "definition_mismatch",
+        "classification_uncertain",
+        "claim_without_conditions",
+        "overview",
+        "other"
+      ]
+    },
+    "enum_review_decision": {
+      "enum": [
+        "confirm",
+        "modify",
+        "pending"
       ]
     },
     "locator": {
@@ -555,6 +716,16 @@
               "type": "string",
               "title": "单位",
               "minLength": 1
+            },
+            "low": {
+              "type": "number",
+              "title": "下限",
+              "description": "两端的数值（如截止电压的下限）；能解析才填"
+            },
+            "high": {
+              "type": "number",
+              "title": "上限",
+              "description": "两端的数值（如截止电压的上限）；能解析才填"
             }
           },
           "required": [
@@ -563,6 +734,353 @@
           "additionalProperties": false
         }
       ]
+    },
+    "doc": {
+      "type": "object",
+      "title": "文件属性",
+      "description": "专利、政策法规、标准、报告、资助记录的著录项目和状态。哪些类别要填哪些项见规格 3.3 和 V-15",
+      "properties": {
+        "kind": {
+          "$ref": "#/$defs/enum_patent_kind",
+          "title": "专利文献的类型"
+        },
+        "application_number": {
+          "type": "string",
+          "title": "申请号",
+          "minLength": 1
+        },
+        "filed": {
+          "$ref": "#/$defs/date_partial",
+          "title": "申请日"
+        },
+        "priority_date": {
+          "$ref": "#/$defs/date_partial",
+          "title": "最早优先权日"
+        },
+        "granted": {
+          "$ref": "#/$defs/date_partial",
+          "title": "授权日"
+        },
+        "applicants": {
+          "type": "array",
+          "title": "申请人或专利权人",
+          "items": {
+            "type": "string",
+            "title": "照文献原样写",
+            "minLength": 1
+          }
+        },
+        "inventors": {
+          "type": "array",
+          "title": "发明人",
+          "items": {
+            "type": "string",
+            "title": "照文献原样写",
+            "minLength": 1
+          }
+        },
+        "family_id": {
+          "type": "string",
+          "title": "同族编号",
+          "minLength": 1,
+          "description": "写明是哪个数据库的编号"
+        },
+        "family_members": {
+          "type": "array",
+          "title": "同族的公开号",
+          "items": {
+            "type": "string",
+            "title": "公开号，前缀是专利局代码（CN、US、EP、WO、JP、KR 等）",
+            "minLength": 1
+          }
+        },
+        "classifications": {
+          "type": "array",
+          "title": "分类号",
+          "items": {
+            "type": "string",
+            "title": "写明体系，如 IPC H01M 8/1023、CPC H01M 8/188",
+            "minLength": 1
+          }
+        },
+        "issuer": {
+          "type": "string",
+          "title": "发布机关、归口单位或发布机构",
+          "minLength": 1
+        },
+        "doc_number": {
+          "type": "string",
+          "title": "文号、标准号或报告编号",
+          "minLength": 1
+        },
+        "issued": {
+          "$ref": "#/$defs/date_partial",
+          "title": "发布日期"
+        },
+        "effective": {
+          "$ref": "#/$defs/date_partial",
+          "title": "生效或实施日期"
+        },
+        "replaces": {
+          "type": "array",
+          "title": "代替的版本",
+          "items": {
+            "type": "string",
+            "title": "标准号或来源编号",
+            "minLength": 1
+          }
+        },
+        "replaced_by": {
+          "type": "string",
+          "title": "被哪个版本代替",
+          "minLength": 1
+        },
+        "scope": {
+          "type": "string",
+          "title": "适用范围",
+          "minLength": 1
+        },
+        "commissioned_by": {
+          "type": "string",
+          "title": "委托方",
+          "minLength": 1
+        },
+        "pages": {
+          "type": "integer",
+          "title": "页数",
+          "minimum": 1
+        },
+        "funder": {
+          "type": "string",
+          "title": "资助机构",
+          "minLength": 1
+        },
+        "programme": {
+          "type": "string",
+          "title": "资助类别或计划",
+          "minLength": 1
+        },
+        "project_number": {
+          "type": "string",
+          "title": "项目号",
+          "minLength": 1
+        },
+        "host": {
+          "type": "string",
+          "title": "承担单位",
+          "minLength": 1
+        },
+        "pi": {
+          "type": "string",
+          "title": "负责人",
+          "minLength": 1
+        },
+        "amount": {
+          "type": "number",
+          "title": "金额",
+          "minimum": 0,
+          "description": "照原币种，不换算汇率"
+        },
+        "amount_stated": {
+          "type": "string",
+          "title": "金额的原文写法",
+          "minLength": 1
+        },
+        "currency": {
+          "type": "string",
+          "title": "币种",
+          "minLength": 1,
+          "description": "ISO 代码，如 CNY、GBP、EUR、USD"
+        },
+        "start": {
+          "$ref": "#/$defs/date_partial",
+          "title": "起"
+        },
+        "end": {
+          "$ref": "#/$defs/date_partial",
+          "title": "止"
+        },
+        "status": {
+          "type": "object",
+          "title": "状态",
+          "description": "专利的法律状态，政策法规和标准走到哪一步。照数据库或官方页面原样写，带查的地方和日期；出报告前再查一次（V-66）",
+          "properties": {
+            "stated": {
+              "type": "string",
+              "title": "原样写的状态",
+              "minLength": 1,
+              "description": "照数据库或官方页面的写法，不作解读"
+            },
+            "stage": {
+              "$ref": "#/$defs/enum_doc_stage",
+              "title": "进程",
+              "description": "只用于政策法规和标准；专利不填（3.8 第 6 条：法律状态只照数据库写）"
+            },
+            "checked_in": {
+              "type": "string",
+              "title": "在哪里查的",
+              "minLength": 1,
+              "description": "数据库或官方页面的名称"
+            },
+            "checked_at": {
+              "$ref": "#/$defs/date",
+              "title": "查的日期"
+            },
+            "events": {
+              "type": "array",
+              "title": "按日期排的事项",
+              "description": "发布、通过、征求意见起止、生效等，每项一句我们自己的话，带出处位置",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "date": {
+                    "$ref": "#/$defs/date_partial",
+                    "title": "日期"
+                  },
+                  "summary": {
+                    "type": "string",
+                    "title": "事项",
+                    "minLength": 1
+                  },
+                  "locator": {
+                    "type": "string",
+                    "title": "出处位置",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "date",
+                  "summary",
+                  "locator"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "next_step": {
+              "type": "object",
+              "title": "下一步",
+              "properties": {
+                "summary": {
+                  "type": "string",
+                  "title": "下一步是什么",
+                  "minLength": 1
+                },
+                "expected": {
+                  "$ref": "#/$defs/date_partial",
+                  "title": "预计的时间"
+                },
+                "locator": {
+                  "type": "string",
+                  "title": "出处位置",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "summary",
+                "locator"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "stated",
+            "checked_in",
+            "checked_at"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "risk": {
+      "type": "object",
+      "title": "风险档",
+      "description": "人工核对之前由 Claude 标好（D-80）；只留内部。档别不能低于按字段推出来的档（V-31）",
+      "properties": {
+        "tier": {
+          "$ref": "#/$defs/enum_risk_tier",
+          "title": "风险档"
+        },
+        "reasons": {
+          "type": "array",
+          "title": "理由",
+          "items": {
+            "$ref": "#/$defs/enum_risk_reason"
+          }
+        },
+        "note": {
+          "type": "string",
+          "title": "说明",
+          "minLength": 1,
+          "description": "理由里有 other 时必填"
+        },
+        "set_by": {
+          "$ref": "#/$defs/actor",
+          "title": "标的人或 AI"
+        },
+        "set_at": {
+          "$ref": "#/$defs/date",
+          "title": "标的日期"
+        }
+      },
+      "required": [
+        "tier",
+        "reasons",
+        "set_by",
+        "set_at"
+      ],
+      "additionalProperties": false
+    },
+    "sample": {
+      "type": "object",
+      "title": "样品登记",
+      "description": "来源里出现的每一张膜一项：研究对象、同文基准、同文对照、作者另拿来对照的膜（D-71、D-81）",
+      "properties": {
+        "label": {
+          "type": "string",
+          "title": "原文里的样品名",
+          "minLength": 1,
+          "description": "原样抄；证据的 sample_label 用它"
+        },
+        "role": {
+          "$ref": "#/$defs/enum_sample_role",
+          "title": "在这个来源里的角色"
+        },
+        "subject_id": {
+          "$ref": "#/$defs/id_ENT",
+          "title": "对应的实体",
+          "description": "商业膜指向产品；实验室样品指向它的材料族（material_class）"
+        },
+        "baseline_form": {
+          "$ref": "#/$defs/enum_baseline_form",
+          "title": "基准膜的形态",
+          "description": "只用于同文基准：原样、预处理过、重铸、原文没写（方案 4.2）"
+        },
+        "facets": {
+          "type": "object",
+          "title": "分类属性",
+          "propertyNames": {
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "实验室样品的分类：含氟类别、传导类型等，键在题目卡的 facets 里定义（V-08）。商业膜的分类记在产品实体上，这里不写"
+        },
+        "notes": {
+          "type": "string",
+          "title": "备注",
+          "minLength": 1,
+          "description": "例如填料含氟不影响归类、归类拿不准的理由"
+        }
+      },
+      "required": [
+        "label",
+        "role",
+        "subject_id"
+      ],
+      "additionalProperties": false
     },
     "meta": {
       "type": "object",
@@ -644,13 +1162,23 @@
           "description": "出版版、预印本第几版、作者接受稿、规格书的版本号；没写填“未注明”"
         },
         "version_of": {
-          "$ref": "#/$defs/id_SRC",
-          "title": "同一作品的另一版本"
+          "type": "array",
+          "title": "同一作品的其他版本",
+          "items": {
+            "$ref": "#/$defs/id_SRC"
+          },
+          "minItems": 1,
+          "description": "预印本、正式版、学位论文里与期刊论文重复的部分等；要互相指向（V-16）"
         },
         "parent_id": {
           "$ref": "#/$defs/id_SRC",
           "title": "所属的主文件",
           "description": "补充材料必填"
+        },
+        "corrects": {
+          "$ref": "#/$defs/id_SRC",
+          "title": "更正的是哪个来源",
+          "description": "更正声明必填（V-16）"
         },
         "publisher_id": {
           "$ref": "#/$defs/id_ENT",
@@ -662,6 +1190,11 @@
           "minLength": 1,
           "description": "如 en、zh"
         },
+        "jurisdiction": {
+          "$ref": "#/$defs/enum_jurisdiction",
+          "title": "法域",
+          "description": "专利、政策法规、标准、政府部门和基金的报告、资助记录必填（D-96，V-15）；EP、WO 专利记 intl"
+        },
         "access_route": {
           "$ref": "#/$defs/enum_access_route",
           "title": "取得途径"
@@ -669,6 +1202,11 @@
         "access_scope": {
           "$ref": "#/$defs/enum_access_scope",
           "title": "读到的范围"
+        },
+        "fetched_by": {
+          "$ref": "#/$defs/enum_fetched_by",
+          "title": "由谁取来",
+          "description": "读取工具直接读、脚本经接口、成员下载后上传、成员在官方系统里代查（D-87、D-89；补充 3 第 3 节）"
         },
         "license": {
           "type": "string",
@@ -719,7 +1257,8 @@
         },
         "copy_kept": {
           "$ref": "#/$defs/enum_copy_kept",
-          "title": "是否留副本"
+          "title": "是否留副本",
+          "description": "project_files：成员下载的原文放在 Project 的文件区，不进仓库和证据库（D-107）"
         },
         "snapshot_ref": {
           "type": "string",
@@ -744,6 +1283,43 @@
           "$ref": "#/$defs/enum_source_use",
           "title": "用途"
         },
+        "paid": {
+          "type": "object",
+          "title": "付费情况",
+          "description": "付费的标准和报告。没买的只用公开部分（D-56 第二条、D-98，V-13）",
+          "properties": {
+            "purchased": {
+              "type": "boolean",
+              "title": "买了没有"
+            },
+            "assessment": {
+              "type": "string",
+              "title": "评估单在哪里",
+              "minLength": 1,
+              "description": "没买的必填：评估单所在的文档和条目（清单 T-14）"
+            }
+          },
+          "required": [
+            "purchased"
+          ],
+          "additionalProperties": false
+        },
+        "doc": {
+          "$ref": "#/$defs/doc",
+          "title": "文件属性"
+        },
+        "parts": {
+          "type": "string",
+          "title": "取用的部分",
+          "minLength": 1,
+          "description": "学位论文必填：按章取舍，写明收了哪几章、哪些没收及原因（补充 2）"
+        },
+        "watch": {
+          "type": "string",
+          "title": "以后要查的",
+          "minLength": 1,
+          "description": "例如待投稿的章节发表后去重、预印本出正式版后改指"
+        },
         "topics": {
           "type": "array",
           "title": "在各题目里的筛选结果",
@@ -766,6 +1342,29 @@
               "found_via": {
                 "$ref": "#/$defs/enum_found_via",
                 "title": "怎么找到的"
+              },
+              "facets": {
+                "type": "object",
+                "title": "膜的类别（只登记的来源用）",
+                "propertyNames": {
+                  "pattern": "^[a-z][a-z0-9_]*$"
+                },
+                "additionalProperties": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "description": "只到题录的来源按题名和摘要判断的类别，判断不了的写 unclear（D-68，V-08）"
+              },
+              "core_check": {
+                "type": "object",
+                "title": "核心指标逐项找过的结果",
+                "description": "读了全文的论文、预印本、学位论文必填：每项核心指标找到了、原文没有报告、不适用（D-67，V-17）",
+                "propertyNames": {
+                  "pattern": "^[a-z][a-z0-9_]*$"
+                },
+                "additionalProperties": {
+                  "$ref": "#/$defs/enum_core_check"
+                }
               }
             },
             "required": [
@@ -815,6 +1414,15 @@
           "$ref": "#/$defs/date",
           "title": "登记日期"
         },
+        "record_verified_by": {
+          "$ref": "#/$defs/actor",
+          "title": "登记内容的核对人",
+          "description": "专利、政策法规、标准、资助记录的著录项目和状态由人核对过（D-95，V-60）"
+        },
+        "record_verified_at": {
+          "$ref": "#/$defs/date",
+          "title": "登记内容的核对日期"
+        },
         "notes": {
           "type": "string",
           "title": "备注",
@@ -833,6 +1441,7 @@
         "language",
         "access_route",
         "access_scope",
+        "fetched_by",
         "license",
         "license_class",
         "terms",
@@ -884,7 +1493,7 @@
           "type": "string",
           "title": "原文里的样品名",
           "minLength": 1,
-          "description": "来源里不止一个样品时必填，原样抄"
+          "description": "原样抄。实验室样品必填，并且要在来源的样品登记里（V-19）；来源里不止一个样品时也必填"
         },
         "level": {
           "$ref": "#/$defs/enum_level",
@@ -894,7 +1503,22 @@
         "indicator": {
           "$ref": "#/$defs/key",
           "title": "指标",
-          "description": "数值型、分类型必填"
+          "description": "数值型、分类型必填 indicator 或 fact 之一（V-21）"
+        },
+        "fact": {
+          "$ref": "#/$defs/key",
+          "title": "事实项",
+          "description": "非学术来源里这条说的是哪一项，键在指标字典的 facts 里（V-21）"
+        },
+        "questions": {
+          "type": "array",
+          "title": "对应题目卡的问题",
+          "items": {
+            "type": "string",
+            "pattern": "^Q\\d+$"
+          },
+          "minItems": 1,
+          "description": "非学术来源的证据必填（V-33）"
         },
         "content_kind": {
           "$ref": "#/$defs/enum_content_kind",
@@ -978,12 +1602,18 @@
         "series_label": {
           "type": "string",
           "title": "同批测试标签",
-          "minLength": 1
+          "minLength": 1,
+          "description": "同一来源里用同一套装置、同一套条件测出的一批数据（样品和基准膜一起）用同一个标签；画随电流密度变化的线时按样品名加这个标签取点。直接可比的组要求成员同一个标签（V-45）"
         },
         "baseline_ref": {
           "$ref": "#/$defs/id_EV",
           "title": "同文基准",
-          "description": "同一来源、同一指标、相同条件下基准膜的那条证据"
+          "description": "指向同一来源、同一指标、相同条件下同文基准膜（样品登记里 role 为 baseline）的那条证据（V-29）"
+        },
+        "control_ref": {
+          "$ref": "#/$defs/id_EV",
+          "title": "同文对照",
+          "description": "指向同一来源、同一指标下没改性的原膜（role 为 control）的那条证据；同文对照不算基准（D-71）"
         },
         "evidence_type": {
           "$ref": "#/$defs/enum_evidence_type",
@@ -1077,6 +1707,10 @@
         "verification_status": {
           "$ref": "#/$defs/enum_verification_status",
           "title": "核验状态"
+        },
+        "risk": {
+          "$ref": "#/$defs/risk",
+          "title": "风险档"
         },
         "machine_check": {
           "type": "object",
@@ -1208,6 +1842,13 @@
         "source": {
           "$ref": "#/$defs/source"
         },
+        "samples": {
+          "type": "array",
+          "title": "样品登记",
+          "items": {
+            "$ref": "#/$defs/sample"
+          }
+        },
         "evidence": {
           "type": "array",
           "title": "从这个来源取出的证据",
@@ -1285,7 +1926,7 @@
             "type": "string",
             "minLength": 1
           },
-          "description": "键在题目卡的 facets 里定义"
+          "description": "键和取值在题目卡的 facets 里定义：material_class 记材料族这一类，产品记含氟类别、传导类型这一类（V-08）"
         },
         "defined_in": {
           "$ref": "#/$defs/id_SRC",
@@ -1552,6 +2193,31 @@
               "type": "string",
               "title": "更早的文献怎么处理",
               "minLength": 1
+            },
+            "exceptions": {
+              "type": "array",
+              "title": "另有时间窗的部分",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "applies_to": {
+                    "type": "string",
+                    "title": "对哪一部分",
+                    "minLength": 1
+                  },
+                  "rule": {
+                    "type": "string",
+                    "title": "怎么算",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "applies_to",
+                  "rule"
+                ],
+                "additionalProperties": false
+              },
+              "description": "例如商业膜一侧不设时间窗（D-64）；专利按公开日 2021 年起（方案 3.8）"
             }
           },
           "required": [
@@ -1582,6 +2248,32 @@
                 "title": "名称",
                 "minLength": 1
               },
+              "applies_to": {
+                "$ref": "#/$defs/enum_facet_scope",
+                "title": "记在哪一类上",
+                "description": "membrane：每一张膜（实验室样品记在样品登记里，商业膜记在产品上）；material_class：材料族"
+              },
+              "required": {
+                "type": "boolean",
+                "title": "必填",
+                "description": "每一张膜（或每个材料族）都要有"
+              },
+              "only_when": {
+                "type": "object",
+                "title": "只在这些情况下填",
+                "description": "另一个分类维度取这些值时才填，并且那时必填。例：部分含氟的子类只在含氟类别为部分含氟时填",
+                "propertyNames": {
+                  "pattern": "^[a-z][a-z0-9_]*$"
+                },
+                "additionalProperties": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "minItems": 1
+                }
+              },
               "values": {
                 "type": "array",
                 "title": "允许的取值",
@@ -1594,7 +2286,8 @@
             },
             "required": [
               "key",
-              "name"
+              "name",
+              "applies_to"
             ],
             "additionalProperties": false
           }
@@ -1676,6 +2369,27 @@
           "$ref": "#/$defs/actor",
           "title": "确认人"
         },
+        "level_conditions": {
+          "type": "object",
+          "title": "按层级统一必填的条件",
+          "description": "某一层的每个指标都必须带的条件，例如器件层的七项（D-72，V-07）",
+          "propertyNames": {
+            "enum": [
+              "material",
+              "component",
+              "system",
+              "product_supply",
+              "compliance",
+              "none"
+            ]
+          },
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/key"
+            }
+          }
+        },
         "conditions": {
           "type": "array",
           "title": "条件项",
@@ -1738,6 +2452,12 @@
                 "$ref": "#/$defs/key",
                 "title": "键"
               },
+              "list_no": {
+                "type": "string",
+                "title": "指标清单里的编号",
+                "pattern": "^IN-\\d{2}$",
+                "description": "《学术样品_指标清单》的 IN-xx；一个编号可以拆成几个键"
+              },
               "name_zh": {
                 "type": "string",
                 "title": "中文名",
@@ -1760,6 +2480,21 @@
               "level": {
                 "$ref": "#/$defs/enum_level",
                 "title": "层级"
+              },
+              "origin": {
+                "$ref": "#/$defs/enum_indicator_origin",
+                "title": "指标来源",
+                "description": "①传统公认；②政策、规范与行业新趋势；③检索里出现；已定内容（D-62）"
+              },
+              "grade": {
+                "$ref": "#/$defs/enum_indicator_grade",
+                "title": "档",
+                "description": "核心每篇都找，扩展看到就记（D-67）"
+              },
+              "entry": {
+                "$ref": "#/$defs/enum_indicator_entry",
+                "title": "怎么录",
+                "description": "默认 evidence；derived 由脚本算、不录入（如 IN-16）；relations 用实体和关系表达（如 IN-42）（V-21）"
               },
               "value_kind": {
                 "$ref": "#/$defs/enum_content_kind",
@@ -1835,6 +2570,8 @@
               "key",
               "name_zh",
               "level",
+              "origin",
+              "grade",
               "value_kind",
               "required_conditions"
             ],
@@ -1856,6 +2593,135 @@
               ]
             }
           }
+        },
+        "facts": {
+          "type": "array",
+          "title": "事实项",
+          "items": {
+            "type": "object",
+            "properties": {
+              "key": {
+                "$ref": "#/$defs/key",
+                "title": "键"
+              },
+              "name_zh": {
+                "type": "string",
+                "title": "中文名",
+                "minLength": 1
+              },
+              "name_en": {
+                "type": "string",
+                "title": "英文名",
+                "minLength": 1
+              },
+              "question": {
+                "type": "string",
+                "pattern": "^Q\\d+$",
+                "title": "对应的问题"
+              },
+              "level": {
+                "$ref": "#/$defs/enum_level",
+                "title": "层级",
+                "description": "多数是 none"
+              },
+              "value_kind": {
+                "$ref": "#/$defs/enum_content_kind",
+                "title": "取值类别"
+              },
+              "unit_std": {
+                "type": "string",
+                "title": "标准单位",
+                "minLength": 1
+              },
+              "units_accepted": {
+                "type": "array",
+                "title": "允许的单位",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "unit": {
+                      "type": "string",
+                      "title": "单位",
+                      "minLength": 1
+                    },
+                    "factor": {
+                      "type": "number",
+                      "title": "换算到标准单位要乘的系数"
+                    }
+                  },
+                  "required": [
+                    "unit",
+                    "factor"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "allowed_values": {
+                "type": "array",
+                "title": "允许的取值",
+                "items": {
+                  "type": "string",
+                  "title": "取值",
+                  "minLength": 1
+                }
+              },
+              "required_conditions": {
+                "type": "array",
+                "title": "必须同时记录的条件",
+                "items": {
+                  "$ref": "#/$defs/key"
+                },
+                "description": "例如年份、币种、范围（方案 3.8：写明口径、年份、币种和范围）"
+              },
+              "optional_conditions": {
+                "type": "array",
+                "title": "可选的条件",
+                "items": {
+                  "$ref": "#/$defs/key"
+                }
+              },
+              "definition": {
+                "type": "string",
+                "title": "定义",
+                "minLength": 1
+              },
+              "status": {
+                "$ref": "#/$defs/enum_dict_status",
+                "title": "状态"
+              },
+              "notes": {
+                "type": "string",
+                "title": "备注",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "key",
+              "name_zh",
+              "question",
+              "level",
+              "value_kind",
+              "required_conditions"
+            ],
+            "additionalProperties": false,
+            "if": {
+              "properties": {
+                "value_kind": {
+                  "const": "numeric"
+                }
+              },
+              "required": [
+                "value_kind"
+              ]
+            },
+            "then": {
+              "required": [
+                "unit_std",
+                "units_accepted"
+              ]
+            }
+          },
+          "description": "非学术来源要抽的事实（专利、政策法规和标准、产业和市场的数字、资助）。不是指标，不进可比组（R9）"
         },
         "rules": {
           "type": "array",
@@ -1888,6 +2754,14 @@
                 "type": "string",
                 "title": "规则内容",
                 "minLength": 1
+              },
+              "key_conditions": {
+                "type": "array",
+                "title": "关键条件",
+                "items": {
+                  "$ref": "#/$defs/key"
+                },
+                "description": "组里成员这几项条件要相同且都报告了（R3，V-47）"
               },
               "tier_if_met": {
                 "$ref": "#/$defs/enum_tier",
@@ -1988,6 +2862,16 @@
           "title": "归一化说明",
           "minLength": 1
         },
+        "baseline_subject_id": {
+          "$ref": "#/$defs/id_ENT",
+          "title": "基准膜",
+          "description": "用与基准之比的组必填：基准膜的型号（产品实体）；重铸的指向全氟磺酸的材料族（D-71，V-46）"
+        },
+        "baseline_class": {
+          "$ref": "#/$defs/enum_baseline_class",
+          "title": "基准膜的形态",
+          "description": "商业膜（原样或预处理过）和重铸的分开成组（D-71）"
+        },
         "condition_envelope": {
           "type": "object",
           "title": "这一组共同的条件",
@@ -1997,6 +2881,20 @@
           "additionalProperties": {
             "$ref": "#/$defs/condition_value"
           }
+        },
+        "missing_conditions": {
+          "type": "array",
+          "title": "原文没写的条件",
+          "items": {
+            "$ref": "#/$defs/key"
+          },
+          "description": "同文同批定为直接可比、但原文漏写了某项条件时，写明缺哪项（D-64 第三条，V-41）"
+        },
+        "same_setup_note": {
+          "type": "string",
+          "title": "同一套条件的依据",
+          "minLength": 1,
+          "description": "原文哪里写明、或哪张图表显示样品和基准膜是同一套条件（D-64 第三条）"
         },
         "members": {
           "type": "array",
@@ -2092,7 +2990,7 @@
     },
     "assessment": {
       "type": "object",
-      "title": "判断（可选）",
+      "title": "判断（现阶段只用描述一层）",
       "properties": {
         "id": {
           "$ref": "#/$defs/id_ASM",
@@ -2110,7 +3008,7 @@
         "layer": {
           "$ref": "#/$defs/enum_layer",
           "title": "层",
-          "description": "description 只陈述数据说了什么；judgment 是评价和建议"
+          "description": "description 只陈述数据说了什么；judgment 是评价和建议，现阶段不用（D-60、D-61，V-51）"
         },
         "statement": {
           "type": "string",
@@ -2550,6 +3448,28 @@
           "minLength": 1,
           "description": "生成时的提交号"
         },
+        "dictionary_version": {
+          "type": "string",
+          "title": "指标字典的版本",
+          "minLength": 1
+        },
+        "skill_version": {
+          "type": "string",
+          "title": "所用报告 skill 的版本",
+          "minLength": 1,
+          "description": "如 intelligent-tank-report v0.2（D-101）"
+        },
+        "file": {
+          "type": "string",
+          "title": "报告文件在仓库里的位置",
+          "minLength": 1
+        },
+        "evidence_file": {
+          "type": "string",
+          "title": "随报告给的全部证据数据文件",
+          "minLength": 1,
+          "description": "已发出的报告必填（D-102，V-60）"
+        },
         "evidence_ids": {
           "type": "array",
           "title": "引用的证据",
@@ -2581,6 +3501,15 @@
         "supersedes": {
           "$ref": "#/$defs/id_RPT",
           "title": "取代了哪一份"
+        },
+        "change_note": {
+          "type": "string",
+          "title": "与上一版相比的变化",
+          "minLength": 1
+        },
+        "other_language": {
+          "$ref": "#/$defs/id_RPT",
+          "title": "另一种语言的版本"
         }
       },
       "required": [
@@ -2621,6 +3550,163 @@
       "type": "array",
       "items": {
         "$ref": "#/$defs/report"
+      }
+    },
+    "review": {
+      "type": "object",
+      "title": "复核单",
+      "description": "专业复核用的单子：一个可比组一张，也可以是不属于任何组的条目（D-80）。只留内部",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id_RVW",
+          "title": "复核单编号"
+        },
+        "topic_id": {
+          "$ref": "#/$defs/id_TOP",
+          "title": "题目"
+        },
+        "comparison_id": {
+          "$ref": "#/$defs/id_CMP",
+          "title": "对应的可比组"
+        },
+        "title": {
+          "type": "string",
+          "title": "名称",
+          "minLength": 1
+        },
+        "status": {
+          "$ref": "#/$defs/enum_review_status",
+          "title": "状态"
+        },
+        "created_by": {
+          "$ref": "#/$defs/actor",
+          "title": "起草人"
+        },
+        "created_at": {
+          "$ref": "#/$defs/date",
+          "title": "起草日期"
+        },
+        "reviewer": {
+          "$ref": "#/$defs/actor",
+          "title": "复核人"
+        },
+        "reviewed_at": {
+          "$ref": "#/$defs/date",
+          "title": "复核日期"
+        },
+        "items": {
+          "type": "array",
+          "title": "要复核人看的条目",
+          "items": {
+            "type": "object",
+            "properties": {
+              "target_id": {
+                "title": "条目",
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/id_EV"
+                  },
+                  {
+                    "$ref": "#/$defs/id_CMP"
+                  },
+                  {
+                    "$ref": "#/$defs/id_ASM"
+                  }
+                ]
+              },
+              "reason": {
+                "$ref": "#/$defs/enum_review_reason",
+                "title": "为什么要看"
+              },
+              "why": {
+                "type": "string",
+                "title": "具体说明",
+                "minLength": 1
+              },
+              "suggestion": {
+                "type": "string",
+                "title": "参考判断",
+                "minLength": 1
+              },
+              "decision": {
+                "$ref": "#/$defs/enum_review_decision",
+                "title": "复核人的决定"
+              },
+              "change_ids": {
+                "type": "array",
+                "title": "改动对应的变化记录",
+                "items": {
+                  "$ref": "#/$defs/id_CHG"
+                },
+                "description": "决定是 modify 时必填"
+              },
+              "note": {
+                "type": "string",
+                "title": "复核人的话",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "target_id",
+              "reason",
+              "why",
+              "suggestion",
+              "decision"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "batch": {
+          "type": "object",
+          "title": "成批确认的条目",
+          "properties": {
+            "evidence_ids": {
+              "type": "array",
+              "title": "条目",
+              "items": {
+                "$ref": "#/$defs/id_EV"
+              },
+              "minItems": 1
+            },
+            "sampled": {
+              "type": "array",
+              "title": "随机抽出来给复核人看的几条",
+              "items": {
+                "$ref": "#/$defs/id_EV"
+              }
+            },
+            "decision": {
+              "$ref": "#/$defs/enum_review_decision",
+              "title": "复核人的决定"
+            }
+          },
+          "required": [
+            "evidence_ids",
+            "decision"
+          ],
+          "additionalProperties": false
+        },
+        "notes": {
+          "type": "string",
+          "title": "备注",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "id",
+        "topic_id",
+        "title",
+        "status",
+        "created_by",
+        "created_at",
+        "items"
+      ],
+      "additionalProperties": false
+    },
+    "reviews_file": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/review"
       }
     }
   }

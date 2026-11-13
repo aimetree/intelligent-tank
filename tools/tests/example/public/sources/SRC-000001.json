@@ -14,7 +14,11 @@
       {
         "topic_id": "TOP-000001",
         "decision": "included",
-        "found_via": "search"
+        "found_via": "search",
+        "core_check": {
+          "energy_efficiency": "found",
+          "area_resistance": "not_reported"
+        }
       }
     ],
     "source_type": "paper",
@@ -32,6 +36,7 @@
     "access_scope": "full",
     "license": "CC BY 4.0",
     "license_class": "open",
+    "handling": "开放获取出版版，AI 协助阅读，不留副本",
     "terms": {
       "no_scraping": false,
       "no_ai": false,
@@ -40,24 +45,46 @@
     "reading_mode": "ai_assisted",
     "copy_kept": "none",
     "external_use": "facts",
-    "handling": "开放获取出版版，AI 协助阅读，不留副本",
-    "use": "evidence"
+    "use": "evidence",
+    "fetched_by": "ai_tool"
   },
+  "samples": [
+    {
+      "label": "X-1",
+      "role": "studied",
+      "subject_id": "ENT-000001",
+      "facets": {
+        "fluorine_class": "non_fluorinated",
+        "conduction_type": "acid_doped"
+      }
+    },
+    {
+      "label": "X-0",
+      "role": "control",
+      "subject_id": "ENT-000001",
+      "facets": {
+        "fluorine_class": "non_fluorinated",
+        "conduction_type": "acid_doped"
+      },
+      "notes": "未改性的原膜（虚构）"
+    },
+    {
+      "label": "P-212",
+      "role": "baseline",
+      "subject_id": "ENT-000003",
+      "baseline_form": "as_received"
+    }
+  ],
   "evidence": [
     {
       "id": "EV-000001-001",
       "topic_id": "TOP-000001",
       "record_version": 1,
-      "source_id": "SRC-000001",
-      "content_kind": "numeric",
-      "value_qualifier": "eq",
-      "entry_method": "ai",
-      "double_extraction": "agree",
-      "obtained_at": "2026-11-11",
       "created_by": "claude",
       "created_at": "2026-11-11",
+      "content_kind": "numeric",
+      "value_qualifier": "eq",
       "verification_status": "expert_reviewed",
-      "visibility": "external",
       "subject_id": "ENT-000001",
       "sample_label": "X-1",
       "level": "component",
@@ -89,6 +116,7 @@
       },
       "series_label": "S1",
       "baseline_ref": "EV-000001-002",
+      "control_ref": "EV-000001-004",
       "evidence_type": "experimental",
       "obtained_from": "table",
       "locator": {
@@ -98,6 +126,14 @@
         "text": "第 6 页，表 2，第 3 行"
       },
       "snippet": "X-1 98.1 87.3 85.6",
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "claude",
+        "set_at": "2026-11-11"
+      },
       "machine_check": {
         "identifier": "pass",
         "snippet": "pass",
@@ -107,22 +143,22 @@
       "verified_by": "yu",
       "verified_at": "2026-11-11",
       "expert_reviewed_by": "kai",
-      "expert_reviewed_at": "2026-11-11"
+      "expert_reviewed_at": "2026-11-11",
+      "source_id": "SRC-000001",
+      "entry_method": "ai",
+      "double_extraction": "agree",
+      "obtained_at": "2026-11-11",
+      "visibility": "external"
     },
     {
       "id": "EV-000001-002",
       "topic_id": "TOP-000001",
       "record_version": 1,
-      "source_id": "SRC-000001",
-      "content_kind": "numeric",
-      "value_qualifier": "eq",
-      "entry_method": "ai",
-      "double_extraction": "agree",
-      "obtained_at": "2026-11-11",
       "created_by": "claude",
       "created_at": "2026-11-11",
+      "content_kind": "numeric",
+      "value_qualifier": "eq",
       "verification_status": "expert_reviewed",
-      "visibility": "external",
       "subject_id": "ENT-000003",
       "sample_label": "P-212",
       "level": "component",
@@ -162,6 +198,14 @@
         "text": "第 6 页，表 2，第 1 行"
       },
       "snippet": "P-212 96.0 85.4 82.0",
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "claude",
+        "set_at": "2026-11-11"
+      },
       "machine_check": {
         "identifier": "pass",
         "snippet": "pass",
@@ -171,22 +215,23 @@
       "verified_by": "yu",
       "verified_at": "2026-11-11",
       "expert_reviewed_by": "kai",
-      "expert_reviewed_at": "2026-11-11"
+      "expert_reviewed_at": "2026-11-11",
+      "source_id": "SRC-000001",
+      "entry_method": "ai",
+      "double_extraction": "agree",
+      "obtained_at": "2026-11-11",
+      "visibility": "external"
     },
     {
       "id": "EV-000001-003",
       "topic_id": "TOP-000001",
       "record_version": 1,
-      "source_id": "SRC-000001",
-      "content_kind": "numeric",
-      "value_qualifier": "eq",
-      "entry_method": "ai",
-      "double_extraction": "na",
-      "obtained_at": "2026-11-11",
       "created_by": "claude",
       "created_at": "2026-11-11",
+      "content_kind": "numeric",
+      "value_qualifier": "eq",
       "verification_status": "human_verified",
-      "visibility": "external",
+      "double_extraction": "na",
       "subject_id": "ENT-000001",
       "sample_label": "X-1",
       "level": "component",
@@ -234,6 +279,15 @@
         "reread_value": 81.0,
         "reading_error": 0.5
       },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "figure_read",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "claude",
+        "set_at": "2026-11-11"
+      },
       "machine_check": {
         "identifier": "pass",
         "snippet": "na",
@@ -241,7 +295,79 @@
         "at": "2026-11-11"
       },
       "verified_by": "yu",
-      "verified_at": "2026-11-11"
+      "verified_at": "2026-11-11",
+      "source_id": "SRC-000001",
+      "entry_method": "ai",
+      "obtained_at": "2026-11-11",
+      "visibility": "external"
+    },
+    {
+      "id": "EV-000001-004",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "created_by": "claude",
+      "created_at": "2026-11-11",
+      "content_kind": "numeric",
+      "value_qualifier": "eq",
+      "verification_status": "machine_checked",
+      "subject_id": "ENT-000001",
+      "sample_label": "X-0",
+      "level": "component",
+      "indicator": "energy_efficiency",
+      "value_reported": "83.1",
+      "unit_reported": "%",
+      "value_std": 83.1,
+      "conditions": {
+        "current_density": {
+          "reported": "80 mA cm-2",
+          "value": 80,
+          "unit": "mA/cm2"
+        },
+        "vanadium_conc": {
+          "reported": "1.6 M",
+          "value": 1.6,
+          "unit": "mol/L"
+        },
+        "acid_conc": {
+          "reported": "3.0 M H2SO4",
+          "value": 3.0,
+          "unit": "mol/L"
+        },
+        "temperature": {
+          "reported": "25 °C",
+          "value": 25,
+          "unit": "degC"
+        }
+      },
+      "series_label": "S1",
+      "evidence_type": "experimental",
+      "obtained_from": "table",
+      "locator": {
+        "page": "6",
+        "table": "2",
+        "item": "第 2 行",
+        "text": "第 6 页，表 2，第 2 行"
+      },
+      "snippet": "X-0 97.5 85.2 83.1",
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "claude",
+        "set_at": "2026-11-11"
+      },
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-11"
+      },
+      "source_id": "SRC-000001",
+      "entry_method": "ai",
+      "double_extraction": "agree",
+      "obtained_at": "2026-11-11",
+      "visibility": "external"
     }
   ]
 }

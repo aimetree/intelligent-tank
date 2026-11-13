@@ -1,0 +1,120 @@
+{
+  "source": {
+    "id": "SRC-000005",
+    "language": "en",
+    "status": "active",
+    "status_checked_at": "2026-11-11",
+    "id_check": {
+      "result": "pass",
+      "at": "2026-11-11"
+    },
+    "registered_by": "claude",
+    "registered_at": "2026-11-11",
+    "topics": [
+      {
+        "topic_id": "TOP-000001",
+        "decision": "included",
+        "found_via": "search"
+      }
+    ],
+    "source_type": "policy",
+    "title": "示例限制提案（虚构）",
+    "creators": "示例监管机构（虚构）",
+    "published": "2025-03",
+    "url": "https://example.org/policy",
+    "accessed_at": "2026-11-11",
+    "version_label": "征求意见稿",
+    "jurisdiction": "eu",
+    "access_route": "public_web",
+    "access_scope": "full",
+    "license": "页面没有许可声明",
+    "license_class": "unstated",
+    "handling": "官方网站的公开文件，AI 协助阅读，不留副本",
+    "doc": {
+      "issuer": "示例监管机构（虚构）",
+      "doc_number": "示例-2025-001",
+      "issued": "2025-03-01",
+      "scope": "示例：含氟聚合物（虚构）",
+      "status": {
+        "stated": "意见草案征求意见中（虚构）",
+        "stage": "in_review",
+        "checked_in": "示例监管机构网站",
+        "checked_at": "2026-11-11",
+        "events": [
+          {
+            "date": "2025-03-01",
+            "summary": "发布提案（虚构）",
+            "locator": "第 1 页"
+          },
+          {
+            "date": "2026-03-02",
+            "summary": "第一个委员会通过意见（虚构）",
+            "locator": "新闻稿"
+          }
+        ],
+        "next_step": {
+          "summary": "第二个委员会出最终意见（虚构）",
+          "expected": "2026",
+          "locator": "第 2 页"
+        }
+      }
+    },
+    "record_verified_by": "yu",
+    "record_verified_at": "2026-11-11",
+    "terms": {
+      "no_scraping": false,
+      "no_ai": false,
+      "checked_at": "2026-11-11"
+    },
+    "reading_mode": "ai_assisted",
+    "copy_kept": "none",
+    "external_use": "facts",
+    "use": "evidence",
+    "fetched_by": "ai_tool"
+  },
+  "evidence": [
+    {
+      "id": "EV-000005-001",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "created_by": "claude",
+      "created_at": "2026-11-11",
+      "content_kind": "statement",
+      "verification_status": "human_verified",
+      "subject_id": "ENT-000002",
+      "level": "none",
+      "fact": "policy_clause",
+      "questions": [
+        "Q3"
+      ],
+      "summary": "提案把示例含氟聚合物列在范围内（虚构）",
+      "evidence_type": "verified_fact",
+      "obtained_from": "text",
+      "locator": {
+        "page": "12",
+        "section": "附件一",
+        "text": "第 12 页，附件一"
+      },
+      "snippet": "fluoropolymers are within scope (fictional)",
+      "risk": {
+        "tier": "low",
+        "reasons": [],
+        "set_by": "claude",
+        "set_at": "2026-11-11"
+      },
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-11"
+      },
+      "verified_by": "yu",
+      "verified_at": "2026-11-11",
+      "source_id": "SRC-000005",
+      "entry_method": "ai",
+      "double_extraction": "agree",
+      "obtained_at": "2026-11-11",
+      "visibility": "external"
+    }
+  ]
+}
