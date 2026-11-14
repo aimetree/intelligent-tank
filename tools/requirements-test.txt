@@ -1,0 +1,3 @@
+# 只有测试看板的页面脚本时才用：tools/tests/test_dashboard.py 里“用浏览器打开点一遍”的那几项。
+# 用机器上已有的 Chrome，不另外下载浏览器。不装也能跑测试，那几项会跳过并写明。
+playwright>=1.45

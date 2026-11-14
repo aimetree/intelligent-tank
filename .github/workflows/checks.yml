@@ -1,6 +1,7 @@
 name: 校验与测试
 
-# 改了数据或脚本就跑：校验 data/，再跑两组测试。只读仓库，不联网取别的东西。
+# 改了数据或脚本就跑：校验 data/，跑三组测试，再用仓库里的 data/ 试着生成一遍看板。
+# 只读仓库。除了装依赖，不联网取别的东西。
 on:
   push:
     paths:
@@ -46,3 +47,11 @@ jobs:
         run: python3 tools/tests/test_validate.py
       - name: 登记与机器核对脚本的测试
         run: python3 tools/tests/test_step1.py
+      - name: 装测试看板要用的包
+        run: pip install -r tools/requirements-test.txt
+      - name: 看板生成脚本的测试
+        env:
+          DASHBOARD_BROWSER_TESTS: required   # 页面脚本要用浏览器测，这里不许跳过
+        run: python3 tools/tests/test_dashboard.py
+      - name: 用仓库里的 data/ 生成看板
+        run: python3 tools/build_dashboard.py --out site --strict
