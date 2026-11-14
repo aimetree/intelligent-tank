@@ -1,0 +1,5 @@
+示例规格书（虚构，测试用）
+
+Property   Value
+Thickness   50 μm
+Area resistance0.45 Ω cm²

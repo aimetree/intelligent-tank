@@ -531,6 +531,20 @@
         "en": "Not applicable"
       }
     },
+    "id_check_method": {
+      "doi_registry": {
+        "zh": "DOI 注册处查得到",
+        "en": "Found in the DOI registry"
+      },
+      "http": {
+        "zh": "网址能打开",
+        "en": "URL opens"
+      },
+      "member": {
+        "zh": "成员取得时确认",
+        "en": "Confirmed by a member on retrieval"
+      }
+    },
     "independent_validation": {
       "yes": {
         "zh": "有",

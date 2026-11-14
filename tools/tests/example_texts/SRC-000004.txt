@@ -1,0 +1,7 @@
+示例专利（虚构，测试用）
+
+Claims
+1. A membrane comprising ... (fictional)
+
+Example 1
+The cell showed an energy efficiency of 84.0% (fictional) at 80 mA/cm2.

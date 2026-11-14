@@ -1,0 +1,9 @@
+示例论文 A（虚构，测试用，不是真实文献）
+
+Table 2. Cell performance at 80 mA cm⁻² (fictional).
+Membrane	CE (%)	VE (%)	EE (%)
+P-212	96.0	85.4	82.0
+X-0	97.5	85.2	83.1
+X-1	98.1	87.3	85.6
+
+Fig. 4b shows the rate performance (fictional).

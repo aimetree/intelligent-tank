@@ -1,0 +1,73 @@
+name: 标识解析
+
+# 要联网的那一步在这里跑（Yu 2026-11-14 定）：查来源的 DOI 在不在注册处、网址打不打得开，
+# 把结果写回来源文件的 id_check，再提交回来。来源文件或这个脚本有改动时自动跑，也可以在 Actions 页面手动跑。
+# 只有在 main 上才写回并提交；别的分支上只查、只出摘要。main 上跑完之后，本地要先 git pull 再接着做。
+on:
+  push:
+    paths:
+      - "data/public/sources/**"
+      - "tools/check_identifiers.py"
+      - ".github/workflows/identifiers.yml"
+  workflow_dispatch:
+    inputs:
+      all:
+        description: "连已经通过的也重查"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write   # 要把 id_check 提交回来
+
+concurrency:
+  group: identifiers-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  resolve:
+    name: 查 DOI 和网址，写回 id_check
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: 装依赖
+        run: pip install -r tools/requirements.txt
+      - name: 自检：注册处里存在的号和不存在的号各查一个
+        env:
+          ID_CHECK_CONTACT: ${{ vars.ID_CHECK_CONTACT }}   # 可选：仓库的 Actions 变量里放一个联系方式
+        run: python3 tools/check_identifiers.py --selftest
+      - name: 查标识
+        id: check
+        continue-on-error: true   # 有不通过的也先把结果写回去，最后一步再标红
+        env:
+          ID_CHECK_CONTACT: ${{ vars.ID_CHECK_CONTACT }}
+          RECHECK: ${{ inputs.all }}
+          ON_MAIN: ${{ github.ref == 'refs/heads/main' }}
+        run: |
+          args="--summary $GITHUB_STEP_SUMMARY"
+          if [ "$ON_MAIN" = "true" ]; then args="$args --write"; fi
+          if [ "$RECHECK" = "true" ]; then args="$args --all"; fi
+          python3 tools/check_identifiers.py $args
+      - name: 把结果提交回来
+        if: github.ref == 'refs/heads/main'
+        run: |
+          if git diff --quiet -- data/public/sources; then
+            echo "没有要写回的结果"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/public/sources
+          git commit -m "标识解析：写回 id_check（tools/check_identifiers.py）"
+          git pull --rebase
+          git push
+      - name: 校验写回之后的 data/
+        run: python3 tools/validate.py --no-git
+      - name: 有不通过的就把这次运行标红
+        if: steps.check.outcome == 'failure'
+        run: |
+          echo "有来源的标识没有通过解析，见这次运行的摘要"
+          exit 1

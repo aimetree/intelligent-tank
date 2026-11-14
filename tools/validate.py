@@ -5,6 +5,7 @@
   python3 tools/validate.py                         校验仓库里的 data/
   python3 tools/validate.py --data tools/tests/example
   python3 tools/validate.py --external CMP-000001   假设这些可比组要对外，多查对外门槛（V-61 至 V-63）
+  python3 tools/validate.py --base <提交>            V-72（日志只追加）和这次提交比，GitHub Actions 上用
 
 做两件事
   1. 结构：每条记录的字段名、类型、枚举和录入时就必填的字段，对照 data/schema/ 里的定义。
@@ -125,7 +126,8 @@ def load_dataset(data_dir):
     problems = []
     ds = {"dir": data_dir, "problems": problems, "meta": None, "sources": {}, "samples": {}, "evidence": {},
           "entities": {}, "relations": {}, "topics": {}, "dictionaries": {}, "comparisons": {}, "assessments": {},
-          "reports": {}, "reviews": {}, "changes": [], "worklog": []}
+          "reports": {}, "reviews": {}, "changes": [], "worklog": [],
+          "files": {}}  # 来源编号 → (文件路径, 整个文件)。改了来源或证据之后写回文件用（tools/store.py）
 
     def put(coll, rec, where):
         rid = rec.get("id") if isinstance(rec, dict) else None
@@ -153,6 +155,8 @@ def load_dataset(data_dir):
             continue
         src = doc["source"]
         put("sources", src, rel)
+        if isinstance(src.get("id"), str) and ds["sources"].get(src["id"]) is src:
+            ds["files"][src["id"]] = (path, doc)
         if src.get("id") != os.path.splitext(os.path.basename(path))[0]:
             problems.append(Issue("V-01", rel, "文件名与来源编号不一致"))
         if "samples" in doc:
@@ -291,6 +295,87 @@ def unit_factor(measure, unit):
     return (unit_entry(measure, unit) or {}).get("factor")
 
 
+class Lookups:
+    """跨记录的查找。check_rules 用它；别的脚本（如 machine_check.py 预填风险档）也用它，
+    这样脚本推出来的和校验查的是同一套。"""
+
+    def __init__(self, ds):
+        self.src, self.ev, self.dic, self.samples = ds["sources"], ds["evidence"], ds["dictionaries"], ds["samples"]
+        self.by_source = {}
+        for e in self.ev.values():
+            if isinstance(e, dict):
+                self.by_source.setdefault(e.get("source_id"), []).append(e)
+
+    def measure_of(self, e):
+        """证据用的指标或事实项：返回 (类别, 定义)。"""
+        d = self.dic.get(e.get("topic_id")) or {}
+        if e.get("indicator"):
+            return "indicator", next((x for x in d.get("indicators", []) if x.get("key") == e["indicator"]), None)
+        if e.get("fact"):
+            return "fact", next((x for x in d.get("facts", []) if x.get("key") == e["fact"]), None)
+        return None, None
+
+    def register_of(self, sid):
+        """来源的样品登记，按样品名索引；补充材料没有自己的登记时用所属论文的。"""
+        reg = self.samples.get(sid)
+        if reg is None:
+            parent = (self.src.get(sid) or {}).get("parent_id")
+            reg = self.samples.get(parent) if parent else None
+        return {x.get("label"): x for x in (reg or []) if isinstance(x, dict)}
+
+    def several(self, sid):
+        """同一来源里有多个样品或多张表（风险理由 multiple_samples_or_tables）。"""
+        rows = self.by_source.get(sid, [])
+        labels = {e.get("sample_label") for e in rows if e.get("sample_label")}
+        tables = {(e.get("locator") or {}).get("table") for e in rows if (e.get("locator") or {}).get("table")}
+        return len(self.register_of(sid)) > 1 or len(labels) > 1 or len(tables) > 1
+
+    def derive_risk(self, e):
+        """按字段推得出的风险理由（方案 5.6）。数值离群的门槛试做时定，这里不推。"""
+        s = self.src.get(e.get("source_id")) or {}
+        reasons = set()
+        if e.get("obtained_from") == "figure_read":
+            reasons.add("figure_read")
+        if e.get("double_extraction") == "resolved":
+            reasons.add("extraction_mismatch")
+        if "fail" in [v for k, v in (e.get("machine_check") or {}).items() if k != "at"]:
+            reasons.add("machine_check_failed")
+        m = self.measure_of(e)[1] or {}
+        if e.get("content_kind") == "numeric" and e.get("unit_reported") and m.get("unit_std") \
+                and e["unit_reported"] != m["unit_std"] and unit_factor(m, e["unit_reported"]) is not None:
+            reasons.add("unit_converted")
+        if e.get("conditions_locator"):
+            reasons.add("conditions_elsewhere")
+        if self.several(e.get("source_id")):
+            reasons.add("multiple_samples_or_tables")
+        if s.get("source_type") == "supplement":
+            reasons.add("from_supplement")
+        if e.get("value_qualifier") not in (None, "eq"):
+            reasons.add("qualified_value")
+        return reasons
+
+
+def risk_floor(reasons):
+    """这些理由对应的最低风险档（方案 5.6）；一个理由都没有就是低档。"""
+    rank = max([TIER_RANK[RISK_REASON_TIER[x]] for x in reasons if x in RISK_REASON_TIER] or [0])
+    return next(k for k, v in TIER_RANK.items() if v == rank)
+
+
+def machine_check_ok(e):
+    """机器核对是否全部通过（V-27）。图上读数只看标识；数值型三项都要通过；
+    分类型、陈述型没有数值可核，value_unit 写不适用（na）也算通过，写未通过不行。"""
+    mc = e.get("machine_check") or {}
+    if mc.get("identifier") != "pass":
+        return False
+    if e.get("obtained_from") == "figure_read":
+        return True
+    if mc.get("snippet") != "pass":
+        return False
+    if e.get("content_kind") == "numeric":
+        return mc.get("value_unit") == "pass"
+    return mc.get("value_unit") in ("pass", "na")
+
+
 def check_rules(ds, external=()):
     """规格第 5 节的规则。external：假设要对外的可比组编号。"""
     issues = []
@@ -325,14 +410,9 @@ def check_rules(ds, external=()):
             E("V-00", rid, f"记录的结构有问题，后面的规则没法查（{type(exc).__name__}: {exc}）")
 
     # ---- 共用的查找
-    def measure_of(e):
-        """证据用的指标或事实项：返回 (类别, 定义)。"""
-        d = dic.get(e.get("topic_id")) or {}
-        if e.get("indicator"):
-            return "indicator", next((x for x in d.get("indicators", []) if x.get("key") == e["indicator"]), None)
-        if e.get("fact"):
-            return "fact", next((x for x in d.get("facts", []) if x.get("key") == e["fact"]), None)
-        return None, None
+    lk = Lookups(ds)
+    measure_of, register_of, several, derive_risk, by_source = (lk.measure_of, lk.register_of, lk.several,
+                                                                lk.derive_risk, lk.by_source)
 
     def unreported(e):
         m = measure_of(e)[1] or {}
@@ -348,52 +428,8 @@ def check_rules(ds, external=()):
         s = src.get(sid) or {}
         return s.get("parent_id") if s.get("source_type") == "supplement" and s.get("parent_id") else sid
 
-    def register_of(sid):
-        """来源的样品登记，按样品名索引；补充材料没有自己的登记时用所属论文的。"""
-        reg = samples.get(sid)
-        if reg is None:
-            parent = (src.get(sid) or {}).get("parent_id")
-            reg = samples.get(parent) if parent else None
-        return {x.get("label"): x for x in (reg or []) if isinstance(x, dict)}
-
     def sample_of(e):
         return register_of(e.get("source_id")).get(e.get("sample_label"))
-
-    by_source = {}
-    for e in ev.values():
-        if isinstance(e, dict):
-            by_source.setdefault(e.get("source_id"), []).append(e)
-
-    def several(sid):
-        """同一来源里有多个样品或多张表（风险理由 multiple_samples_or_tables）。"""
-        rows = by_source.get(sid, [])
-        labels = {e.get("sample_label") for e in rows if e.get("sample_label")}
-        tables = {(e.get("locator") or {}).get("table") for e in rows if (e.get("locator") or {}).get("table")}
-        return len(register_of(sid)) > 1 or len(labels) > 1 or len(tables) > 1
-
-    def derive_risk(e):
-        """按字段推得出的风险理由（方案 5.6）。数值离群的门槛试做时定，这里不推。"""
-        s = src.get(e.get("source_id")) or {}
-        reasons = set()
-        if e.get("obtained_from") == "figure_read":
-            reasons.add("figure_read")
-        if e.get("double_extraction") == "resolved":
-            reasons.add("extraction_mismatch")
-        if "fail" in [v for k, v in (e.get("machine_check") or {}).items() if k != "at"]:
-            reasons.add("machine_check_failed")
-        m = measure_of(e)[1] or {}
-        if e.get("content_kind") == "numeric" and e.get("unit_reported") and m.get("unit_std") \
-                and e["unit_reported"] != m["unit_std"] and unit_factor(m, e["unit_reported"]) is not None:
-            reasons.add("unit_converted")
-        if e.get("conditions_locator"):
-            reasons.add("conditions_elsewhere")
-        if several(e.get("source_id")):
-            reasons.add("multiple_samples_or_tables")
-        if s.get("source_type") == "supplement":
-            reasons.add("from_supplement")
-        if e.get("value_qualifier") not in (None, "eq"):
-            reasons.add("qualified_value")
-        return reasons
 
     def included_in(s, tid=None):
         return [tu for tu in s.get("topics", []) if tu.get("decision") == "included" and (tid is None or tu.get("topic_id") == tid)]
@@ -565,6 +601,11 @@ def check_rules(ds, external=()):
         resolved = (s.get("id_check") or {}).get("result") == "pass"
         if not ((ids.get("doi") or ids.get("patent_number") or s.get("url")) and resolved) and s.get("use") != "lead":
             E("V-11", sid, "没有通过解析的标识（DOI、专利号或网址），只能作线索")
+        how = (s.get("id_check") or {}).get("method")
+        if how == "member" and s.get("fetched_by") not in ("member_download", "member_lookup"):
+            E("V-11", sid, "id_check 写的是成员取得时确认（member），但这个来源不是成员下载或代查的")
+        if how == "doi_registry" and not ids.get("doi"):
+            E("V-11", sid, "id_check 写的是在 DOI 注册处查到（doi_registry），但来源没有登记 DOI")
         # V-10
         if st == "supplement" and not s.get("parent_id"):
             E("V-10", sid, "补充材料要填 parent_id，指向论文")
@@ -817,11 +858,9 @@ def check_rules(ds, external=()):
         loc = e.get("locator") or {}
         if not any(loc.get(k) for k in ("page", "table", "figure", "section", "item")):
             E("V-26", i, "出处位置至少写到页、表、图、节、项之一")
-        st, mc = e.get("verification_status"), e.get("machine_check") or {}
-        if st in ("machine_checked",) + VERIFIED:
-            need = ["identifier"] if e.get("obtained_from") == "figure_read" else ["identifier", "snippet", "value_unit"]
-            if any(mc.get(k) != "pass" for k in need):
-                E("V-27", i, "机器核对没有全部通过，状态不能到机器已核及以上")
+        st = e.get("verification_status")
+        if st in ("machine_checked",) + VERIFIED and not machine_check_ok(e):
+            E("V-27", i, "机器核对没有全部通过，状态不能到机器已核及以上")
         status_rules(i, e)
         if st == "disputed" and not e.get("dispute_note"):
             E("V-27", i, "存疑要写 dispute_note")
@@ -1202,8 +1241,11 @@ def check_rules(ds, external=()):
     return issues
 
 
-def check_append_only(data_dir):
-    """V-72：两个日志只在末尾加。和 git 里上一次提交的内容比，已有的行不能变。不在 git 里就跳过。"""
+def check_append_only(data_dir, base="HEAD"):
+    """V-72：两个日志只在末尾加。和 git 里 base 那次提交的内容比，已有的行不能变。不在 git 里就跳过。
+
+    提交之前在本机跑，和 HEAD 比就够了；在 GitHub Actions 上工作区就是 HEAD，要给 --base 指定推送之前的那次提交。
+    """
     issues = []
     try:
         top = subprocess.run(["git", "-C", data_dir, "rev-parse", "--show-toplevel"], capture_output=True, text=True)
@@ -1215,9 +1257,9 @@ def check_append_only(data_dir):
     for name in ("changes.jsonl", "worklog.jsonl"):
         path = os.path.join(data_dir, name)
         rel = os.path.relpath(os.path.realpath(path), os.path.realpath(root)).replace(os.sep, "/")
-        old = subprocess.run(["git", "-C", root, "show", f"HEAD:{rel}"], capture_output=True)
+        old = subprocess.run(["git", "-C", root, "show", f"{base}:{rel}"], capture_output=True)
         if old.returncode != 0:
-            continue  # 上一次提交里还没有这个文件
+            continue  # 那次提交里还没有这个文件
         new = open(path, "rb").read() if os.path.exists(path) else b""
         if not new.startswith(old.stdout):
             issues.append(Issue("V-72", name, "已经提交过的行被改动或删除了；这个日志只能在末尾加"))
@@ -1235,6 +1277,7 @@ def main(argv=None):
     ap.add_argument("--schema", default=DEFAULT_SCHEMA, help="schema 文件")
     ap.add_argument("--external", nargs="*", default=[], metavar="CMP-编号", help="假设这些可比组要对外，多查对外门槛")
     ap.add_argument("--no-git", action="store_true", help="不查 V-72（日志只追加）")
+    ap.add_argument("--base", default="HEAD", metavar="提交", help="V-72 和哪次提交比，默认 HEAD（提交之前在本机跑）")
     args = ap.parse_args(argv)
     if not os.path.isdir(args.data):
         print(f"找不到数据目录：{args.data}", file=sys.stderr)
@@ -1243,7 +1286,7 @@ def main(argv=None):
     ds = load_dataset(args.data)
     issues = validate(ds, schema, args.external)
     if not args.no_git:
-        issues += check_append_only(args.data)
+        issues += check_append_only(args.data, args.base)
     spec = (ds["meta"] or {}).get("spec_version")
     counts = "、".join(f"{name} {len(ds[key])}" for name, key in (
         ("题目", "topics"), ("来源", "sources"), ("证据", "evidence"), ("实体", "entities"), ("关系", "relations"),

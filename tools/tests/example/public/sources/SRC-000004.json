@@ -6,7 +6,8 @@
     "status_checked_at": "2026-11-11",
     "id_check": {
       "result": "pass",
-      "at": "2026-11-11"
+      "at": "2026-11-11",
+      "method": "http"
     },
     "registered_by": "claude",
     "registered_at": "2026-11-11",
@@ -119,7 +120,7 @@
       "machine_check": {
         "identifier": "pass",
         "snippet": "pass",
-        "value_unit": "pass",
+        "value_unit": "na",
         "at": "2026-11-11"
       },
       "verified_by": "yu",

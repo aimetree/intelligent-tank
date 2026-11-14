@@ -13,3 +13,6 @@ __pycache__/
 # Secrets and local config: never commit
 .env
 *.key
+
+# 处理时的中间文件：来源文本、两遍抽取的结果和比对报告，不入库（规格 9.1 第 6 项）
+work/

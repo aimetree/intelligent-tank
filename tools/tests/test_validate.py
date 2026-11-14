@@ -98,6 +98,8 @@ CASES = [
     # ---- 来源
     ("自动读取的文件放进了 Project 文件区", "V-10", lambda d: src(d, "SRC-000001").__setitem__("copy_kept", "project_files"), ()),
     ("来源的标识没通过解析却作证据", "V-11", lambda d: src(d, "SRC-000001")["id_check"].__setitem__("result", "fail"), ()),
+    ("成员确认的查法用在了不是成员取来的来源上", "V-11", lambda d: src(d, "SRC-000001")["id_check"].__setitem__("method", "member"), ()),
+    ("没有 DOI 却写在 DOI 注册处查到", "V-11", lambda d: src(d, "SRC-000002")["id_check"].__setitem__("method", "doi_registry"), ()),
     ("条款禁止 AI 却由读取工具直接读", "V-12", lambda d: src(d, "SRC-000002")["terms"].__setitem__("no_ai", True), ()),
     ("条款禁止自动抓取却由读取工具直接读", "V-12", lambda d: src(d, "SRC-000007").__setitem__("fetched_by", "ai_tool"), ()),
     ("只有摘要却标全文", "V-13", lambda d: src(d, "SRC-000003").__setitem__("access_scope", "full"), ()),
@@ -143,6 +145,8 @@ CASES = [
     ("出处只写到来源", "V-26", lambda d: ev(d, "EV-000001-001").__setitem__("locator", {"text": "见论文"}), ()),
     ("AI 标成人工已核", "V-27", lambda d: ev(d, "EV-000003-001").__setitem__("verified_by", "claude"), ()),
     ("机器核对没过却标已核", "V-27", lambda d: ev(d, "EV-000002-001")["machine_check"].__setitem__("snippet", "fail"), ()),
+    ("数值型的数值核对写了不适用", "V-27", lambda d: ev(d, "EV-000002-001")["machine_check"].__setitem__("value_unit", "na"), ()),
+    ("陈述型的数值核对没通过", "V-27", lambda d: ev(d, "EV-000005-001")["machine_check"].__setitem__("value_unit", "fail"), ()),
     ("存疑没写说明", "V-27", lambda d: ev(d, "EV-000003-001").__setitem__("verification_status", "disputed"), ()),
     ("来源撤稿后证据没处理", "V-28", lambda d: src(d, "SRC-000003").__setitem__("status", "retracted"), ()),
     ("基准指到了别的来源", "V-29", lambda d: ev(d, "EV-000001-001").__setitem__("baseline_ref", "EV-000003-001"), ()),
@@ -267,6 +271,9 @@ def test_logs_are_append_only():
         lines = open(log, encoding="utf-8").read().splitlines()
         open(log, "w", encoding="utf-8").write("\n".join(lines[1:]) + "\n")
         assert [i.rule for i in V.check_append_only(data)] == ["V-72"]   # 删了已提交的行：不行
+        subprocess.run(git + ["commit", "-q", "-am", "改了已提交的行"], check=True)
+        assert V.check_append_only(data) == []                            # 提交之后和 HEAD 比看不出来
+        assert [i.rule for i in V.check_append_only(data, "HEAD~1")] == ["V-72"]   # 和推送之前的那次提交比才看得出来
 
 
 def test_export_drops_internal_fields():

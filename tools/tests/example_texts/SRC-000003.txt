@@ -1,0 +1,4 @@
+示例论文 B 的摘要（虚构，测试用）
+
+The membrane delivered an energy efficiency above 84% at 80 mA cm⁻² in a
+vanadium flow cell (fictional).

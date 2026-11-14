@@ -278,6 +278,13 @@
         "na"
       ]
     },
+    "enum_id_check_method": {
+      "enum": [
+        "doi_registry",
+        "http",
+        "member"
+      ]
+    },
     "enum_independent_validation": {
       "enum": [
         "yes",
@@ -1386,7 +1393,7 @@
         "id_check": {
           "type": "object",
           "title": "标识能否解析",
-          "description": "由脚本生成",
+          "description": "由脚本生成（tools/check_identifiers.py）",
           "properties": {
             "result": {
               "enum": [
@@ -1398,6 +1405,11 @@
             "at": {
               "$ref": "#/$defs/date",
               "title": "检查日期"
+            },
+            "method": {
+              "$ref": "#/$defs/enum_id_check_method",
+              "title": "怎么查的",
+              "description": "DOI 在注册处查到；网址能打开；成员下载或代查时确认。可选，旧记录可以没有"
             }
           },
           "required": [

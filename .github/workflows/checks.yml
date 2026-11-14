@@ -1,0 +1,48 @@
+name: 校验与测试
+
+# 改了数据或脚本就跑：校验 data/，再跑两组测试。只读仓库，不联网取别的东西。
+on:
+  push:
+    paths:
+      - "data/**"
+      - "tools/**"
+      - ".github/workflows/checks.yml"
+  pull_request:
+    paths:
+      - "data/**"
+      - "tools/**"
+      - ".github/workflows/checks.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    name: 校验 data/ 并跑测试
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0   # V-72 要和推送之前的那次提交比
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: 装依赖
+        run: pip install -r tools/requirements.txt
+      - name: 校验 data/
+        env:
+          EVENT: ${{ github.event_name }}
+          BEFORE: ${{ github.event.before }}
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          # 两个日志只能在末尾加（V-72）：推送时和推送之前的那次提交比，合并请求和目标分支比
+          base="$BEFORE"
+          if [ "$EVENT" = "pull_request" ]; then base="origin/$BASE_REF"; fi
+          if [ -z "$base" ] || ! git cat-file -e "$base^{commit}" 2>/dev/null; then base="HEAD"; fi
+          python3 tools/validate.py --base "$base"
+      - name: 校验脚本的测试
+        run: python3 tools/tests/test_validate.py
+      - name: 登记与机器核对脚本的测试
+        run: python3 tools/tests/test_step1.py

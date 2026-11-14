@@ -33,7 +33,26 @@
 2. 录入：从 `templates/` 里复制对应的模板，填好，用不到的可选字段整项删掉，不留空值。
 3. 编号取现有最大号加一，一经分配不复用。记录不删除：证据作废改状态，实体合并填 `merged_into`。
 4. 每次提交之前跑：`python3 tools/validate.py`。有问题时退出码是 1，每行是“规则编号、记录编号、哪里不对”。
-5. 改了 schema 之后：`python3 tools/make_templates.py` 重新生成模板，再跑 `python3 tools/tests/test_validate.py`。
+5. 改了 schema 之后：`python3 tools/make_templates.py` 重新生成模板，再跑 `python3 tools/tests/test_validate.py` 和 `python3 tools/tests/test_step1.py`。
+
+## 录一个来源，脚本怎么配合
+
+登记与机器核对这一步的脚本（2026-11-14 起，样品阶段脚本第 1 步）。每个脚本的文件头里有用法。
+
+| 步 | 做什么 | 用哪个脚本 |
+|---|---|---|
+| 1 | 分配来源编号，建来源文件 | `python3 tools/ids.py SRC` |
+| 2 | 同一个来源独立抽两遍，各存一个文件，把两遍对起来 | `python3 tools/compare_extractions.py pass1.json pass2.json --out report.json`：一致的已经写好 `double_extraction`，可以直接登记；不一致的、只有一遍有的交给人裁定，定下来的记 `resolved` |
+| 3 | 给证据分配编号，登记进来源文件 | `python3 tools/ids.py EV --source SRC-编号 --count 20` |
+| 4 | 查来源的标识能不能解析（要联网） | 推到 `main` 之后 GitHub Actions 自动跑 `tools/check_identifiers.py`，把 `id_check` 提交回来；跑完先 `git pull` 再接着做 |
+| 5 | 机器核对，预填风险档 | `python3 tools/machine_check.py --texts work/texts --write` |
+| 6 | 校验 | `python3 tools/validate.py` |
+
+- **来源文本**　机器核对要拿原文片段到来源文本里逐字找。抽取的时候把读到的来源文本存成 `work/texts/SRC-编号.txt`（或 `.md`）；`work/` 不入库（规格 9.1 第 6 项），两遍抽取的文件和比对报告也放在这里。没有文本的来源，它的证据没法查，留在待核。
+- **标识怎么查**　有 DOI 的到 DOI 注册处查这个号存不存在，不碰出版商的网站；没有 DOI、由成员下载或代查的，成员取到了就是存在，不发请求；其余的先看网站的 robots.txt，让自动访问才打开登记的网址。条款禁止自动访问又不是成员取来的，不查，列出来等人处理。没查成的（超时、被拒、robots.txt 不让）不写进数据。专利号现在不单独查，按网址或成员确认走。
+- **机器核对查什么**　来源的标识通过了解析；原文片段在来源文本里逐字找得到；数值在片段里，片段里数值后面紧跟着单位的，和记录的单位一致。只放宽排版上的差别（上标、全角、横线的写法、空白、换行、行尾断词），不改字，大小写不放宽。都过了的从待核改成机器已核；没过的留在或退回待核。人工已核及以上的证据不动。
+- **风险档**　机器核对之后按字段推出风险理由预填（规格 3.6.1）；数值离群、其他这两种由人或 Claude 标，重跑时留着。
+- **GitHub Actions**　`.github/workflows/checks.yml` 在数据或脚本有改动时跑校验和两组测试；`.github/workflows/identifiers.yml` 查标识，只有在 `main` 上才写回并提交，每次先自检（到注册处查一个存在的号和一个不存在的号）。
 
 ## 校验脚本查什么
 
@@ -42,6 +61,8 @@
 - **对外门槛**　报告登记里状态是 `issued` 的报告会自动查。想提前看某几个可比组能不能对外：`python3 tools/validate.py --external CMP-000001`。
 - **日志只追加**（V-72）　和上一次提交比，`changes.jsonl`、`worklog.jsonl` 里已有的行不能变。
 - **导出**（V-64）　生成对外证据表和随报告给的证据数据文件时，调用 `validate.strip_internal()` 去掉只留内部的字段，调用 `validate.display_flags()` 取要显示的标注（显示名在 `labels.json` 的 `flags`）。
+
+`tools/tests/example_texts/` 是示例来源的文本，也是虚构的，机器核对的测试用。
 
 `tools/tests/example/` 是一组虚构的示例数据，测试用，不是证据：11 个来源（论文、规格书、只有摘要的论文、专利、政策法规、资助记录、预印本和它的正式版、只登记题录的论文、更正声明、付费报告）、13 条证据、3 个可比组、1 张复核单。测试的做法是逐处把它改错，看对应的规则有没有报出来；另有一条测试查校验脚本里的每条规则都有改错的测试。
 
