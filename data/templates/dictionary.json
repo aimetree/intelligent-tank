@@ -92,13 +92,13 @@
       "applies_to": [
         "<必填：键名，英文小写加下划线>"
       ],
-      "level": "<必填：material｜component｜system｜product_supply｜compliance｜none>",
+      "level": "<material｜component｜system｜product_supply｜compliance｜none>",
       "statement": "<必填：规则内容>",
       "key_conditions": [
         "<键名，英文小写加下划线>"
       ],
-      "tier_if_met": "<必填：direct｜conditional｜reference｜insufficient>",
-      "normalization": "<必填：none｜unit｜ratio_to_baseline｜other>",
+      "tier_if_met": "<direct｜conditional｜reference｜insufficient>",
+      "normalization": "<none｜unit｜ratio_to_baseline｜other>",
       "status": "<draft｜confirmed>",
       "notes": "<备注>"
     }

@@ -1,0 +1,185 @@
+{
+  "id": "TOP-000001",
+  "title": "全钒液流电池里的非氟膜对全氟磺酸商业膜",
+  "direction": "academic",
+  "status": "active",
+  "questions": [
+    {
+      "key": "Q1",
+      "text": "2021 年以来，哪些非氟膜和部分含氟膜在全钒液流电池里做过实验，各属哪类材料。"
+    },
+    {
+      "key": "Q2",
+      "text": "它们在 14 项核心指标上报告了什么数值，测试条件是什么，哪些没有报告。"
+    },
+    {
+      "key": "Q3",
+      "text": "与同一篇论文里的全氟磺酸商业膜相比，各项指标的比值是多少。"
+    },
+    {
+      "key": "Q4",
+      "text": "全氟磺酸商业膜公开了哪些规格、价格和同条件对比数据。"
+    },
+    {
+      "key": "Q5",
+      "text": "哪些膜做到了电堆或示范，背后有哪些专利和企业。"
+    },
+    {
+      "key": "Q6",
+      "text": "哪些数据互相矛盾，哪些没有覆盖到。"
+    },
+    {
+      "key": "Q7",
+      "text": "2021 年以来公开了哪些非氟膜、部分含氟膜的液流电池专利：谁申请、在哪些国家、保护什么材料和做法，和样品里的论文、企业对得上哪些。"
+    },
+    {
+      "key": "Q8",
+      "text": "哪些现行或在审的政策、法规、标准直接涉及液流电池的膜：规定了什么、走到哪一步、何时生效。"
+    },
+    {
+      "key": "Q9",
+      "text": "咨询公司、政府部门、机构的报告对液流电池和膜给了哪些数字和说法（装机、成本、膜占成本的比例、路线图），各自的口径和出处是什么，报告之间哪里不一致。"
+    },
+    {
+      "key": "Q10",
+      "text": "英国、中国、欧盟、美国的基金资助了哪些相关项目：承担单位、金额、起止年份，和样品里的论文对得上哪些。"
+    }
+  ],
+  "scope_in": "体系：全钒液流电池，硫酸体系和混酸体系都算。非氟一侧：聚合物成分不含氟、在全钒体系里做过实验的膜；部分含氟的膜、与全氟磺酸共混或复合的膜照样收，单独成类。商业膜一侧：全氟磺酸商业膜，包括 Nafion、Fumasep、Aquivion 和国内厂商的产品。论文里测过的其他商业膜（烃类离子交换膜、含氟但不是全氟磺酸的商业膜）按含氟类别归类，照样收。非学术来源：专利、政策法规、标准、咨询公司的报告、政府部门的报告、基金的报告和资助记录，英国、中国、欧盟、美国四个法域都系统地收，国际组织的照收。",
+  "scope_out": "别的液流电池体系里的数据（铁钒、钒溴、锌基、有机体系等）。以实验室改性的全氟磺酸膜为研究对象的论文（这类膜只在作同文基准时记录）。只有计算或模拟、没有实验的论文。替代技术；技术经济性（指我们自己做的测算）。评价和建议。",
+  "levels": [
+    "material",
+    "component",
+    "system",
+    "product_supply",
+    "compliance",
+    "none"
+  ],
+  "time_window": {
+    "from": "2021",
+    "earlier_rule": "更早的只引综述，标第三方分析",
+    "exceptions": [
+      {
+        "applies_to": "商业膜一侧：规格书、产品页、同条件比较商业膜的论文、电堆级数据",
+        "rule": "不设时间窗，逐条核对（D-64 第四条）"
+      },
+      {
+        "applies_to": "专利",
+        "rule": "按公开日 2021 年起；同一族里更早公开过的，只要 2021 年以后有新的公开或授权就收，并注明（方案 3.8 默认做法第 1 条）"
+      },
+      {
+        "applies_to": "政策法规和标准",
+        "rule": "收现行的和在审的，不限发布年份（方案 3.8 默认做法第 1 条）"
+      },
+      {
+        "applies_to": "报告和资助项目",
+        "rule": "2021 年起（方案 3.8 默认做法第 1 条）"
+      }
+    ]
+  },
+  "evidence_source_types": [
+    "paper",
+    "review",
+    "preprint",
+    "thesis",
+    "supplement",
+    "erratum",
+    "metadata_db",
+    "patent",
+    "datasheet",
+    "company_web",
+    "filing",
+    "institution_report",
+    "open_database",
+    "policy",
+    "standard",
+    "consultancy_report",
+    "government_report",
+    "funder_report",
+    "grant_record"
+  ],
+  "facets": [
+    {
+      "key": "material_family",
+      "name": "材料族",
+      "applies_to": "material_class",
+      "required": true,
+      "values": [
+        "sulfonated_paek",
+        "sulfonated_polyimide",
+        "paes_psf",
+        "pbi",
+        "ppo",
+        "ether_free_aromatic",
+        "microporous_polymer",
+        "framework",
+        "porous_substrate",
+        "fluorinated_backbone",
+        "pfsa",
+        "other",
+        "unclear"
+      ]
+    },
+    {
+      "key": "fluorine_class",
+      "name": "含氟类别",
+      "applies_to": "membrane",
+      "required": true,
+      "values": [
+        "perfluorinated",
+        "partially_fluorinated",
+        "non_fluorinated",
+        "unclear"
+      ]
+    },
+    {
+      "key": "partial_fluorine_kind",
+      "name": "部分含氟的子类",
+      "applies_to": "membrane",
+      "required": false,
+      "only_when": {
+        "fluorine_class": [
+          "partially_fluorinated"
+        ]
+      },
+      "values": [
+        "pfsa_blend",
+        "fluorinated_backbone_or_side_group",
+        "fluorinated_support"
+      ]
+    },
+    {
+      "key": "fluorine_basis",
+      "name": "含氟类别的依据",
+      "applies_to": "membrane",
+      "required": false,
+      "values": [
+        "structure",
+        "manufacturer_statement",
+        "title_abstract"
+      ]
+    },
+    {
+      "key": "conduction_type",
+      "name": "传导类型",
+      "applies_to": "membrane",
+      "required": true,
+      "values": [
+        "cation_exchange",
+        "anion_exchange",
+        "amphoteric",
+        "porous_sieving",
+        "acid_doped",
+        "composite_multilayer",
+        "unclear"
+      ]
+    }
+  ],
+  "report_languages": [
+    "zh",
+    "en"
+  ],
+  "confirmed_by": "kai",
+  "confirmed_at": "2026-11-13",
+  "notes": "内容照《阶段1_样品验证方案》v0.5 第 2 节。确认人照该节写 kai，依据 D-59、D-64、D-70、D-73、D-94、D-110；最后一次改动是 2026-11-13 第十问改成四个法域（D-110），确认日期按这天写。层级：材料、器件、系统三层的数不直接比；产品与供应、合规两组指标不参与对标，只在一览表里列出；none 给政策条文、资助信息、报告里的说法（D-10、D-67）。新闻只作线索，不算证据来源（D-56、D-95）。证据库里我们自己写的文字先写中文（D-66）。截至日期试做批次和第一版各自在检索当天定，现在不填。分类维度的取值照方案 3.5 试做，试做后由 Kai 定稿（D-81）。数据文件由 Claude 2026-11-14 起草（D-123），待 Yu 验收。"
+}

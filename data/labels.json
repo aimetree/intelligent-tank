@@ -1,5 +1,5 @@
 {
-  "note": "字段和枚举值的显示名。enums 与 schema 里的枚举一一对应；fields 是对外证据表的列名；flags 是对外显示的标注（validate.display_flags 给出）；units 是单位的显示写法，先放了几个常用的，随指标字典补。",
+  "note": "字段和枚举值的显示名。enums 与 schema 里的枚举一一对应；fields 是对外证据表的列名；flags 是对外显示的标注（validate.display_flags 给出）；values 是题目卡和指标字典自己定义的取值（分类维度的取值、分类型条件和指标的允许取值），按维度、条件或指标的键分开，同一个键在各题目里取值的意思要一样；units 是单位的显示写法，中英文一样的写一个字符串，不一样的写 zh、en 两项，随指标字典补。仓库里的题目卡和指标字典用到的取值和单位都要在这里有显示名（tools/tests 里有测试）。",
   "enums": {
     "level": {
       "material": {
@@ -1552,6 +1552,210 @@
       "en": "Paid source, public part only"
     }
   },
+  "values": {
+    "material_family": {
+      "sulfonated_paek": {
+        "zh": "磺化聚芳醚酮类（SPEEK 等）",
+        "en": "Sulfonated poly(aryl ether ketone)s (SPEEK etc.)"
+      },
+      "sulfonated_polyimide": {
+        "zh": "磺化聚酰亚胺",
+        "en": "Sulfonated polyimides"
+      },
+      "paes_psf": {
+        "zh": "磺化聚芳醚砜与聚砜类",
+        "en": "Sulfonated poly(arylene ether sulfone)s and polysulfones"
+      },
+      "pbi": {
+        "zh": "聚苯并咪唑",
+        "en": "Polybenzimidazoles"
+      },
+      "ppo": {
+        "zh": "聚苯醚",
+        "en": "Poly(phenylene oxide)s"
+      },
+      "ether_free_aromatic": {
+        "zh": "聚芳基哌啶、聚三联苯等不含醚键的芳香骨架",
+        "en": "Ether-free aromatic backbones (poly(aryl piperidinium), polyterphenyl, etc.)"
+      },
+      "microporous_polymer": {
+        "zh": "微孔聚合物（PIM、Tröger's base 类）",
+        "en": "Microporous polymers (PIMs, Tröger's base polymers)"
+      },
+      "framework": {
+        "zh": "框架材料（COF、MOF 为主体）",
+        "en": "Framework materials (COF- or MOF-based)"
+      },
+      "porous_substrate": {
+        "zh": "聚烯烃、聚丙烯腈等多孔基膜",
+        "en": "Porous substrates (polyolefin, polyacrylonitrile, etc.)"
+      },
+      "fluorinated_backbone": {
+        "zh": "含氟骨架（PVDF 等）",
+        "en": "Fluorinated backbones (PVDF etc.)"
+      },
+      "pfsa": {
+        "zh": "全氟磺酸",
+        "en": "Perfluorosulfonic acid (PFSA)"
+      },
+      "other": {
+        "zh": "其他",
+        "en": "Other"
+      },
+      "unclear": {
+        "zh": "看不出",
+        "en": "Unclear"
+      }
+    },
+    "fluorine_class": {
+      "perfluorinated": {
+        "zh": "全氟",
+        "en": "Perfluorinated"
+      },
+      "partially_fluorinated": {
+        "zh": "部分含氟",
+        "en": "Partially fluorinated"
+      },
+      "non_fluorinated": {
+        "zh": "非氟",
+        "en": "Non-fluorinated"
+      },
+      "unclear": {
+        "zh": "看不出",
+        "en": "Unclear"
+      }
+    },
+    "partial_fluorine_kind": {
+      "pfsa_blend": {
+        "zh": "与全氟磺酸共混或复合",
+        "en": "Blended or composited with PFSA"
+      },
+      "fluorinated_backbone_or_side_group": {
+        "zh": "含氟的骨架或侧基",
+        "en": "Fluorinated backbone or side groups"
+      },
+      "fluorinated_support": {
+        "zh": "含氟的基底或增强层",
+        "en": "Fluorinated support or reinforcement"
+      }
+    },
+    "fluorine_basis": {
+      "structure": {
+        "zh": "按结构判断",
+        "en": "Judged from the structure"
+      },
+      "manufacturer_statement": {
+        "zh": "结构未公开，按厂商的说法",
+        "en": "Structure not disclosed; per the manufacturer"
+      },
+      "title_abstract": {
+        "zh": "只按题名和摘要（只登记的论文）",
+        "en": "From title and abstract only (registered-only papers)"
+      }
+    },
+    "conduction_type": {
+      "cation_exchange": {
+        "zh": "阳离子交换",
+        "en": "Cation exchange"
+      },
+      "anion_exchange": {
+        "zh": "阴离子交换",
+        "en": "Anion exchange"
+      },
+      "amphoteric": {
+        "zh": "两性",
+        "en": "Amphoteric"
+      },
+      "porous_sieving": {
+        "zh": "多孔筛分（没有或很少固定电荷）",
+        "en": "Porous sieving (few or no fixed charges)"
+      },
+      "acid_doped": {
+        "zh": "酸掺杂",
+        "en": "Acid-doped"
+      },
+      "composite_multilayer": {
+        "zh": "复合或多层",
+        "en": "Composite or multilayer"
+      },
+      "unclear": {
+        "zh": "看不出",
+        "en": "Unclear"
+      }
+    },
+    "direction": {
+      "through_plane": {
+        "zh": "穿膜",
+        "en": "Through-plane"
+      },
+      "in_plane": {
+        "zh": "面内",
+        "en": "In-plane"
+      }
+    },
+    "thickness_state": {
+      "dry": {
+        "zh": "干",
+        "en": "Dry"
+      },
+      "wet": {
+        "zh": "湿",
+        "en": "Wet"
+      }
+    },
+    "vanadium_species": {
+      "v2": {
+        "zh": "二价",
+        "en": "V(II)"
+      },
+      "v3": {
+        "zh": "三价",
+        "en": "V(III)"
+      },
+      "v4": {
+        "zh": "四价",
+        "en": "V(IV)"
+      },
+      "v5": {
+        "zh": "五价",
+        "en": "V(V)"
+      }
+    },
+    "stack_validation": {
+      "yes": {
+        "zh": "有",
+        "en": "Yes"
+      },
+      "no": {
+        "zh": "无",
+        "en": "No"
+      }
+    },
+    "nbt42080_tested": {
+      "yes": {
+        "zh": "是",
+        "en": "Yes"
+      },
+      "no": {
+        "zh": "否",
+        "en": "No"
+      }
+    },
+    "pfas_restriction_scope": {
+      "in_scope": {
+        "zh": "在范围内",
+        "en": "In scope"
+      },
+      "out_of_scope": {
+        "zh": "不在范围内",
+        "en": "Out of scope"
+      },
+      "to_check": {
+        "zh": "待核",
+        "en": "To be checked"
+      }
+    }
+  },
   "units": {
     "%": "%",
     "1": "",
@@ -1569,6 +1773,65 @@
     "h": "h",
     "V": "V",
     "mL": "mL",
-    "mL/min": "mL min⁻¹"
+    "mL/min": "mL min⁻¹",
+    "mm": "mm",
+    "S/m": "S m⁻¹",
+    "cm2/s": "cm² s⁻¹",
+    "m2/s": "m² s⁻¹",
+    "S*min/cm3": "S min cm⁻³",
+    "S*s/cm3": "S s cm⁻³",
+    "min": "min",
+    "mmol/g": "mmol g⁻¹",
+    "meq/g": "meq g⁻¹",
+    "MPa": "MPa",
+    "nm": "nm",
+    "mW/cm2": "mW cm⁻²",
+    "W/cm2": "W cm⁻²",
+    "kW": "kW",
+    "MWh": "MWh",
+    "GW": "GW",
+    "cells": {
+      "zh": "节",
+      "en": "cells"
+    },
+    "cycles": {
+      "zh": "次",
+      "en": "cycles"
+    },
+    "%/cycle": {
+      "zh": "%/圈",
+      "en": "% per cycle"
+    },
+    "%/d": {
+      "zh": "%/天",
+      "en": "% per day"
+    },
+    "d": {
+      "zh": "天",
+      "en": "d"
+    },
+    "year": {
+      "zh": "年",
+      "en": "years"
+    },
+    "m2/year": {
+      "zh": "平方米/年",
+      "en": "m² per year"
+    },
+    "CNY/m2": "CNY/m²",
+    "CNY/kW": "CNY/kW",
+    "CNY/kWh": "CNY/kWh",
+    "USD/m2": "USD/m²",
+    "USD/kW": "USD/kW",
+    "USD/kWh": "USD/kWh",
+    "EUR/m2": "EUR/m²",
+    "EUR/kW": "EUR/kW",
+    "EUR/kWh": "EUR/kWh",
+    "GBP/m2": "GBP/m²",
+    "GBP/kW": "GBP/kW",
+    "GBP/kWh": "GBP/kWh",
+    "JPY/m2": "JPY/m²",
+    "JPY/kW": "JPY/kW",
+    "JPY/kWh": "JPY/kWh"
   }
 }

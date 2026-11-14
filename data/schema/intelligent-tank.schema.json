@@ -2503,7 +2503,8 @@
               "unit_std": {
                 "type": "string",
                 "title": "标准单位",
-                "minLength": 1
+                "minLength": 1,
+                "description": "有单位要换算（写了 factor）时必填（V-07）；单位都照原文记、不换算的（如价格照原币种记）不写"
               },
               "units_accepted": {
                 "type": "array",
@@ -2518,15 +2519,16 @@
                     },
                     "factor": {
                       "type": "number",
-                      "title": "换算到标准单位要乘的系数"
+                      "title": "换算到标准单位要乘的系数",
+                      "description": "不写的，这个单位照原文记、不换算：币种（不换算汇率，D-72），或和标准单位不是同一种量的（如装机的 GW、容量的 %/cycle）。这样的证据不填 value_std（V-23）"
                     }
                   },
                   "required": [
-                    "unit",
-                    "factor"
+                    "unit"
                   ],
                   "additionalProperties": false
-                }
+                },
+                "description": "标准单位本身也列在这里，系数为 1（V-07）"
               },
               "allowed_values": {
                 "type": "array",
@@ -2588,7 +2590,6 @@
             },
             "then": {
               "required": [
-                "unit_std",
                 "units_accepted"
               ]
             }
@@ -2631,7 +2632,8 @@
               "unit_std": {
                 "type": "string",
                 "title": "标准单位",
-                "minLength": 1
+                "minLength": 1,
+                "description": "有单位要换算（写了 factor）时必填（V-07）；单位都照原文记、不换算的（如价格照原币种记）不写"
               },
               "units_accepted": {
                 "type": "array",
@@ -2646,15 +2648,16 @@
                     },
                     "factor": {
                       "type": "number",
-                      "title": "换算到标准单位要乘的系数"
+                      "title": "换算到标准单位要乘的系数",
+                      "description": "不写的，这个单位照原文记、不换算：币种（不换算汇率，D-72），或和标准单位不是同一种量的（如装机的 GW、容量的 %/cycle）。这样的证据不填 value_std（V-23）"
                     }
                   },
                   "required": [
-                    "unit",
-                    "factor"
+                    "unit"
                   ],
                   "additionalProperties": false
-                }
+                },
+                "description": "标准单位本身也列在这里，系数为 1（V-07）"
               },
               "allowed_values": {
                 "type": "array",
@@ -2716,7 +2719,6 @@
             },
             "then": {
               "required": [
-                "unit_std",
                 "units_accepted"
               ]
             }
@@ -2748,7 +2750,8 @@
               },
               "level": {
                 "$ref": "#/$defs/enum_level",
-                "title": "层级"
+                "title": "层级",
+                "description": "规则只管一层时写，适用的指标都要在这一层（V-07）；不写的规则对适用的指标各在各的层，可比组仍然一层一组（V-40）"
               },
               "statement": {
                 "type": "string",
@@ -2765,11 +2768,13 @@
               },
               "tier_if_met": {
                 "$ref": "#/$defs/enum_tier",
-                "title": "满足时的可比档"
+                "title": "满足时的可比档",
+                "description": "不写的是约束性的规则（如跨论文不算直接可比、层级不混），只说不能怎么分组，由校验规则落实；可比组不能拿它作依据（V-40）"
               },
               "normalization": {
                 "$ref": "#/$defs/enum_normalization",
-                "title": "归一化方法"
+                "title": "归一化方法",
+                "description": "不写就是 none"
               },
               "status": {
                 "$ref": "#/$defs/enum_dict_status",
@@ -2785,13 +2790,11 @@
               "key",
               "name",
               "applies_to",
-              "level",
-              "statement",
-              "tier_if_met",
-              "normalization"
+              "statement"
             ],
             "additionalProperties": false
-          }
+          },
+          "description": "方案 4.4 的 R1 至 R9。可比组的 rule 指向其中写了 tier_if_met 的一条，组里的指标要在它适用的指标里（V-40）"
         }
       },
       "required": [

@@ -20,7 +20,7 @@
 | `docs/03_技术与开发/` | 设计方案（对内 dashboard 与对外报告）；数据结构的字段规格（v0.1、v0.2）；示范案例库；报告写法 skill |
 | `docs/90_资料归档/` | 交接资料的 Markdown 转录 |
 | `archive/Intelligence_Handoff_2026-11-09/` | 交接包原件（含 5 个 Word 文件，其中两份历史稿内容相同） |
-| `data/` | 证据库的数据文件。现在只有骨架：字段的机器可读定义（`schema/`，规格 v0.2）、空白模板（`templates/`）、显示名表和空的数据文件；还没有数据。说明见 `data/README.md` |
+| `data/` | 证据库的数据文件。现在有字段的机器可读定义（`schema/`，规格 v0.2）、空白模板（`templates/`）、显示名表，和学术样品的题目卡、指标字典（草稿，待 Yu 验收）；还没有来源和证据。说明见 `data/README.md` |
 | `tools/` | 脚本：`validate.py` 校验 `data/`，`make_templates.py` 由 schema 生成模板，`tests/` 是测试和一组虚构的示例数据 |
 
 每次提交 `data/` 之前跑一遍 `python3 tools/validate.py`（依赖见 `tools/requirements.txt`）。

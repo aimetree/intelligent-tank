@@ -281,6 +281,16 @@ def check_structure(ds, schema):
 
 # ---------------------------------------------------------------- 规则
 
+def unit_entry(measure, unit):
+    """指标或事实项的 units_accepted 里这个单位的那一项；不在里面返回 None。"""
+    return next((u for u in (measure or {}).get("units_accepted", []) if u.get("unit") == unit), None)
+
+
+def unit_factor(measure, unit):
+    """换算到标准单位的系数；单位不在允许的单位里，或这个单位照原文记、不换算的，返回 None。"""
+    return (unit_entry(measure, unit) or {}).get("factor")
+
+
 def check_rules(ds, external=()):
     """规格第 5 节的规则。external：假设要对外的可比组编号。"""
     issues = []
@@ -373,7 +383,7 @@ def check_rules(ds, external=()):
             reasons.add("machine_check_failed")
         m = measure_of(e)[1] or {}
         if e.get("content_kind") == "numeric" and e.get("unit_reported") and m.get("unit_std") \
-                and e["unit_reported"] != m["unit_std"]:
+                and e["unit_reported"] != m["unit_std"] and unit_factor(m, e["unit_reported"]) is not None:
             reasons.add("unit_converted")
         if e.get("conditions_locator"):
             reasons.add("conditions_elsewhere")
@@ -445,6 +455,12 @@ def check_rules(ds, external=()):
                         E("V-07", label, f"{kind_name} {i.get('key')} 用到的条件 {k} 不在条件项里")
                 if i.get("value_kind") == "category" and not i.get("allowed_values"):
                     E("V-07", label, f"分类型{kind_name} {i.get('key')} 要列出允许的取值")
+                units = i.get("units_accepted", [])
+                std = i.get("unit_std")
+                if std is None and any("factor" in u for u in units):
+                    E("V-07", label, f"{kind_name} {i.get('key')} 有要换算的单位，要写标准单位 unit_std")
+                if std is not None and (unit_entry(i, std) or {}).get("factor") != 1:
+                    E("V-07", label, f"{kind_name} {i.get('key')} 的标准单位 {std} 要列在允许的单位里，系数为 1")
         for i in d.get("indicators", []):
             lacking = [k for k in level_conditions.get(i.get("level"), []) if k not in i.get("required_conditions", [])]
             if lacking and i.get("entry", "evidence") == "evidence":
@@ -452,10 +468,13 @@ def check_rules(ds, external=()):
         for f in d.get("facts", []):
             if f.get("question") and tid in top and f["question"] not in {q.get("key") for q in top[tid].get("questions", [])}:
                 E("V-07", label, f"事实项 {f.get('key')} 对应的问题 {f['question']} 不在题目卡里")
+        ind_level = {i.get("key"): i.get("level") for i in d.get("indicators", [])}
         for r in d.get("rules", []):
             for k in r.get("applies_to", []):
                 if k not in ind_keys:
                     E("V-07", label, f"可比规则 {r.get('key')} 适用的指标 {k} 不在指标里")
+                elif r.get("level") and ind_level[k] != r["level"]:
+                    E("V-07", label, f"可比规则 {r.get('key')} 写的层级是 {r['level']}，适用的指标 {k} 在 {ind_level[k]} 层")
             for k in r.get("key_conditions", []):
                 if k not in cond_keys:
                     E("V-07", label, f"可比规则 {r.get('key')} 的关键条件 {k} 不在条件项里")
@@ -764,9 +783,13 @@ def check_rules(ds, external=()):
             if not e.get("value_reported") or not e.get("unit_reported"):
                 E("V-23", i, "数值型要有 value_reported 和 unit_reported")
             elif m:
-                factor = next((u.get("factor") for u in m.get("units_accepted", []) if u.get("unit") == e["unit_reported"]), None)
-                if factor is None:
+                entry = unit_entry(m, e["unit_reported"])
+                factor = (entry or {}).get("factor")
+                if entry is None:
                     E("V-23", i, f"单位 {e['unit_reported']} 不在允许的单位里")
+                elif factor is None:
+                    if e.get("value_std") is not None:
+                        E("V-23", i, f"单位 {e['unit_reported']} 照原文记、不换算，不填 value_std")
                 elif e.get("value_std") is None:
                     E("V-23", i, "缺 value_std（由脚本按换算系数算）")
                 else:
@@ -880,6 +903,13 @@ def check_rules(ds, external=()):
                 E("V-40", cid, f"指标 {k} 不在指标字典里")
         if c.get("rule") and d and c["rule"] not in rules:
             E("V-40", cid, f"可比规则 {c['rule']} 不在指标字典里")
+        elif c.get("rule") in rules:
+            r = rules[c["rule"]]
+            if not r.get("tier_if_met"):
+                E("V-40", cid, f"可比规则 {c['rule']} 是约束性的规则（没有满足时的可比档），不能作为可比组的依据")
+            for k in c.get("indicators", []):
+                if k in ind_keys and k not in r.get("applies_to", []):
+                    E("V-40", cid, f"指标 {k} 不在可比规则 {c['rule']} 适用的指标里")
         if c.get("tier") == "insufficient" and not c.get("missing"):
             E("V-40", cid, "数据不足要写明缺什么")
         seen, rows = set(), []

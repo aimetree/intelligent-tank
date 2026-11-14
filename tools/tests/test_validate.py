@@ -81,6 +81,9 @@ CASES = [
     ("事实项对应的问题不在题目卡里", "V-07", lambda d: d["dictionaries"][T]["facts"][0].__setitem__("question", "Q9"), ()),
     ("可比规则的关键条件没定义", "V-07", lambda d: d["dictionaries"][T]["rules"][2]["key_conditions"].append("flow_rate"), ()),
     ("分类维度的 only_when 用了没定义的维度", "V-07", lambda d: d["topics"][T]["facets"][2]["only_when"].__setitem__("fluorine_kind", ["x"]), ()),
+    ("有要换算的单位却没写标准单位", "V-07", lambda d: d["dictionaries"][T]["facts"][2].pop("unit_std"), ()),
+    ("标准单位没有列在允许的单位里", "V-07", lambda d: d["dictionaries"][T]["indicators"][2]["units_accepted"].clear(), ()),
+    ("可比规则写的层级和适用的指标不一致", "V-07", lambda d: d["dictionaries"][T]["rules"][0].__setitem__("level", "material"), ()),
     # ---- 分类维度
     ("实体用了没定义的分类维度", "V-08", lambda d: d["entities"]["ENT-000001"]["facets"].__setitem__("colour", "red"), ()),
     ("分类取值不在允许的取值里", "V-08", lambda d: smp(d, "SRC-000001", "X-1")["facets"].__setitem__("conduction_type", "magic"), ()),
@@ -133,6 +136,8 @@ CASES = [
     ("单位不在允许范围", "V-23", lambda d: ev(d, "EV-000002-001").__setitem__("unit_reported", "ohm"), ()),
     ("事实项的单位不在允许范围", "V-23", lambda d: ev(d, "EV-000011-001").__setitem__("unit_reported", "GW"), ()),
     ("换算值不一致", "V-23", lambda d: ev(d, "EV-000001-001").__setitem__("value_std", 8.56), ()),
+    ("不换算的单位填了 value_std", "V-23", lambda d: (d["dictionaries"][T]["facts"][2]["units_accepted"].append({"unit": "GW"}),
+                                                   ev(d, "EV-000011-001").__setitem__("unit_reported", "GW")), ()),
     ("缺原文片段", "V-24", lambda d: ev(d, "EV-000001-002").pop("snippet"), ()),
     ("全文来源却标仅摘要", "V-25", lambda d: ev(d, "EV-000001-001").__setitem__("obtained_from", "abstract_only"), ()),
     ("出处只写到来源", "V-26", lambda d: ev(d, "EV-000001-001").__setitem__("locator", {"text": "见论文"}), ()),
@@ -156,6 +161,8 @@ CASES = [
     # ---- 可比组
     ("跨层级放进一组", "V-40", lambda d: d["comparisons"]["CMP-000001"]["members"].append({"evidence_id": "EV-000002-001", "role": "member"}), ()),
     ("可比组建在合规层", "V-40", lambda d: d["comparisons"]["CMP-000003"].__setitem__("level", "compliance"), ()),
+    ("可比组拿约束性的规则作依据", "V-40", lambda d: d["dictionaries"][T]["rules"][0].pop("tier_if_met"), ()),
+    ("可比组的指标不在规则适用的指标里", "V-40", lambda d: d["dictionaries"][T]["rules"][0].__setitem__("applies_to", ["max_current_density"]), ()),
     ("陈述放进了可比组", "V-40", lambda d: d["comparisons"]["CMP-000003"]["members"].append({"evidence_id": "EV-000004-001", "role": "member"}), ()),
     ("仅摘要进直接可比", "V-41", lambda d: d["comparisons"]["CMP-000001"]["members"].append({"evidence_id": "EV-000003-001", "role": "member"}), ()),
     ("条件未报告进直接可比，组上没写", "V-41", lambda d: ev(d, "EV-000001-002")["conditions"].__setitem__("temperature", "not_reported"), ()),
@@ -293,6 +300,49 @@ def test_labels_cover_every_enum_value():
             got = labels.get(name[5:], {})
             assert set(got) == set(node["enum"]), name
             assert all(v.get("zh") and "en" in v for v in got.values()), name
+
+
+def test_unconverted_unit_passes():
+    """照原文记、不换算的单位（如装机的 GW、价格的币种）：不填 value_std，也不算“换算过单位”的风险理由。"""
+    ds = fresh()
+    ds["dictionaries"][T]["facts"][2]["units_accepted"].append({"unit": "GW"})
+    e = ev(ds, "EV-000011-001")
+    e["unit_reported"] = "GW"
+    del e["value_std"]
+    # 示例里这条是约数，本来就有 qualified_value；只看会不会多要一条 unit_converted
+    e["risk"] = {"tier": "medium", "reasons": ["qualified_value"], "set_by": "claude", "set_at": DAY}
+    assert V.validate(ds, SCHEMA) == []
+
+
+def test_labels_cover_repo_topics():
+    """仓库里题目卡和指标字典用到的取值、单位，labels.json 里都有显示名（看板和中英两版报告从这里取）。"""
+    labels = json.load(open(os.path.join(REPO, "data", "labels.json"), encoding="utf-8"))
+    values, units = labels["values"], labels["units"]
+    ds = V.load_dataset(os.path.join(REPO, "data"))
+    missing = []
+
+    def named(group, code):
+        v = values.get(group, {}).get(code)
+        if not (v and v.get("zh") and v.get("en")):
+            missing.append(f"{group}.{code}")
+
+    def unit_named(u):
+        v = units.get(u)
+        if not (isinstance(v, str) or (isinstance(v, dict) and v.get("zh") and v.get("en"))):
+            missing.append(f"单位 {u}")
+
+    for t in ds["topics"].values():
+        for f in t.get("facets") or []:
+            for code in f.get("values") or []:
+                named(f["key"], code)
+    for d in ds["dictionaries"].values():
+        for x in d.get("conditions", []) + d.get("indicators", []) + d.get("facts", []):
+            for code in x.get("allowed_values") or []:
+                named(x["key"], code)
+            for u in [x.get("unit_std")] + [y["unit"] for y in x.get("units_accepted", [])]:
+                if u:
+                    unit_named(u)
+    assert not missing, missing
 
 
 def test_templates_match_schema():
