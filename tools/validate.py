@@ -153,7 +153,8 @@ def load_dataset(data_dir):
     ds = {"dir": data_dir, "problems": problems, "meta": None, "sources": {}, "samples": {}, "evidence": {},
           "entities": {}, "relations": {}, "topics": {}, "dictionaries": {}, "comparisons": {}, "assessments": {},
           "reports": {}, "reviews": {}, "changes": [], "worklog": [],
-          "files": {}}  # 来源编号 → (文件路径, 整个文件)。改了来源或证据之后写回文件用（tools/store.py）
+          "files": {},        # 来源编号 → (文件路径, 整个文件)。改了来源或证据之后写回文件用（tools/store.py）
+          "topic_files": {}}  # (题目编号, 类别) → (文件路径, 这个文件里读进来的编号，照文件里的次序)。写回可比组、描述、复核单用
 
     def put(coll, rec, where):
         rid = rec.get("id") if isinstance(rec, dict) else None
@@ -220,8 +221,12 @@ def load_dataset(data_dir):
                            ("reports", "reports.json"), ("reviews", "reviews.json")):
             path = os.path.join(tdir, name)
             if os.path.exists(path):
+                loaded = []
                 for rec in _read_json(path, problems, f"{rel}/{name}") or []:
                     put(coll, rec, f"{rel}/{name}")
+                    if isinstance(rec, dict) and isinstance(rec.get("id"), str) and ds[coll].get(rec["id"]) is rec:
+                        loaded.append(rec["id"])
+                ds["topic_files"][(tid, coll)] = (path, loaded)
 
     ds["changes"] = _read_jsonl(os.path.join(data_dir, "changes.jsonl"), problems, "changes.jsonl")
     ds["worklog"] = _read_jsonl(os.path.join(data_dir, "worklog.jsonl"), problems, "worklog.jsonl")

@@ -158,7 +158,9 @@ class Names:
     def field(self, obj, key, sub=None):
         prop = ((self.defs.get(obj) or {}).get("properties") or {}).get(key) or {}
         if sub is not None:
-            prop = (prop.get("properties") or {}).get(sub) or {}
+            # 字段是一个对象时找它里面的字段；是一个数组时找数组里每一项的字段（如复核单的 items）
+            inner = prop.get("properties") or ((prop.get("items") or {}).get("properties") if isinstance(prop.get("items"), dict) else None) or {}
+            prop = inner.get(sub) or {}
             return prop.get("title") or sub
         return prop.get("title") or key
 

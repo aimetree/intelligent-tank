@@ -5,6 +5,8 @@
 - 与基准之比、派生指标是脚本现算的，不是证据，页面上标“换算值”（规格 1.5）。
 - 可比性矩阵：这一层里谁和谁在同一个组里、是哪一档。
 - 同一批测试里随条件变化的图：同一来源、同一批测试，同一个样品的点连起来。
+- 每个可比组的复核单：专业复核时要逐条看的条目、为什么要看、参考判断、复核人的决定（规格 3.13，D-80）。
+  单子由 tools/review_sheet.py 起草和写回，这里只照数据显示。
 这里只整理和并排：成员照数据文件里的次序排，不按数值排名，不求平均，不下结论（D-60，设计方案 6.1 第 5 条）。
 """
 import charts
@@ -205,7 +207,55 @@ def group_model(c, by_id, ds, lk, names, rules, questions, stamp):
     g["notes"] = notes
     g["columns"], g["same"] = condition_table(g["members"], rule.get("key_conditions") or [], names)
     g["chart"], g["skipped"], g["caption"] = chart_of(g, names, stamp)
+    g["reviews"] = review_models(g, ds, by_id, names)
     return g
+
+
+def review_models(g, ds, by_id, names):
+    """这一组的复核单，照编号排。"""
+    labels = {m["id"]: m["obj"]["label"] for m in g["members"]}
+
+    def target(tid):
+        tid = s(tid)
+        if tid == g["id"]:
+            return {"id": tid, "href": "", "what": "这一组的档别"}
+        if tid.startswith("ASM-"):
+            return {"id": tid, "href": "", "what": names.enum("review_reason", "overview")}
+        row = by_id.get(tid)
+        what = f"{labels.get(tid) or (row or {}).get('sample') or (row or {}).get('subject') or ''}"
+        if row and not row["error"]:
+            what = "　".join(x for x in (what, f"{row['measure']} {row['value']}") if x)
+        return {"id": tid, "href": f"#{tid}" if row else "", "what": what or "证据库里没有这一条"}
+
+    out = []
+    for rid in sorted(ds["reviews"]):
+        r = ds["reviews"][rid]
+        if not isinstance(r, dict) or r.get("comparison_id") != g["id"]:
+            continue
+        items = []
+        for it in r.get("items") or []:
+            if not isinstance(it, dict):
+                continue
+            items.append({"target": target(it.get("target_id")),
+                          "reason": names.enum("review_reason", it.get("reason")) or s(it.get("reason")),
+                          "why": s(it.get("why")), "suggestion": s(it.get("suggestion")),
+                          "decision": s(it.get("decision")),
+                          "decision_label": names.enum("review_decision", it.get("decision")) or s(it.get("decision")) or NOT_FILLED,
+                          "note": s(it.get("note")),
+                          "changes": [s(x) for x in it.get("change_ids") or []] if isinstance(it.get("change_ids"), list) else []})
+        b = r.get("batch") if isinstance(r.get("batch"), dict) else None
+        batch = None
+        if b:
+            ids = [s(x) for x in b.get("evidence_ids") or []] if isinstance(b.get("evidence_ids"), list) else []
+            sampled = [s(x) for x in b.get("sampled") or []] if isinstance(b.get("sampled"), list) else []
+            batch = {"ids": [target(x) for x in ids], "sampled": sampled, "decision": s(b.get("decision")),
+                     "decision_label": names.enum("review_decision", b.get("decision")) or s(b.get("decision")) or NOT_FILLED}
+        out.append({"id": rid, "title": s(r.get("title")), "status": s(r.get("status")),
+                    "status_label": names.enum("review_status", r.get("status")) or s(r.get("status")) or NOT_FILLED,
+                    "created": "，".join(x for x in (s(r.get("created_by")), s(r.get("created_at"))) if x),
+                    "reviewed": "，".join(x for x in (s(r.get("reviewer")), s(r.get("reviewed_at"))) if x),
+                    "items": items, "batch": batch, "notes": s(r.get("notes"))})
+    return out
 
 
 def matrix_model(groups, names):
@@ -391,7 +441,45 @@ def render_group(g, names):
     if g["skipped"]:
         body.append(el("div", {"class": "block"}, el("div", {"class": "block-name"}, "没画进图里的"),
                        el("ul", {"class": "plain"}, [el("li", None, f"{eid}：{why}") for eid, why in g["skipped"]])))
+    body += [render_review(r, names) for r in g["reviews"]] or [el("p", {"class": "note"}, "这一组还没有复核单。")]
     return el("section", {"class": "card group-card", "id": g["id"]}, body)
+
+
+def _target(t):
+    return [el("a", {"href": t["href"]}, t["id"]) if t["href"] else t["id"], " ", el("span", {"class": "sub"}, t["what"])]
+
+
+def render_review(r, names):
+    """一张复核单：谁起草、谁复核；要逐条看的条目和复核人的决定；成批确认的。还没定的决定标出来。"""
+    def field(key):
+        return names.field("review", "items", key)
+
+    def decision(code, label):
+        return flagged(label, code not in ("confirm", "modify"))
+
+    head = [f"{names.field('review', 'status')}：{r['status_label']}", f"{names.field('review', 'created_by')}：{r['created'] or NOT_FILLED}",
+            f"{names.field('review', 'reviewer')}：{r['reviewed'] or '还没有复核'}"]
+    body = [el("div", {"class": "block-name"}, f"复核单 {r['id']}　{r['title']}"),
+            el("div", {"class": "tags"}, [[el("span", None, x), " "] for x in head])]
+    if r["items"]:
+        lines = []
+        for it in r["items"]:
+            extra = [[" ", el("span", {"class": "sub"}, f"{field('note')}：{it['note']}")] if it["note"] else None,
+                     [" ", el("span", {"class": "sub"}, f"{field('change_ids')}：{'、'.join(it['changes'])}")] if it["changes"] else None]
+            lines.append(el("tr", None, el("td", None, _target(it["target"])), el("td", None, it["reason"]), el("td", None, it["why"]),
+                            el("td", None, it["suggestion"]), el("td", None, decision(it["decision"], it["decision_label"]), extra)))
+        head_cells = [names.field("review", "items")] + [field(k) for k in ("reason", "why", "suggestion", "decision")]
+        body.append(el("div", {"class": "table-wrap"}, el("table", {"class": "cmp-table"},
+                    el("thead", None, el("tr", None, [el("th", {"scope": "col"}, h) for h in head_cells])), el("tbody", None, lines))))
+    if r["batch"]:
+        b = r["batch"]
+        ids = [[("、" if i else ""), el("a", {"href": t["href"]}, t["id"]) if t["href"] else t["id"],
+                "（抽看）" if t["id"] in b["sampled"] else ""] for i, t in enumerate(b["ids"])]
+        body.append(el("p", {"class": "note"}, f"{names.field('review', 'batch')} {len(b['ids'])} 条：", ids, "｜",
+                       f"{names.field('review', 'batch', 'decision')}：", decision(b["decision"], b["decision_label"])))
+    if r["notes"]:
+        body.append(el("p", {"class": "note"}, f"{names.field('review', 'notes')}：{r['notes']}"))
+    return el("div", {"class": "block review", "id": r["id"]}, body)
 
 
 def render_matrix(matrix, level_label):

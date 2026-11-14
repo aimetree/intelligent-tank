@@ -337,6 +337,11 @@ def card(b, cid):
     return b.dom.one("section", "group-card", id=cid)
 
 
+def same_conditions(c):
+    """卡片里“各成员都一样的条件”那一行。卡片后面还有复核单的说明，所以按开头的字找，不按位置找。"""
+    return [p.clean for p in c.all("p", "note") if p.clean.startswith("各成员都一样的条件")]
+
+
 def chart_points(node):
     """图上的点：[(证据编号, 跳到哪里, 填的颜色, 边的颜色, 横坐标)]。"""
     out = []
@@ -347,9 +352,14 @@ def chart_points(node):
     return out
 
 
+def members(node):
+    """卡片里的第一张表：成员的表。可比组的卡片后面还有复核单的表。"""
+    return node.all("table", "cmp-table")[0]
+
+
 def table(node):
-    head = [th.clean for th in node.one("table", "cmp-table").one("thead").all("th")]
-    lines = [[td.clean for td in tr.all("td")] for tr in node.one("table", "cmp-table").one("tbody").all("tr")]
+    head = [th.clean for th in members(node).one("thead").all("th")]
+    lines = [[td.clean for td in tr.all("td")] for tr in members(node).one("tbody").all("tr")]
     return head, lines
 
 
@@ -370,7 +380,7 @@ def test_direct_group():
     c = card(b, "CMP-000001")
     assert c.one("h3").text == "CMP-000001　同一来源、同一批测试的能量效率"
     assert c.one("span", "tier").text == "直接可比" and "t-direct" in c.one("span", "tier").attrs["class"]
-    assert c.one("div", "tags").clean == "直接可比 状态：专业已复核 用的可比规则：同文同批、条件一致才直接比 归一化方法：不做".replace(" ", "")
+    assert c.all("div", "tags")[0].clean == "直接可比 状态：专业已复核 用的可比规则：同文同批、条件一致才直接比 归一化方法：不做".replace(" ", "")
     notes = dict(zip([d.text for d in c.one("dl", "kv").all("dt")], [d.text for d in c.one("dl", "kv").all("dd")]))
     assert notes == {"定档理由": "同一篇论文、同一套电池、条件一致", "这条规则说的是": "同一来源、同一批测试，电流密度、电解液组成、温度一致"}
     points = chart_points(c)
@@ -384,9 +394,9 @@ def test_direct_group():
         ["EV-000001-001", "X-1 示例非氟材料族 N（虚构）｜SRC-000001", "参与比较", "85.6%", "1.0439（85.6 ÷ 82，基准 EV-000001-002）", "80 mA cm-2", "实验数据", "专业已复核"],
         ["EV-000001-002", "P-212 示例商业膜 P（虚构）｜SRC-000001", "基准", "82.0%", "—（它就是基准）", "80 mA cm-2", "实验数据", "专业已复核"]]
     assert abs(85.6 / 82.0 - 1.0439) < 5e-5
-    assert [p.clean for p in c.all("p", "note")][-1] == "各成员都一样的条件：钒离子浓度 1.6 M；硫酸浓度 3.0 M H2SO4；温度 25 °C"
-    assert [tr.attrs["id"] for tr in c.one("tbody").all("tr")] == ["CMP-000001--EV-000001-001", "CMP-000001--EV-000001-002"]
-    assert [a.attrs["href"] for a in c.one("tbody").all("a")] == ["#EV-000001-001", "#EV-000001-002"], "成员那一行点得进证据"
+    assert same_conditions(c) == ["各成员都一样的条件：钒离子浓度 1.6 M；硫酸浓度 3.0 M H2SO4；温度 25 °C"]
+    assert [tr.attrs["id"] for tr in members(c).one("tbody").all("tr")] == ["CMP-000001--EV-000001-001", "CMP-000001--EV-000001-002"]
+    assert [a.attrs["href"] for a in members(c).one("tbody").all("a")] == ["#EV-000001-001", "#EV-000001-002"], "成员那一行点得进证据"
 
 
 def test_ratio_group():
@@ -410,10 +420,10 @@ def test_ratio_group():
     assert [r[4] for r in lines] == ["1.0439（85.6 ÷ 82，基准 EV-000001-002）", "—（它就是基准）", "1.0075（80.5 ÷ 79.9，基准 EV-000007-002）",
                                      "—（它就是基准）", "没有写同文基准"]
     assert lines[4][2] == "只作参考 仅摘要，条件不全" and lines[4][5:8] == ["未报告", "未报告", "未报告"] and lines[4][8] == "实验数据 仅摘要"
-    last = c.one("tbody").all("tr")[4]
+    last = members(c).one("tbody").all("tr")[4]
     assert last.attrs["class"] == "role-reference" and len(last.all("span", "missing")) == 4, "没报告的条件、算不出的比值都标出来"
     assert [li.text for li in c.one("ul", "plain").all("li")] == ["EV-000003-001：没有写同文基准"]
-    assert [p.clean for p in c.all("p", "note")][-1] == "各成员都一样的条件：电流密度 80 mA cm-2"
+    assert same_conditions(c) == ["各成员都一样的条件：电流密度 80 mA cm-2"]
 
 
 def test_cross_source_group():

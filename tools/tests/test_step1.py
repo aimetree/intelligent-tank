@@ -70,7 +70,7 @@ def test_next_ids():
     assert I.next_ids(ds, "EV", source_id="SRC-000001") == ["EV-000001-005"]
     assert I.next_ids(ds, "EV", 3, "SRC-000012") == ["EV-000012-001", "EV-000012-002", "EV-000012-003"]
     assert I.next_ids(ds, "CMP", 2) == ["CMP-000004", "CMP-000005"]
-    assert I.next_ids(ds, "RVW") == ["RVW-000002"]
+    assert I.next_ids(ds, "RVW") == ["RVW-000005"]
     assert I.next_ids(ds, "TOP") == ["TOP-000002"]
     for kind, key in (("LOG", "worklog"), ("CHG", "changes")):
         used = {r["id"] for r in ds[key]}

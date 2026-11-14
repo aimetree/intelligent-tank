@@ -377,6 +377,9 @@ main, .view { display: flex; flex-direction: column; gap: 20px; }
 .cmp-table tr.role-reference td, .cmp-table tr.role-excluded td { color: var(--muted); }
 .matrix td { min-width: 76px; }
 .matrix td.self { color: var(--muted); }
+/* 可比组卡片里的复核单：和上面成员的图表之间隔一条细线 */
+.review { padding-top: 14px; border-top: 1px solid var(--line-row); gap: 8px; }
+.review .block-name { font-size: 13px; font-weight: 600; color: var(--ink); }
 /* 从图上的点、从别的页面跳过来时，标出跳到的是哪一处 */
 .target { outline: 2px solid var(--blue); outline-offset: 2px; background: var(--blue-soft); scroll-margin-top: 16px; }
 

@@ -29,6 +29,54 @@ def write_json(path, obj):
     return True
 
 
+def put_after(obj, key, value, after):
+    """给一条记录设一个字段。已经有就原地改；没有就插在 after 里头一个存在的字段后面，都不在就放最后。
+    这样新加的字段落在它该在的位置，文件里别的行不动。"""
+    if key in obj:
+        obj[key] = value
+        return
+    anchor = next((k for k in after if k in obj), None)
+    if anchor is None:
+        obj[key] = value
+        return
+    items = list(obj.items())
+    obj.clear()
+    for k, v in items:
+        obj[k] = v
+        if k == anchor:
+            obj[key] = value
+
+
+TOPIC_FILES = {"comparisons": "comparisons.json", "assessments": "assessments.json", "reports": "reports.json",
+               "reviews": "reviews.json"}
+
+
+def save_topic(ds, topic_id, coll, new_ids=()):
+    """把一个题目的可比组、描述、报告登记或复核单写回它的文件。文件里是一个数组：
+    原有的记录照原来的次序，new_ids 是这次新加的，接在后面。返回有没有写。
+
+    ds["topic_files"][(题目编号, 类别)] 是 (文件路径, 读进来的编号)；记录就是 ds[类别] 里的那几个对象，直接改它们就行。
+    文件里有读不进来的记录（没有编号、编号重复）时不能用它写回：那样会把读不进来的那几条丢掉。调用的人先看 ds["problems"]。
+    """
+    path, ids = ds["topic_files"].get((topic_id, coll)) or (
+        os.path.join(ds["dir"], "public", "topics", topic_id, TOPIC_FILES[coll]), [])
+    ids = list(ids) + [i for i in new_ids if i not in ids]
+    ds["topic_files"][(topic_id, coll)] = (path, ids)
+    return write_json(path, [ds[coll][i] for i in ids])
+
+
+def append_jsonl(path, record):
+    """在日志末尾加一行。两个日志只在末尾加，已有的行不动（V-72）。"""
+    lead = ""
+    if os.path.exists(path) and os.path.getsize(path):
+        with open(path, "rb") as f:
+            f.seek(-1, os.SEEK_END)
+            if f.read(1) != b"\n":
+                lead = "\n"
+    with open(path, "a", encoding="utf-8") as f:
+        f.write(lead + json.dumps(record, ensure_ascii=False) + "\n")
+
+
 def save_sources(ds, source_ids):
     """把这些来源的文件写回去（来源登记、样品登记和证据在同一个文件里）。
 

@@ -21,7 +21,7 @@
 | `docs/90_资料归档/` | 交接资料的 Markdown 转录 |
 | `archive/Intelligence_Handoff_2026-11-09/` | 交接包原件（含 5 个 Word 文件，其中两份历史稿内容相同） |
 | `data/` | 证据库的数据文件。现在有字段的机器可读定义（`schema/`，规格 v0.2）、空白模板（`templates/`）、显示名表，和学术样品的题目卡、指标字典（草稿，待 Yu 验收）；还没有来源和证据。说明见 `data/README.md` |
-| `tools/` | 脚本：`validate.py` 校验 `data/`，`make_templates.py` 由 schema 生成模板；登记与机器核对用的 `ids.py`（分配编号）、`compare_extractions.py`（两遍抽取的比对）、`check_identifiers.py`（标识能否解析，要联网）、`machine_check.py`（机器核对和风险档预填）；`derive.py` 算派生值（标准单位下的值、与同文基准之比、派生指标）；`build_dashboard.py` 从 `data/` 生成对内看板（只读的静态网页，样式和页面脚本在 `dashboard/`；对标视图在 `compare_view.py`，图在 `charts.py`，都是脚本直接写 SVG，不用图表库）；`tests/` 是测试和一组虚构的示例数据。怎么配合见 `data/README.md` |
+| `tools/` | 脚本：`validate.py` 校验 `data/`，`make_templates.py` 由 schema 生成模板；登记与机器核对用的 `ids.py`（分配编号）、`compare_extractions.py`（两遍抽取的比对）、`check_identifiers.py`（标识能否解析，要联网）、`machine_check.py`（机器核对和风险档预填）；`derive.py` 算派生值（标准单位下的值、与同文基准之比、派生指标）；`review_sheet.py` 管专业复核用的复核单（起草、给人看、变成对话里的点选题、把复核人的回答写回数据）；`build_dashboard.py` 从 `data/` 生成对内看板（只读的静态网页，样式和页面脚本在 `dashboard/`；对标视图在 `compare_view.py`，图在 `charts.py`，都是脚本直接写 SVG，不用图表库）；`tests/` 是测试和一组虚构的示例数据。怎么配合见 `data/README.md` |
 | `.github/workflows/` | GitHub Actions：`checks.yml` 跑校验和测试，生成看板并在 `main` 上存成可下载的附件；`identifiers.yml` 跑要联网的标识解析 |
 
 每次提交 `data/` 之前跑一遍 `python3 tools/validate.py`（依赖见 `tools/requirements.txt`）。推上去之后 GitHub Actions 会再跑一遍校验和测试。
