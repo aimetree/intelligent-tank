@@ -59,6 +59,9 @@ jobs:
           python3 tools/build_dashboard.py --out site --strict
           # 同一次提交在哪台机器上生成都应当逐字节相同：把校验和记在日志里，下载下来的或本机生成的可以拿来对
           sha256sum site/index.html site/evidence-internal.csv
+          # 仓库里的 data/ 还没有证据时上面是空表。再用测试的示例数据（13 条虚构的证据）生成一份，只为了记下校验和来对；不存成附件
+          python3 tools/build_dashboard.py --data tools/tests/example --out "$RUNNER_TEMP/site-example" > /dev/null
+          (cd "$RUNNER_TEMP/site-example" && sha256sum index.html evidence-internal.csv)
       - name: 给这次生成的看板起名（只在 main 上）
         id: dashboard
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
