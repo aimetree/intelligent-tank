@@ -154,6 +154,12 @@
       "origin": "policy_trend",
       "grade": "core",
       "entry": "derived",
+      "derived_from": {
+        "indicators": [
+          "energy_efficiency"
+        ],
+        "condition": "current_density"
+      },
       "value_kind": "numeric",
       "unit_std": "mA/cm2",
       "units_accepted": [

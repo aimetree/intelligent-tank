@@ -34,6 +34,12 @@
       "origin": "<必填：conventional｜policy_trend｜search_found｜prior_decision>",
       "grade": "<必填：core｜extended>",
       "entry": "<evidence｜derived｜relations>",
+      "derived_from": {
+        "indicators": [
+          "<必填：键名，英文小写加下划线>"
+        ],
+        "condition": "<必填：按哪个条件取最大的，英文小写加下划线>"
+      },
       "value_kind": "<必填：numeric｜category｜statement>",
       "unit_std": "<标准单位>",
       "units_accepted": [

@@ -60,6 +60,32 @@ RISK_REASON_TIER = {
 TIER_RANK = {"low": 0, "medium": 1, "high": 2}
 
 
+_PLAIN = re.compile(r"^[+-]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?$")
+_GROUPED = re.compile(r"^[+-]?\d{1,3}(,\d{3})+(\.\d+)?$")
+_POWER = re.compile(r"^([+-]?\d+(?:\.\d+)?)\s*[×xX*·]\s*10\s*(?:\^\s*\(?\s*([+-]?\d+)\s*\)?|([⁺⁻]?[⁰¹²³⁴⁵⁶⁷⁸⁹]+)|([+-]\d+))$")
+_DASHES = str.maketrans({"−": "-", "–": "-", "‒": "-", "﹣": "-", "－": "-", "\u00a0": " ", "\u2009": " ", "\u202f": " "})
+_SUPER = str.maketrans("⁺⁻⁰¹²³⁴⁵⁶⁷⁸⁹", "+-0123456789")
+
+
+def parse_number(text):
+    """原文数值的写法 → 数。认三种：普通的数（85.6、1.2e-6）；带千分位逗号的（3,200）；
+    a×10ⁿ（1.2×10⁻⁶、1.2 x 10^-6、1.2×10-6）。指数要看得出是指数：上标、^ 或带正负号；
+    “2×103”这种看不出来的，以及范围、带单位、小数逗号等别的写法，返回 None，不猜。
+    换算 value_std（tools/derive.py）和校验（V-23）用的是这同一个函数。"""
+    if not isinstance(text, str):
+        return None
+    t = text.strip().translate(_DASHES).strip()
+    if _PLAIN.match(t):
+        return float(t)
+    if _GROUPED.match(t):
+        return float(t.replace(",", ""))
+    m = _POWER.match(t)
+    if m:
+        exponent = m.group(2) or (m.group(3) or "").translate(_SUPER) or m.group(4)
+        return float(f"{m.group(1)}e{int(exponent)}")
+    return None
+
+
 def is_human(actor):
     return isinstance(actor, str) and actor != "" and actor not in NOT_HUMAN
 
@@ -497,7 +523,31 @@ def check_rules(ds, external=()):
                     E("V-07", label, f"{kind_name} {i.get('key')} 有要换算的单位，要写标准单位 unit_std")
                 if std is not None and (unit_entry(i, std) or {}).get("factor") != 1:
                     E("V-07", label, f"{kind_name} {i.get('key')} 的标准单位 {std} 要列在允许的单位里，系数为 1")
+        ind_by_key = {i.get("key"): i for i in d.get("indicators", [])}
+        cond_by_key = {c.get("key"): c for c in d.get("conditions", [])}
         for i in d.get("indicators", []):
+            # 由脚本派生的指标（如 IN-16）：要写明从哪些指标的证据里、按哪个条件取最大的那一条
+            src = i.get("derived_from")
+            if i.get("entry") == "derived" and not src:
+                E("V-07", label, f"指标 {i.get('key')} 由脚本派生，要写从哪里派生 derived_from")
+            if src and i.get("entry") != "derived":
+                E("V-07", label, f"指标 {i.get('key')} 写了 derived_from，entry 要是 derived")
+            if src:
+                cond = cond_by_key.get(src.get("condition"))
+                if cond is None:
+                    E("V-07", label, f"指标 {i.get('key')} 的 derived_from 按条件 {src.get('condition')} 挑，这个条件不在条件项里")
+                elif cond.get("value_kind") != "numeric":
+                    E("V-07", label, f"指标 {i.get('key')} 的 derived_from 按条件 {src.get('condition')} 取最大的，这个条件要是数值型")
+                elif i.get("unit_std") != cond.get("unit_std"):
+                    E("V-07", label, f"指标 {i.get('key')} 的标准单位要和条件 {src.get('condition')} 的一样（{cond.get('unit_std')}）")
+                for k in src.get("indicators", []):
+                    base = ind_by_key.get(k)
+                    if base is None:
+                        E("V-07", label, f"指标 {i.get('key')} 的 derived_from 里的 {k} 不在指标里")
+                    elif base.get("entry", "evidence") != "evidence" or base.get("level") != i.get("level"):
+                        E("V-07", label, f"指标 {i.get('key')} 的 derived_from 里的 {k} 要是同一层、照常录入的指标")
+                    elif src.get("condition") not in base.get("required_conditions", []) + base.get("optional_conditions", []):
+                        E("V-07", label, f"指标 {k} 没有条件 {src.get('condition')}，指标 {i.get('key')} 没法按它挑")
             lacking = [k for k in level_conditions.get(i.get("level"), []) if k not in i.get("required_conditions", [])]
             if lacking and i.get("entry", "evidence") == "evidence":
                 E("V-07", label, f"指标 {i.get('key')} 是 {i.get('level')} 层，必须同时记录 {'、'.join(lacking)}（D-72）")
@@ -834,10 +884,8 @@ def check_rules(ds, external=()):
                 elif e.get("value_std") is None:
                     E("V-23", i, "缺 value_std（由脚本按换算系数算）")
                 else:
-                    try:
-                        want = float(e["value_reported"]) * factor
-                    except ValueError:
-                        want = None  # 原文写法不是纯数字（如 1.2×10⁻⁶），只要求有 value_std
+                    number = parse_number(e["value_reported"])
+                    want = None if number is None else number * factor  # 认不出的写法（如范围）只要求有 value_std
                     if want is not None and abs(want - e["value_std"]) > 1e-9 * max(1.0, abs(want)):
                         E("V-23", i, f"value_std 与换算结果不一致（应为 {want:g}）")
         if kind == "category":

@@ -648,6 +648,14 @@
       "origin": "policy_trend",
       "grade": "core",
       "entry": "derived",
+      "derived_from": {
+        "indicators": [
+          "coulombic_efficiency",
+          "voltage_efficiency",
+          "energy_efficiency"
+        ],
+        "condition": "current_density"
+      },
       "value_kind": "numeric",
       "unit_std": "mA/cm2",
       "units_accepted": [

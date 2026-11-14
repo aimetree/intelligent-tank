@@ -223,7 +223,7 @@ def test_every_page_shows_cutoff_date_and_data_version():
     assert b.dom.one("div", id="stamp").text == f"截至 2026-11-11｜数据版本 {VERSION}"
     assert b.dom.one("footer").text.endswith(f"截至 2026-11-11｜数据版本 {VERSION}")
     assert b.dom.one("div", id="notice").text == "测试用的示例数据，全部虚构，不是证据"
-    assert b.dom.one("title").text == "示例题目（虚构数据，仅用于说明字段）｜对内看板"
+    assert b.dom.one("head").one("title").text == "示例题目（虚构数据，仅用于说明字段）｜对内看板"
 
 
 def test_skeleton_has_the_five_pages():
@@ -234,9 +234,10 @@ def test_skeleton_has_the_five_pages():
         ("#gaps", "gaps", "数据概览与缺口"), ("#non-academic", "non-academic", "非学术来源")]
     views = b.dom.one("main").all("section", "view")
     assert [v.attrs["id"] for v in views] == ALL_VIEWS
+    done = {name for name, _, _, _, step in B.VIEWS if step is None}
+    assert done == {"evidence", "compare"}, "做好了的页面：证据表、对标视图"
     for v in views:
-        if v.attrs["id"] != "evidence":
-            assert "还没有做" in v.text, v.attrs["id"]
+        assert ("还没有做" in v.text) == (v.attrs["id"] not in done), v.attrs["id"]
     assert "13 条证据，来自 8 个来源" in b.dom.one("section", "view", id="overview").text
     # 网页版只让“字母、数字、连字符”的名字出现在 # 后面；settings、sidebar 等几个名字它自己占着
     for name in ALL_VIEWS:
@@ -306,7 +307,7 @@ def test_rows_match_the_data():
     b = example()
     ids = [t.attrs["id"] for t in b.dom.all("tbody", "ev")]
     assert ids == sorted(fresh()["evidence"]), "一条证据一行，按编号排"
-    assert [th.text for th in b.dom.one("thead").all("th")] == [
+    assert [th.text for th in b.dom.one("table", "ev-table").one("thead").all("th")] == [
         "编号", "对象", "层级", "指标或事实项", "数值", "关键条件", "证据类型", "核验状态", "可比档和所在的组", "风险档"]
     for eid, want in EXPECTED_ROWS.items():
         subject = b.cell(eid, "c-subject")
@@ -650,7 +651,8 @@ def test_text_from_sources_is_never_treated_as_markup():
         assert len(b.dom.all("script")) == 2 and len(b.dom.all("style")) == 1, "来源里的文字不能变成脚本或样式"
         for tag in ("img", "iframe", "b"):
             assert b.dom.all(tag) == [], tag
-        assert len(b.dom.all("svg", "mark")) + 1 == len(b.dom.all("svg")), "不能多出别的 svg"
+        for svg in b.dom.all("svg"):   # 页面自己的 svg 只有三种：记号、记号的那组形状、图
+            assert svg.attrs.get("class") in ("mark", "sprite", "chart"), "不能多出别的 svg"
         for node in b.dom.walk():
             assert not any(k.startswith("on") for k in node.attrs), node.attrs
         hrefs = [a.attrs["href"] for a in b.dom.all("a")]
@@ -671,7 +673,7 @@ def test_text_from_sources_is_never_treated_as_markup():
         assert pairs["实际访问的网址"] == "javascript:alert(8)" and source.all("a") == [], "不是 http、https 的网址只当文字显示"
         assert pairs["DOI"] == "10.1234/x\" onmouseover=\"alert(10)"
         assert b.dom.one("div", id="notice").text == "<script>alert(12)</script>"
-        assert b.dom.one("h1").text == "</title><script>alert(13)</script>" == b.dom.one("title").text[:-5]
+        assert b.dom.one("h1").text == "</title><script>alert(13)</script>" == b.dom.one("head").one("title").text[:-5]
         assert b.csv_cell(eid, "原文片段") == "<script>alert(1)</script>"
 
 
@@ -859,7 +861,9 @@ def test_one_unshowable_record_does_not_take_the_page_down():
     assert b.code == 0 and strict.code == 1
     assert len(b.dom.all("tbody", "ev")) == 13
     assert "这条证据显示不出来：RuntimeError: 故意弄坏的" in b.detail("EV-000001-002").text
-    assert b.problems() == ["EV-000001-002：这条证据显示不出来（RuntimeError: 故意弄坏的）"]
+    assert b.problems() == ["EV-000001-002：显示不出来（RuntimeError: 故意弄坏的）"]
+    assert len(b.dom.all("section", "group-card")) == 3, "对标视图照样出"
+    assert "证据库里没有这一条" not in b.dom.one("section", "group-card", id="CMP-000002").text
     assert b.cell("EV-000001-001", "c-value").clean == "85.6%", "别的证据不受影响"
     assert len(b.table) == 14 and b.csv_cell("EV-000001-002", "原文数值") == "82.0", "表格文件里这一条也占一行"
 
@@ -1147,7 +1151,7 @@ def test_browser_filters():
             assert page.is_visible("#ev-empty") == (not want)
             assert page.is_visible("#ev-clear") == (len(want) != 13), steps
             pressed = page.eval_on_selector_all(
-                "button.chip[aria-pressed=true]", "chips => chips.map(c => c.dataset.filter + '=' + c.dataset.value)")
+                "button.chip[data-filter][aria-pressed=true]", "chips => chips.map(c => c.dataset.filter + '=' + c.dataset.value)")
             chosen = {s[1]: s[2] for s in steps if s[0] == "chip"}
             assert sorted(pressed) == sorted(f"{k}={chosen.get(k, '')}" for k in ("level", "status", "srctype", "risk")), steps
         # 清除筛选

@@ -258,6 +258,49 @@ main, .view { display: flex; flex-direction: column; gap: 20px; }
 .history .date { color: var(--muted); margin-right: 8px; font-variant-numeric: tabular-nums; }
 .plain { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 4px; }
 
+/* ---------- 对标视图 ---------- */
+.level { display: flex; flex-direction: column; gap: 20px; }
+.level-name { font-size: 15px; color: var(--muted); }
+.tags { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; font-size: 13px; color: var(--soft); }
+.tier {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 24px;
+  padding: 0 8px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  background: #FFFFFF;
+  color: var(--ink);
+  border: 1px solid var(--ink);
+}
+.tier.t-direct { background: var(--ink); color: #FFFFFF; }
+.tier.t-reference { background: #EEF0F3; color: var(--muted); border-color: var(--line-strong); }
+.tier.t-insufficient { color: var(--soft); border: 1px dashed var(--line-dark); }
+.figure { margin: 0; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.chart { max-width: 100%; height: auto; }
+.table-wrap { overflow-x: auto; }
+.cmp-table { border-collapse: collapse; min-width: 100%; font-size: 14px; line-height: 1.5; }
+.cmp-table th {
+  text-align: left;
+  font-weight: 400;
+  font-size: 13px;
+  color: var(--muted);
+  padding: 8px 12px 8px 0;
+  border-bottom: 1px solid var(--line-strong);
+  vertical-align: bottom;
+}
+.cmp-table td { padding: 8px 12px 8px 0; vertical-align: top; border-top: 1px solid var(--line-row); }
+.cmp-table tbody th { font-weight: 600; color: var(--ink); border-bottom: 0; border-top: 1px solid var(--line-row); vertical-align: top; }
+/* 只作参考的、排除的成员灰显（设计方案 4.4 第 4 项）；是哪一种，“角色”一栏里写着 */
+.cmp-table tr.role-reference td, .cmp-table tr.role-excluded td { color: var(--muted); }
+.matrix td { min-width: 76px; }
+.matrix td.self { color: var(--muted); }
+/* 从图上的点、从别的页面跳过来时，标出跳到的是哪一处 */
+.target { outline: 2px solid var(--blue-mid); outline-offset: 2px; background: #F3F7FD; scroll-margin-top: 16px; }
+
 /* ---------- 图例 ---------- */
 .legend { flex-direction: row; flex-wrap: wrap; gap: 24px; font-size: 13px; line-height: 1.7; }
 .legend-col { flex: 1 1 220px; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
@@ -278,6 +321,9 @@ main, .view { display: flex; flex-direction: column; gap: 20px; }
   .detail { grid-template-columns: minmax(0, 1fr); padding: 12px; }
   .picker { flex: 1 1 100%; }
   .picker select, .picker input { width: 100%; }
+  /* 图缩得太小字就看不清了：窄屏上图保持原来的大小，在自己的框里左右滑 */
+  .figure { overflow-x: auto; }
+  .chart { max-width: none; }
 }
 
 /* ---------- 打印：只印当前这一页，证据全部展开 ---------- */

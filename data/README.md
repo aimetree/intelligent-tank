@@ -33,7 +33,7 @@
 2. 录入：从 `templates/` 里复制对应的模板，填好，用不到的可选字段整项删掉，不留空值。
 3. 编号取现有最大号加一，一经分配不复用。记录不删除：证据作废改状态，实体合并填 `merged_into`。
 4. 每次提交之前跑：`python3 tools/validate.py`。有问题时退出码是 1，每行是“规则编号、记录编号、哪里不对”。
-5. 改了 schema 之后：`python3 tools/make_templates.py` 重新生成模板，再跑 `python3 tools/tests/test_validate.py`、`python3 tools/tests/test_step1.py` 和 `python3 tools/tests/test_dashboard.py`。
+5. 改了 schema 之后：`python3 tools/make_templates.py` 重新生成模板，再跑 `python3 tools/tests/test_validate.py`、`python3 tools/tests/test_step1.py`、`python3 tools/tests/test_dashboard.py` 和 `python3 tools/tests/test_step3.py`。
 
 ## 录一个来源，脚本怎么配合
 
@@ -44,19 +44,20 @@
 | 1 | 分配来源编号，建来源文件 | `python3 tools/ids.py SRC` |
 | 2 | 同一个来源独立抽两遍，各存一个文件，把两遍对起来 | `python3 tools/compare_extractions.py pass1.json pass2.json --out report.json`：一致的已经写好 `double_extraction`，可以直接登记；不一致的、只有一遍有的交给人裁定，定下来的记 `resolved` |
 | 3 | 给证据分配编号，登记进来源文件 | `python3 tools/ids.py EV --source SRC-编号 --count 20` |
-| 4 | 查来源的标识能不能解析（要联网） | 推到 `main` 之后 GitHub Actions 自动跑 `tools/check_identifiers.py`，把 `id_check` 提交回来；跑完先 `git pull` 再接着做 |
-| 5 | 机器核对，预填风险档 | `python3 tools/machine_check.py --texts work/texts --write` |
-| 6 | 校验 | `python3 tools/validate.py` |
+| 4 | 算标准单位下的值 `value_std` | `python3 tools/derive.py --write`。原文数值乘上指标字典里这个单位的换算系数；照原文记的单位（币种、GW）不算；写法认不出的（范围、带单位）不猜，列出来等人处理 |
+| 5 | 查来源的标识能不能解析（要联网） | 推到 `main` 之后 GitHub Actions 自动跑 `tools/check_identifiers.py`，把 `id_check` 提交回来；跑完先 `git pull` 再接着做 |
+| 6 | 机器核对，预填风险档 | `python3 tools/machine_check.py --texts work/texts --write` |
+| 7 | 校验 | `python3 tools/validate.py` |
 
 - **来源文本**　机器核对要拿原文片段到来源文本里逐字找。抽取的时候把读到的来源文本存成 `work/texts/SRC-编号.txt`（或 `.md`）；`work/` 不入库（规格 9.1 第 6 项），两遍抽取的文件和比对报告也放在这里。没有文本的来源，它的证据没法查，留在待核。
 - **标识怎么查**　有 DOI 的到 DOI 注册处查这个号存不存在，不碰出版商的网站；没有 DOI、由成员下载或代查的，成员取到了就是存在，不发请求；其余的先看网站的 robots.txt，让自动访问才打开登记的网址。条款禁止自动访问又不是成员取来的，不查，列出来等人处理。没查成的（超时、被拒、robots.txt 不让）不写进数据。专利号现在不单独查，按网址或成员确认走。
 - **机器核对查什么**　来源的标识通过了解析；原文片段在来源文本里逐字找得到；数值在片段里，片段里数值后面紧跟着单位的，和记录的单位一致。只放宽排版上的差别（上标、全角、横线的写法、空白、换行、行尾断词），不改字，大小写不放宽。都过了的从待核改成机器已核；没过的留在或退回待核。人工已核及以上的证据不动。
 - **风险档**　机器核对之后按字段推出风险理由预填（规格 3.6.1）；数值离群、其他这两种由人或 Claude 标，重跑时留着。
-- **GitHub Actions**　`.github/workflows/checks.yml` 在数据或脚本有改动时跑校验和三组测试，并用仓库里的 `data/` 试着生成一遍看板；`.github/workflows/identifiers.yml` 查标识，只有在 `main` 上才写回并提交，每次先自检（到注册处查一个存在的号和一个不存在的号）。
+- **GitHub Actions**　`.github/workflows/checks.yml` 在数据或脚本有改动时跑校验和四组测试，并用仓库里的 `data/` 试着生成一遍看板；`.github/workflows/identifiers.yml` 查标识，只有在 `main` 上才写回并提交，每次先自检（到注册处查一个存在的号和一个不存在的号）。
 
 ## 生成看板
 
-对内看板由脚本从 `data/` 生成，不建数据库和服务（设计方案 4.5，D-30）。2026-11-14 起，样品阶段脚本第 2 步：现在有骨架和证据表页；总览、对标视图、数据概览与缺口、非学术来源四页先占位。
+对内看板由脚本从 `data/` 生成，不建数据库和服务（设计方案 4.5，D-30）。2026-11-14 起，样品阶段脚本第 2、3 步：现在有骨架、证据表页和对标视图；总览、数据概览与缺口、非学术来源三页先占位。
 
 - **生成**　`python3 tools/build_dashboard.py`。写出 `site/index.html`（看板）和 `site/evidence-internal.csv`（证据表的表格文件）。`site/` 不入库。想先看个样子：`python3 tools/build_dashboard.py --data tools/tests/example --out /tmp/site`，用虚构的示例数据生成一份。
 - **看**　用浏览器打开 `site/index.html`。不用联网，不用装别的东西。成员平时有两处可以看（Yu 2026-11-14 定）：
@@ -65,6 +66,9 @@
   GitHub Pages 不用：私有仓库的 Pages 站点是公开的，而页面里有只留内部的原文片段。
 - **一个文件**　样式和页面脚本都写在网页里，打开时不向任何地方发请求；页面里另有一条浏览器策略，把对外的请求全部拦住。五个页面是这个文件里的五块，用网址里 `#` 后面的名字切换（`#overview`、`#evidence`、`#compare`、`#gaps`、`#non-academic`）；写成 `#EV-000001-001` 就直接跳到那条证据并展开。浏览器不跑脚本时，五块全部显示、每条证据都展开，内容一样看得到。
 - **证据表页**　一条证据一行；点编号展开，看原文片段、出处、测试条件、来源和链接、核验历史、风险档和理由、所在可比组、被哪些数据概览引用。可以按层级、核验状态、来源类别、风险档、证据类型、可比档、可见范围、对象、指标或事实项、来源筛选，也可以查找文字。窄屏上一条证据排成一张卡片，不用横着滑。
+- **对标视图**　层级各有各的一块，一次看一层。每个可比组一张卡片：档别、依据的规则、定档理由、缺什么；一张图；成员的表（数值、与基准之比、关键条件和各成员不一样的条件）。另有同一批测试里随条件变化的图、可比性矩阵、派生指标的表。成员照登记的次序排，不按数值排名，不求平均。图上的点点一下跳到成员表里那一行，再点跳到证据表里那条证据。
+- **图**　脚本直接写 SVG，不用图表库（Yu 2026-11-14 定）。证据类型用形状，专业已复核的实心、还没复核的空心；原文给了范围或误差就画出来；只有同一批测试里同一个样品的点才连线。每张图自带样式，单独存成 `.svg` 文件也是完整的，可以直接放进报告。
+- **换算值**　与同文基准之比、派生指标（指标字典里 `entry` 为 `derived` 的，要写 `derived_from`：从哪些指标的证据里、按哪个条件取最大的那一条）由脚本现算，不是证据，不入库，页面上标“换算值”。想单独看：`python3 tools/derive.py`。
 - **截至日期和数据版本**　页头和页脚都写着。截至日期取题目卡的 `cutoff_date`，没有填就写“还没有定”。数据版本就是提交号；数据或脚本有没提交的改动时，后面注明“＋没提交的改动”。同一次提交生成的文件逐字节相同。
 - **名字从哪里来**　题目、指标、事实项、条件取自题目卡和指标字典，枚举值和单位取自 `labels.json`，字段名取自 schema。脚本里不写死任何一个指标。找不到显示名的原样显示代码。
 - **数据有问题时**　页面照样生成，没通过校验的地方列在页面顶上，那一格里照实写“没有填”“实体库里没有这个编号”之类。加 `--strict`，有问题时退出码是 1。

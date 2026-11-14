@@ -2508,6 +2508,30 @@
                 "title": "怎么录",
                 "description": "默认 evidence；derived 由脚本算、不录入（如 IN-16）；relations 用实体和关系表达（如 IN-42）（V-21）"
               },
+              "derived_from": {
+                "type": "object",
+                "title": "从哪里派生",
+                "description": "entry 为 derived 时必填：由脚本从同一批测试里、这些指标的证据中，取这个条件最大的那一条（V-07）",
+                "properties": {
+                  "indicators": {
+                    "type": "array",
+                    "title": "从哪些指标的证据里取",
+                    "items": {
+                      "$ref": "#/$defs/key"
+                    },
+                    "minItems": 1
+                  },
+                  "condition": {
+                    "$ref": "#/$defs/key",
+                    "title": "按哪个条件取最大的"
+                  }
+                },
+                "required": [
+                  "indicators",
+                  "condition"
+                ],
+                "additionalProperties": false
+              },
               "value_kind": {
                 "$ref": "#/$defs/enum_content_kind",
                 "title": "取值类别"

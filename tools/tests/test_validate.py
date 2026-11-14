@@ -52,6 +52,11 @@ def smp(ds, sid, label):
     return next(x for x in ds["samples"][sid] if x["label"] == label)
 
 
+def derived(ds):
+    """示例指标字典里由脚本派生的那个指标（IN-16）。"""
+    return next(i for i in ds["dictionaries"][T]["indicators"] if i.get("entry") == "derived")
+
+
 def report(ds, **cited):
     ds["reports"]["RPT-000001"] = issued_report(**cited)
 
@@ -82,6 +87,14 @@ CASES = [
     ("可比规则的关键条件没定义", "V-07", lambda d: d["dictionaries"][T]["rules"][2]["key_conditions"].append("flow_rate"), ()),
     ("分类维度的 only_when 用了没定义的维度", "V-07", lambda d: d["topics"][T]["facets"][2]["only_when"].__setitem__("fluorine_kind", ["x"]), ()),
     ("有要换算的单位却没写标准单位", "V-07", lambda d: d["dictionaries"][T]["facts"][2].pop("unit_std"), ()),
+    ("派生的指标没写从哪里派生", "V-07", lambda d: derived(d).pop("derived_from"), ()),
+    ("派生的指标指向了没有的指标", "V-07", lambda d: derived(d)["derived_from"]["indicators"].append("no_such_indicator"), ()),
+    ("派生的指标按不是数值的条件挑", "V-07", lambda d: derived(d)["derived_from"].__setitem__("condition", "test_medium"), ()),
+    ("派生的指标和挑的条件单位不一样", "V-07", lambda d: derived(d).update(unit_std="%", units_accepted=[{"unit": "%", "factor": 1}]), ()),
+    ("照常录入的指标写了从哪里派生", "V-07", lambda d: d["dictionaries"][T]["indicators"][0].__setitem__(
+        "derived_from", {"indicators": ["area_resistance"], "condition": "current_density"}), ()),
+    ("换算值和 a×10ⁿ 写法的原文数值对不上", "V-23", lambda d: ev(d, "EV-000002-001").update(
+        value_reported="4.5×10⁻¹", value_std=4.5), ()),
     ("标准单位没有列在允许的单位里", "V-07", lambda d: d["dictionaries"][T]["indicators"][2]["units_accepted"].clear(), ()),
     ("可比规则写的层级和适用的指标不一致", "V-07", lambda d: d["dictionaries"][T]["rules"][0].__setitem__("level", "material"), ()),
     # ---- 分类维度

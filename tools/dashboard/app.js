@@ -1,5 +1,5 @@
 /* 对内看板的页面脚本，由 tools/build_dashboard.py 写进页面。
-   只做四件事：切换页面、筛选证据表、展开一条证据、把当前显示的行复制成表格。
+   只做五件事：切换页面、筛选证据表、展开一条证据、把当前显示的行复制成表格、在对标视图里切换层级。
    不发任何网络请求，不往浏览器里存任何东西；数据都已经写在页面里。
    给人看的字都在 HTML 里，这里不写。 */
 (function () {
@@ -25,8 +25,10 @@
     var copyNote = document.getElementById('ev-copy-note');
     var copyBox = document.getElementById('ev-copy-box');
     var download = document.getElementById('ev-download');
+    var levelTabs = all('[data-level-tab]');
+    var levelPanels = all('[data-level-panel]');
+    var marked = null;  // 上一次跳到并标出来的那一处
 
-    var EV_ID = /^EV-\d{6}-\d{3,}$/;
     var state = {};     // 筛选项的名字 → 选中的值。没选的不在里面
     var texts = null;   // 每条证据的全部文字，第一次查找时才算
 
@@ -51,18 +53,48 @@
       }
     }
 
-    /* name 是页面的名字，或者一条证据的编号；都不是就回到第一页 */
+    /* name 是页面的名字，或者页面里某一处的编号（一条证据、一个可比组、可比组里的一行）。
+       都不是就回到第一页 */
     function show(name) {
-      if (EV_ID.test(name)) {
-        var row = document.getElementById(name);
-        if (row && row.classList.contains('ev')) {
-          showView('evidence');
-          reveal(row);
-          return;
-        }
+      var node = name ? document.getElementById(name) : null;
+      var view = node && node.closest ? node.closest('main .view') : null;
+      if (!view) {
+        showView(views.length ? views[0].id : '');
+        return;
       }
-      var known = views.some(function (view) { return view.id === name; });
-      showView(known ? name : (views.length ? views[0].id : ''));
+      showView(view.id);
+      if (node === view) { return; }
+      if (node.classList.contains('ev')) {
+        reveal(node);
+        return;
+      }
+      var panel = node.closest('[data-level-panel]');
+      if (panel) { showLevel(panel.getAttribute('data-level-panel')); }
+      if (marked) { marked.classList.remove('target'); }
+      marked = node;
+      node.classList.add('target');
+      node.setAttribute('tabindex', '-1');
+      node.scrollIntoView();
+      focusLater(node);
+    }
+
+    /* ---------- 对标视图：一次只看一个层级 ---------- */
+
+    function showLevel(code) {
+      levelPanels.forEach(function (panel) { panel.hidden = panel.getAttribute('data-level-panel') !== code; });
+      levelTabs.forEach(function (tab) {
+        tab.setAttribute('aria-pressed', tab.getAttribute('data-level-tab') === code ? 'true' : 'false');
+      });
+    }
+
+    levelTabs.forEach(function (tab) {
+      tab.addEventListener('click', function () { showLevel(tab.getAttribute('data-level-tab')); });
+    });
+
+    if (levelPanels.length) {
+      // 先显示第一个有可比组的层级；都没有就显示第一个
+      var first = levelPanels.filter(function (panel) { return panel.querySelector('.group-card'); })[0] || levelPanels[0];
+      showLevel(first.getAttribute('data-level-panel'));
     }
 
     function route() {
