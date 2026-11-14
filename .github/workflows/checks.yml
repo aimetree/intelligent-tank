@@ -1,6 +1,7 @@
 name: 校验与测试
 
-# 改了数据或脚本就跑：校验 data/，跑三组测试，再用仓库里的 data/ 试着生成一遍看板。
+# 改了数据或脚本就跑：校验 data/，跑三组测试，再用仓库里的 data/ 生成一遍看板。
+# 在 main 上，生成的看板存成这次运行的附件（Artifacts），有仓库权限的人可以下载；前面任何一步没过就不存。
 # 只读仓库。除了装依赖，不联网取别的东西。
 on:
   push:
@@ -55,3 +56,15 @@ jobs:
         run: python3 tools/tests/test_dashboard.py
       - name: 用仓库里的 data/ 生成看板
         run: python3 tools/build_dashboard.py --out site --strict
+      - name: 给这次生成的看板起名（只在 main 上）
+        id: dashboard
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        run: echo "name=dashboard-${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+      - name: 把看板存成这次运行的附件
+        if: steps.dashboard.outputs.name != ''
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ steps.dashboard.outputs.name }}   # dashboard-提交号，和页面上写的数据版本是同一个号
+          path: site/
+          retention-days: 14        # 随时可以从同一次提交重新生成，不必久留
+          if-no-files-found: error
