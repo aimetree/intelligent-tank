@@ -122,8 +122,6 @@ main, .view { display: flex; flex-direction: column; gap: 20px; }
   gap: 14px;
 }
 .view-head { display: flex; flex-wrap: wrap; gap: 4px 16px; align-items: baseline; justify-content: space-between; }
-/* 还没做的页面：空心的框 */
-.todo { background: transparent; border: 1px dashed var(--line-dark); }
 
 /* ---------- 筛选：胶囊。选中的是蓝底白字、加粗 ---------- */
 .filters { gap: 18px; }
@@ -383,6 +381,97 @@ main, .view { display: flex; flex-direction: column; gap: 20px; }
 /* 从图上的点、从别的页面跳过来时，标出跳到的是哪一处 */
 .target { outline: 2px solid var(--blue); outline-offset: 2px; background: var(--blue-soft); scroll-margin-top: 16px; }
 
+/* ---------- 总览、数据概览与缺口、非学术来源三页 ---------- */
+/* 一排大数：卡片里的浅灰小块 */
+.tiles { display: flex; flex-wrap: wrap; gap: 12px; }
+.tile { flex: 1 1 170px; min-width: 0; background: var(--bg); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 4px; }
+.tile-name { font-size: 13px; color: var(--muted); }
+.tile-n { font-size: 28px; line-height: 1.15; font-weight: 600; font-variant-numeric: tabular-nums; }
+.tile-sub { font-size: 12px; line-height: 1.5; color: var(--muted); overflow-wrap: anywhere; }
+.tile.warn { background: var(--warn-soft); }
+.tile.warn .tile-name, .tile.warn .tile-n, .tile.warn .tile-sub { color: var(--warn-ink); }
+/* 核到哪一步：一条横条分成几段，条数写在下面的字里，颜色不单独承担含义 */
+.statusbar { display: block; width: 100%; height: 18px; border-radius: 9px; overflow: hidden; background: var(--fill); }
+.seg { stroke: var(--card); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.seg-expert_reviewed { fill: var(--blue); }
+.seg-human_verified { fill: var(--blue-mid); }
+.seg-machine_checked { fill: #C5DDFB; }
+.seg-pending { fill: var(--line); }
+.seg-disputed { fill: var(--warn); }
+.seg-void, .seg-x { fill: var(--line-dark); }
+.status-counts { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 14px; }
+.status-count { display: inline-flex; align-items: center; gap: 6px; }
+/* 覆盖图：格子里写着核验状态的头一个字，样子和核验状态的标记是一套 */
+.cov-table td { text-align: center; white-space: nowrap; }
+.cov-table tbody th { min-width: 170px; }
+.cov-table thead th { white-space: normal; min-width: 76px; }
+.cov {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 30px;
+  height: 26px;
+  padding: 0 6px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid transparent;
+  color: var(--muted);
+}
+.cov-expert_reviewed { background: var(--blue); color: #FFFFFF; border-color: var(--blue); }
+.cov-human_verified { background: var(--blue-soft); color: var(--blue-dark); border-color: var(--blue-mid); }
+.cov-machine_checked { background: var(--card); color: var(--blue-dark); border-color: var(--blue); }
+.cov-pending, .cov-unknown { background: var(--card); color: var(--soft); border: 1px dashed var(--line-dark); }
+.cov-disputed { background: var(--warn-soft); color: var(--warn-dark); border-color: var(--warn); }
+.cov-not_reported, .cov-not_applicable { background: var(--fill); color: var(--soft); }
+.cov-also-disputed { box-shadow: 0 0 0 2px var(--warn); }
+.cov-link { display: inline-block; border-radius: 8px; text-decoration: none; }
+.cov-table .sub { display: inline; margin-left: 4px; }
+.cov-table tbody th .sub, .cov-table thead .sub { display: block; margin-left: 0; }
+.cov-legend { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 13px; }
+/* 并排的三张小卡片；卡片里一行一行的数 */
+.thirds { display: flex; flex-wrap: wrap; gap: 20px; align-items: stretch; }
+.third { flex: 1 1 340px; min-width: 0; }
+.lines { display: flex; flex-direction: column; gap: 8px; font-size: 14px; line-height: 1.6; }
+.line { display: flex; justify-content: space-between; gap: 12px; }
+.line > .strong { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.muted, .line.muted { color: var(--muted); }
+.gap { overflow-wrap: anywhere; }
+.meter { display: flex; flex-direction: column; gap: 4px; }
+.bar { display: block; width: 100%; height: 8px; border-radius: 4px; overflow: hidden; }
+.bar-bg { fill: var(--fill); }
+.bar-fill { fill: var(--blue); }
+#missing-conditions .bar-fill { fill: var(--warn-dark); }
+/* 一览表：一格里可以有几条证据 */
+.sum-table td { min-width: 200px; }
+.sum-table tbody th { min-width: 130px; }
+.entry + .entry { margin-top: 8px; }
+/* 数据概览的陈述：左边是话，右边是依据 */
+.statements { display: flex; flex-direction: column; }
+.statement { display: flex; flex-wrap: wrap; gap: 8px 24px; padding: 12px 0; border-top: 1px solid var(--line-row); font-size: 14px; line-height: 1.7; scroll-margin-top: 16px; }
+.statement-text { flex: 1 1 520px; min-width: 0; }
+.statement-side { flex: 0 1 320px; min-width: 0; font-size: 13px; color: var(--soft); }
+.basis { white-space: nowrap; margin-right: 8px; }
+.asm { display: inline-flex; align-items: center; min-height: 22px; padding: 0 8px; border-radius: 11px; font-size: 12px; background: var(--card); color: var(--soft); border: 1px dashed var(--line-dark); }
+.asm-reviewed { background: var(--blue); color: #FFFFFF; border: 1px solid var(--blue); }
+.asm-withdrawn { border: 1px solid var(--line); color: var(--muted); text-decoration: line-through; }
+/* 非学术来源：一个来源一张小卡片 */
+.doc-cards { display: flex; flex-wrap: wrap; gap: 12px; }
+.doc-card { flex: 1 1 380px; min-width: 0; border: 1px solid var(--line); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 10px; font-size: 14px; line-height: 1.6; scroll-margin-top: 16px; }
+.doc-head { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; font-size: 15px; }
+.chip-static { display: inline-flex; align-items: center; min-height: 24px; padding: 0 10px; border-radius: 12px; font-size: 12px; background: var(--fill); color: var(--ink); border: 1px solid var(--line); }
+.chip-static.dashed { background: var(--card); color: var(--soft); border: 1px dashed var(--line-dark); }
+/* 事项：按日期排的一条线。实心点是已经发生的，空心点是时间表上预计的；“预计”两个字也写在日期后面 */
+.events { margin: 0 0 0 7px; padding: 0 0 0 20px; list-style: none; border-left: 2px solid var(--line); display: flex; flex-direction: column; gap: 14px; font-size: 14px; line-height: 1.6; }
+.event { position: relative; }
+.event::before { content: ""; position: absolute; left: -28px; top: 4px; width: 14px; height: 14px; box-sizing: border-box; border-radius: 50%; background: var(--blue); border: 3px solid var(--blue); }
+.event.expected::before { background: var(--card); }
+.rels { display: flex; flex-direction: column; }
+.rel { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; padding: 10px 0; border-top: 1px solid var(--line-row); font-size: 14px; line-height: 1.6; scroll-margin-top: 16px; }
+.rel-what { flex: 1 1 300px; min-width: 0; font-weight: 600; }
+.rel > .sub { flex: 1 1 280px; min-width: 0; }
+.banner-soft { background: var(--bg); border-radius: 12px; padding: 12px 16px; font-size: 14px; line-height: 1.6; }
+
 /* ---------- 图例 ---------- */
 .legend { flex-direction: row; flex-wrap: wrap; gap: 24px; font-size: 13px; line-height: 1.7; }
 .legend-col { flex: 1 1 220px; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
@@ -396,6 +485,8 @@ main, .view { display: flex; flex-direction: column; gap: 20px; }
 /* 系统的高对比度模式会去掉底色：选中的那一项另外加一圈线 */
 @media (forced-colors: active) {
   nav.pages a[aria-current="page"], .chip[aria-pressed="true"] { outline: 2px solid; outline-offset: -3px; }
+  .cov-expert_reviewed, .asm-reviewed { outline: 2px solid; outline-offset: -3px; }
+  .seg, .bar-fill { forced-color-adjust: none; }
 }
 
 /* ---------- 窄屏：一条证据排成一张卡片，不用横着滑 ---------- */

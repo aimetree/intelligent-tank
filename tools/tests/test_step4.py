@@ -480,7 +480,7 @@ def test_answers_close_the_sheet_and_carry_over():
         code, out, err = run("--data", data, "apply", "RVW-000003", "--answers", answers_file(data, FULL))
         assert code == 0, out + err
         assert out.splitlines() == ["RVW-000003 复核完了：同意 2 条，改 0 条，成批确认 4 条", "CMP-000002 标成专业已复核",
-                                    "3 条证据标成专业已复核", "工作记录加了一条 LOG-000005"]
+                                    "3 条证据标成专业已复核", "工作记录加了一条 LOG-000006"]
         ds = V.load_dataset(data)
         sheet = ds["reviews"]["RVW-000003"]
         assert (sheet["status"], sheet["reviewer"], sheet["reviewed_at"]) == ("closed", "kai", "2026-11-12")
@@ -500,7 +500,7 @@ def test_answers_close_the_sheet_and_carry_over():
         for eid in ("EV-000001-001", "EV-000001-002"):
             assert ds["evidence"][eid] == before["evidence"][eid], "早先在别的单子里复核过的不动（复核人、日期照旧）"
         assert ds["comparisons"]["CMP-000003"] == before["comparisons"]["CMP-000003"] and ds["assessments"] == before["assessments"]
-        assert ds["worklog"][-1] == {"id": "LOG-000005", "date": "2026-11-12", "topic_id": "TOP-000001", "arm": "C", "step": "expert_review",
+        assert ds["worklog"][-1] == {"id": "LOG-000006", "date": "2026-11-12", "topic_id": "TOP-000001", "arm": "C", "step": "expert_review",
                                      "actor_kind": "human", "actor": "kai", "summary": "看 RVW-000003（CMP-000002），复核完", "minutes": 9,
                                      "refs": ["RVW-000003"], "counts": {"confirmed": 2, "modified": 0, "left_pending": 0, "evidence_reviewed": 3}}
         assert ds["worklog"][:-1] == before["worklog"], "工作记录只在末尾加"
@@ -526,7 +526,7 @@ def test_answers_in_two_sittings():
     with ready_copy() as data:
         first = {"reviewer": "kai", "date": "2026-11-12", "minutes": 4, "items": {"CMP-000002": {"decision": "confirm"}}}
         code, out, err = run("--data", data, "apply", "RVW-000003", "--answers", answers_file(data, first))
-        assert code == 0 and out.splitlines() == ["RVW-000003 记下了回答，还没有复核完：1 条还没有定；成批确认的那一项还没有定", "工作记录加了一条 LOG-000005"], out + err
+        assert code == 0 and out.splitlines() == ["RVW-000003 记下了回答，还没有复核完：1 条还没有定；成批确认的那一项还没有定", "工作记录加了一条 LOG-000006"], out + err
         ds = V.load_dataset(data)
         sheet = ds["reviews"]["RVW-000003"]
         assert sheet["status"] == "sent" and "reviewer" not in sheet and [it["decision"] for it in sheet["items"]] == ["confirm", "pending"]
@@ -552,7 +552,7 @@ def test_answers_in_two_sittings():
         sheet = ds["reviews"]["RVW-000003"]
         assert (sheet["status"], sheet["reviewed_at"], sheet["notes"]) == ("closed", "2026-11-13", "分两次看的")
         assert sheet["items"][1]["note"] == "等我查一下原文", "先前留的话还在"
-        assert [w["id"] for w in ds["worklog"][-4:]] == ["LOG-000005", "LOG-000006", "LOG-000007", "LOG-000008"], "每坐下来看一次记一条"
+        assert [w["id"] for w in ds["worklog"][-4:]] == ["LOG-000006", "LOG-000007", "LOG-000008", "LOG-000009"], "每坐下来看一次记一条"
         assert "minutes" not in ds["worklog"][-1] and ds["worklog"][-1]["minutes_note"] == "当时没有记时间"
         assert ds["worklog"][-1]["counts"] == {"confirmed": 0, "modified": 0, "left_pending": 0, "evidence_reviewed": 3}
         assert problems(data) == []
@@ -611,7 +611,7 @@ def test_reviewed_statement_and_later_members():
         assert run("--data", data, "questions", "RVW-000002", "--send", "--out", os.devnull)[0] == 0
         said = {"reviewer": "kai", "date": "2026-11-12", "minutes": 2, "items": {"ASM-000001": {"decision": "confirm"}}}
         code, out, err = run("--data", data, "apply", "RVW-000002", "--answers", answers_file(data, said))
-        assert code == 0 and out.splitlines() == ["RVW-000002 复核完了：同意 1 条，改 0 条", "ASM-000001 标成已复核", "工作记录加了一条 LOG-000005"], out + err
+        assert code == 0 and out.splitlines() == ["RVW-000002 复核完了：同意 1 条，改 0 条", "ASM-000001 标成已复核", "工作记录加了一条 LOG-000006"], out + err
         ds = V.load_dataset(data)
         a = ds["assessments"]["ASM-000001"]
         assert (a["status"], a["reviewed_by"], a["reviewed_at"]) == ("reviewed", "kai", "2026-11-12")

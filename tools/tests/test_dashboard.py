@@ -234,10 +234,11 @@ def test_skeleton_has_the_five_pages():
         ("#gaps", "gaps", "数据概览与缺口"), ("#non-academic", "non-academic", "非学术来源")]
     views = b.dom.one("main").all("section", "view")
     assert [v.attrs["id"] for v in views] == ALL_VIEWS
-    done = {name for name, _, _, _, step in B.VIEWS if step is None}
-    assert done == {"evidence", "compare"}, "做好了的页面：证据表、对标视图"
-    for v in views:
-        assert ("还没有做" in v.text) == (v.attrs["id"] not in done), v.attrs["id"]
+    assert [name for name, _, _, _ in B.VIEWS] == ALL_VIEWS and set(B.PAGES) == set(ALL_VIEWS) - {"evidence"}
+    for (name, _, title, question), v in zip(B.VIEWS, views):   # 五页都做了：每页有自己的标题，没有哪一页说“还没有做”“生成不了”
+        assert v.all("h2")[0].text == title and v.attrs["aria-label"] == title, name
+        assert question in v.text or name == "compare", name
+        assert "还没有做" not in v.text and "生成不了" not in v.text, name
     assert "13 条证据，来自 8 个来源" in b.dom.one("section", "view", id="overview").text
     # 网页版只让“字母、数字、连字符”的名字出现在 # 后面；settings、sidebar 等几个名字它自己占着
     for name in ALL_VIEWS:
@@ -562,8 +563,10 @@ def test_same_data_gives_identical_files():
         b = Built(data)
         assert a.page == b.page and a.raw_csv == b.raw_csv
         assert tempfile.gettempdir() not in b.page and EXAMPLE not in a.page, "页面里不能带出本机的路径"
-    c = Built(EXAMPLE, version="另一个版本")
-    assert c.page != a.page and c.page.replace("另一个版本", VERSION) == a.page, "换了数据版本，只有版本号那几处不同"
+    other = "版本乙"   # 示例数据里不会出现的写法：下面要把它整个换回去再比
+    assert other not in a.page and VERSION not in a.page.replace(f"数据版本 {VERSION}", "")
+    c = Built(EXAMPLE, version=other)
+    assert c.page != a.page and c.page.replace(other, VERSION) == a.page, "换了数据版本，只有版本号那几处不同"
 
 
 NETWORK_WORDS = ["fetch(", "XMLHttpRequest", "WebSocket", "EventSource", "sendBeacon", "import(", "importScripts",
@@ -651,8 +654,8 @@ def test_text_from_sources_is_never_treated_as_markup():
         assert len(b.dom.all("script")) == 2 and len(b.dom.all("style")) == 1, "来源里的文字不能变成脚本或样式"
         for tag in ("img", "iframe", "b"):
             assert b.dom.all(tag) == [], tag
-        for svg in b.dom.all("svg"):   # 页面自己的 svg 只有三种：记号、记号的那组形状、图
-            assert svg.attrs.get("class") in ("mark", "sprite", "chart"), "不能多出别的 svg"
+        for svg in b.dom.all("svg"):   # 页面自己的 svg 只有这几种：记号、记号的那组形状、图、核到哪一步的横条、表示大小的横条
+            assert svg.attrs.get("class") in ("mark", "sprite", "chart", "statusbar", "bar"), "不能多出别的 svg"
         for node in b.dom.walk():
             assert not any(k.startswith("on") for k in node.attrs), node.attrs
         hrefs = [a.attrs["href"] for a in b.dom.all("a")]

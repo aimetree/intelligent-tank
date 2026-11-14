@@ -15,8 +15,9 @@
 - 题目、指标、条件、取值的名字都从题目卡、指标字典和 labels.json 取，这里不写死任何一个指标（D-03）。
 - 来源里抄来的文字（题名、原文片段等）写进页面之前一律转义；网址只认 http 和 https。
 
-现在做了骨架和证据表页（K2）。总览、对标视图、数据概览与缺口、非学术来源四页先占位，后面几步再做。
-表格文件含原文片段、风险档这些只留内部的字段，是内部用的；给对方的证据表另由报告那一侧的脚本出。
+五页都做了：总览（overview_view.py）、证据表（这个文件）、对标视图（compare_view.py）、
+数据概览与缺口（gaps_view.py）、非学术来源（nonacademic_view.py）。哪一页的数据坏到生成不了，别的页面照样出，原因写在页面顶上。
+表格文件含原文片段、风险档这些只留内部的字段，是内部用的；给对方的证据表由 tools/report_export.py 出。
 """
 import argparse
 import csv
@@ -31,6 +32,9 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
 import compare_view  # noqa: E402
+import gaps_view  # noqa: E402
+import nonacademic_view  # noqa: E402
+import overview_view  # noqa: E402
 import validate as V  # noqa: E402
 from display import (MARKS, MARK_UNKNOWN, NONE, NOT_FILLED, QUALIFIER_SIGN, TIER_HANDLING, Names, as_text, cls,  # noqa: E402
                      doi_url, ev_sort_key, fmt_num, mark, safe_url, s, tok, with_unit)
@@ -44,15 +48,17 @@ CSV_NAME = "evidence-internal.csv"
 # 浏览器按这一条拦住页面的一切对外请求（设计方案 4.4 第 15 项）：除了写在页面里的样式和脚本，什么都不许加载、不许连
 CSP = "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'"
 
-# 五个页面（设计方案 4.2）：网址里的名字、页面编号、名称、回答什么问题、排在样品阶段脚本的第几步（None 是已经做了）
+# 五个页面（设计方案 4.2）：网址里的名字、页面编号、名称、回答什么问题
 VIEWS = [
-    ("overview", "K1", "总览", "这个题目做到什么程度，哪里有问题。", 5),
-    ("evidence", "K2", "证据表", "每条数据从哪来、条件是什么、核过没有。", None),
-    ("compare", "K3", "对标视图", "同层级、同条件下谁和谁能比。", None),
-    ("gaps", "K5", "数据概览与缺口", "每组数据说了什么，缺什么。", 5),
-    ("non-academic", "K9", "非学术来源", "专利、政策法规和标准、产业和市场的数字、科研资助，同一页各占一块。", 5),
+    ("overview", "K1", "总览", "这个题目做到什么程度，哪里有问题。"),
+    ("evidence", "K2", "证据表", "每条数据从哪来、条件是什么、核过没有。"),
+    ("compare", "K3", "对标视图", "同层级、同条件下谁和谁能比。"),
+    ("gaps", "K5", "数据概览与缺口", "每组数据说了什么，缺什么。"),
+    ("non-academic", "K9", "非学术来源", "专利、政策法规和标准、产业和市场的数字、科研资助，同一页各占一块。"),
 ]
-
+# 证据表以外的四页各由一个脚本整理和写出：页面的名字 → (整理好的数据放在哪个键下面, 脚本)
+PAGES = {"overview": ("overview", overview_view), "compare": ("compare", compare_view),
+         "gaps": ("gaps", gaps_view), "non-academic": ("nonacademic", nonacademic_view)}
 
 
 # ---------------------------------------------------------------- 反查
@@ -471,11 +477,14 @@ def build_model(ds, schema, labels, topic_id, version, lang="zh"):
         "names": names, "rows": rows, "ids": ids, "filters": filters, "issues": issues, "errors": errors,
         "source_count": len({r["source_id"] for r in rows if r["source_id"]}),
     }
-    try:
-        m["compare"] = compare_view.build(ds, topic_id, names, rows, stamp(m))
-    except Exception as exc:  # 对标视图万一生成不了，别的页面照样出；问题写在页面顶上
-        m["compare"] = None
-        errors.append(("对标视图", f"{type(exc).__name__}: {exc}"))
+    titles = {name: title for name, _, title, _ in VIEWS}
+    for name in ("compare", "overview", "gaps", "non-academic"):   # 对标视图先算：别的页面要知道有哪些可比组可以跳过去
+        key, module = PAGES[name]
+        try:
+            m[key] = compare_view.build(ds, topic_id, names, rows, stamp(m)) if name == "compare" else module.build(m, ds, topic_id)
+        except Exception as exc:  # 哪一页万一生成不了，别的页面照样出；问题写在页面顶上
+            m[key] = None
+            errors.append((titles[name], f"{type(exc).__name__}: {exc}"))
     return m
 
 
@@ -526,7 +535,7 @@ def render_banners(m):
 
 
 def render_nav():
-    links = [el("a", {"href": f"#{name}", "data-view": name}, title) for name, _, title, _, _ in VIEWS]
+    links = [el("a", {"href": f"#{name}", "data-view": name}, title) for name, _, title, _ in VIEWS]
     return el("nav", {"class": "pages", "aria-label": "页面"}, links)
 
 
@@ -733,15 +742,10 @@ def render_evidence_view(m, name, title, question):
     return el("section", {"class": "view", "id": name, "aria-label": title}, body)
 
 
-def render_todo_view(m, name, code, title, question, step):
-    extra = None
-    if name == VIEWS[0][0]:
-        extra = el("p", None, "现在能看的是", el("a", {"href": "#evidence"}, "证据表"),
-                   f"：{len(m['rows'])} 条证据，来自 {m['source_count']} 个来源。")
+def render_failed_view(name, title):
     return el("section", {"class": "view", "id": name, "aria-label": title},
-              el("section", {"class": "card todo"},
-                 el("div", {"class": "view-head"}, el("h2", None, title), el("div", {"class": "note"}, question)),
-                 el("p", None, f"这一页（{code}）还没有做，排在样品阶段脚本的第 {step} 步。"), extra))
+              el("section", {"class": "card"}, el("div", {"class": "view-head"}, el("h2", None, title)),
+                 el("p", {"class": "flag"}, "这一页生成不了，原因列在页面顶上。")))
 
 
 def render_legend(names):
@@ -775,17 +779,20 @@ def render_page(m, css, js):
         if re.search(r"</\s*(style|script)", text, re.I):
             raise ValueError(f"{name} 里不能出现 </style 或 </script")
     views = []
-    for name, code, title, question, step in VIEWS:
+    for name, code, title, question in VIEWS:
+        key, module = PAGES.get(name, (None, None))
         if name == "evidence":
             views.append(render_evidence_view(m, name, title, question))
-        elif name == "compare" and m.get("compare"):
-            views.append(compare_view.render(m["compare"], m["names"], title, question))
+        elif not m.get(key):
+            views.append(render_failed_view(name, title))
         elif name == "compare":
-            views.append(el("section", {"class": "view", "id": name, "aria-label": title},
-                            el("section", {"class": "card"}, el("div", {"class": "view-head"}, el("h2", None, title)),
-                               el("p", {"class": "flag"}, "这一页生成不了，原因列在页面顶上。"))))
+            views.append(compare_view.render(m["compare"], m["names"], title, question))
         else:
-            views.append(render_todo_view(m, name, code, title, question, step))
+            try:
+                views.append(module.render(m[key], m, title, question))
+            except Exception as exc:   # 写网页这一步出了错也一样：这一页说明生成不了，别的照出
+                m["errors"].append((title, f"{type(exc).__name__}: {exc}"))
+                views.append(render_failed_view(name, title))
     head = el(
         "head", None,
         el("meta", {"charset": "utf-8"}),
