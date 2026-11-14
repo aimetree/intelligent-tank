@@ -6,6 +6,7 @@
 - 原文给了范围或误差就画出来。不可比的不连线：只有调用的人明说要连的一组点才连（同一批测试里的同一个样品）。
 - 每个点是一个链接，点得进它的证据。
 图的样式写在属性里，不靠页面的样式表：单独存成 .svg 文件也是完整的，可以直接放进报告。
+颜色和字体跟页面的样式表是一套（tools/dashboard/style.css）：墨色、一种蓝、几档灰。网格和坐标轴是细的实线，颜色浅，不抢数据。
 同样的数据画出来逐字节相同：坐标一律保留一位小数，不用随机数和时间。
 """
 import math
@@ -13,8 +14,11 @@ import math
 from display import MARKS, MARK_UNKNOWN, SUPERSCRIPT, fmt_num
 from htmlgen import Raw, el
 
-INK, BLUE, GREY, MUTED, GRID, AXIS = "#1A1D21", "#1D4E9E", "#8A929E", "#4A5361", "#E3E6EA", "#6B7480"
-FONT = '"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC",system-ui,sans-serif'
+# 墨色画基准，蓝色画参与比较的，灰色画只作参考的和参考线；MUTED 是图上的小字；GRID、AXIS 是网格和坐标轴
+INK, BLUE, GREY, MUTED, GRID, AXIS = "#1D1D1F", "#0066CC", "#8E8E93", "#636366", "#E8E8ED", "#D2D2D7"
+SURFACE = "#FFFFFF"   # 图的底色。空心的记号里面填的就是它
+FONT = ('-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",'
+        '"Noto Sans CJK SC",system-ui,sans-serif')
 ROLE_COLOR = {"baseline": INK, "reference": GREY}
 
 
@@ -94,7 +98,7 @@ def marker(kind, x, y, solid, color, size=14):
     """证据类型的记号，中心在 (x, y)。solid 为真画实心，否则空心。"""
     k = size / 12
     return el("g", {"transform": f"translate({n(x - size / 2)} {n(y - size / 2)}) scale({k:.3f})",
-                    "fill": color if solid else "#FFFFFF", "stroke": color, "stroke-width": f"{1.6 / k:.2f}",
+                    "fill": color if solid else SURFACE, "stroke": color, "stroke-width": f"{1.6 / k:.2f}",
                     "stroke-linejoin": "round"}, Raw(MARKS.get(kind, MARK_UNKNOWN)))
 
 
@@ -102,7 +106,7 @@ def point(p, x, y):
     """一个数据点：提示文字、够大的点击范围、记号。有 href 的是链接。"""
     color = ROLE_COLOR.get(p.get("role"), BLUE)
     inner = [el("title", None, p.get("title")),
-             el("circle", {"cx": n(x), "cy": n(y), "r": 13, "fill": "#FFFFFF", "fill-opacity": 0}),
+             el("circle", {"cx": n(x), "cy": n(y), "r": 13, "fill": SURFACE, "fill-opacity": 0}),
              marker(p.get("type"), x, y, p.get("solid"), color)]
     if p.get("href"):
         return el("a", {"href": p["href"], "aria-label": p.get("title"), "data-evidence": p.get("evidence")}, inner)
@@ -137,11 +141,11 @@ def dot_chart(rows, axis_label, label, ref=None, ref_label=None, width=760):
         body += [line(sx(t), top - 6, sx(t), base, GRID), text(sx(t), base + 18, sx.label(t), anchor="middle")]
     body += [line(left, base, width - right, base), text((left + width - right) / 2, base + 38, axis_label, anchor="middle")]
     if ref is not None:
-        body += [line(sx(ref), top - 6, sx(ref), base, AXIS, 1, "4 3"), text(sx(ref), top - 12, ref_label, 11, anchor="middle")]
+        body += [line(sx(ref), top - 6, sx(ref), base, GREY, 1, "4 3"), text(sx(ref), top - 12, ref_label, 11, anchor="middle")]
     for i, r in enumerate(rows):
         y = top + row_h * i + row_h / 2
         body += [text(0, y - 2, r.get("label"), 13, INK, weight=600), text(0, y + 13, r.get("sub"), 11),
-                 line(left, y, width - right, y, GRID, 1, "1 3")]
+                 line(left, y, width - right, y, GRID)]
         if r.get("err"):
             body += error_bar(r, sx(r["err"][0]), sx(r["err"][1]), y, True)
         body += [point(r, sx(r["value"]), y),
@@ -168,7 +172,8 @@ def xy_chart(series, x_label, y_label, label, width=760, height=400):
         if s.get("connect") and len(ordered) > 1:
             color = ROLE_COLOR.get(ordered[0].get("role"), BLUE)
             body.append(el("polyline", {"points": " ".join(f"{n(sx(p['x']))},{n(sy(p['y']))}" for p in ordered),
-                                        "fill": "none", "stroke": color, "stroke-width": 1.4}))
+                                        "fill": "none", "stroke": color, "stroke-width": 2, "stroke-linejoin": "round",
+                                        "stroke-linecap": "round"}))
     placed = []
     for p in sorted(pts, key=lambda p: (p["x"], p["y"], str(p.get("label")))):
         x, y = sx(p["x"]), sy(p["y"])

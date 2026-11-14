@@ -27,7 +27,7 @@ import derive  # noqa: E402
 import test_dashboard as T  # noqa: E402
 import validate as V  # noqa: E402
 
-BLUE, INK, WHITE = "#1D4E9E", "#1A1D21", "#FFFFFF"
+BLUE, INK, GREY, WHITE = charts.BLUE, charts.INK, charts.GREY, charts.SURFACE
 STAMP = f"截至 2026-11-11｜数据版本 {T.VERSION}"
 
 
@@ -270,7 +270,7 @@ def test_dot_chart():
     links = _find(root, "a")
     assert [(a.get("href"), a.get("data-evidence"), a.get("aria-label")) for a in links] == [("#a", "EV-1", "甲的提示"), ("#b", "EV-2", "乙的提示")]
     marks = [g for g in _find(root, "g") if g.get("transform")]
-    assert [(g.get("fill"), g.get("stroke")) for g in marks] == [(BLUE, BLUE), (WHITE, INK), (WHITE, "#8A929E")], "实心空心看核验状态，基准、参考各有各的写法"
+    assert [(g.get("fill"), g.get("stroke")) for g in marks] == [(BLUE, BLUE), (WHITE, INK), (WHITE, GREY)], "实心空心看核验状态，基准、参考各有各的写法"
     assert [_local(g[0]) for g in marks] == ["circle", "rect", "rect"], "形状看证据类型；不认识的类型用一条短横"
     xs, ys = zip(*[_xy(g) for g in marks])
     assert ys == tuple(sorted(ys)), "照给的次序从上往下排，不按数值重排"
@@ -281,6 +281,36 @@ def test_dot_chart():
     assert len(dashed) == 1 and dashed[0].get("stroke") == INK, "图上读数的范围用虚线"
     assert all(t.get("font-size") and t.get("fill") for t in _find(root, "text")), "样式写在图自己身上，单独存成文件也一样"
     assert "class=\"chart\"" in text and "style=" not in text and "<script" not in text
+
+
+def _contrast(a, b):
+    """两种颜色的对比度（WCAG 的算法）。颜色写成 #RRGGBB。"""
+    def lum(c):
+        parts = [int(c[i:i + 2], 16) / 255 for i in (1, 3, 5)]
+        r, g, b_ = [v / 12.92 if v <= 0.04045 else ((v + 0.055) / 1.055) ** 2.4 for v in parts]
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b_
+    hi, lo = sorted([lum(a), lum(b)], reverse=True)
+    return (hi + 0.05) / (lo + 0.05)
+
+
+def test_chart_colours_can_be_told_apart_and_read():
+    """换配色的时候守住三条：三种角色的颜色互不相同，也都不是底色；记号在底色上看得清（对比度不低于 3）；
+    图上的字在底色上读得清（对比度不低于 4.5）。"""
+    assert round(_contrast("#000000", "#FFFFFF"), 1) == 21.0 and round(_contrast("#777777", "#FFFFFF"), 2) == 4.48, "对比度的算法先对一下"
+    roles = [charts.BLUE, charts.INK, charts.GREY]
+    assert len(set(roles + [charts.SURFACE])) == 4, "基准、参与比较、只作参考，三种颜色要分得开"
+    assert set(charts.ROLE_COLOR.values()) == {charts.INK, charts.GREY} and charts.BLUE not in charts.ROLE_COLOR.values()
+    for colour in roles:
+        assert _contrast(colour, charts.SURFACE) >= 3, f"记号的颜色 {colour} 在图的底色上太浅"
+    for colour in (charts.INK, charts.MUTED):
+        assert _contrast(colour, charts.SURFACE) >= 4.5, f"图上的字 {colour} 在图的底色上太浅"
+    for colour in (charts.GRID, charts.AXIS):
+        assert _contrast(colour, charts.SURFACE) < _contrast(charts.GREY, charts.SURFACE), "网格和坐标轴要比数据浅"
+    svg = charts.dot_chart(_rows(), "某个量，单位", "图的名字", ref=1.0, ref_label="基准 = 1")
+    used = set(re.findall(r"#[0-9A-Fa-f]{6}", svg))
+    assert used <= {charts.INK, charts.BLUE, charts.GREY, charts.MUTED, charts.GRID, charts.AXIS, charts.SURFACE}, f"图里出现了没有登记的颜色：{used}"
+    text_fills = {t.get("fill") for t in _find(_svg(svg), "text")}
+    assert text_fills <= {charts.INK, charts.MUTED}, "图上的字只用墨色和次要文字的颜色，不跟着数据的颜色走"
 
 
 def test_xy_chart_connects_only_what_it_is_told_to():

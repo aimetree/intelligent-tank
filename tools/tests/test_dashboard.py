@@ -1014,7 +1014,9 @@ def opened(data=EXAMPLE, script=True, size=(1280, 900), frame=False):
         base = "file://" + os.path.join(site, "frame.html" if frame else B.PAGE_NAME)
         with sync_playwright() as p:
             browser = p.chromium.launch(executable_path=exe, args=["--no-sandbox"])
-            context = browser.new_context(java_script_enabled=script, viewport={"width": size[0], "height": size[1]})
+            # reduced_motion：样式表里的过渡在“减少动态效果”下是关掉的，测试里量颜色、量位置就不用等动画走完
+            context = browser.new_context(java_script_enabled=script, viewport={"width": size[0], "height": size[1]},
+                                          reduced_motion="reduce")
             page = context.new_page()
             seen = {"requests": [], "errors": []}
             page.on("request", lambda r: seen["requests"].append(r.url))
@@ -1301,6 +1303,102 @@ def test_browser_narrow_screen_needs_no_sideways_scrolling():
         top = page.evaluate("document.querySelector('#EV-000007-002').getBoundingClientRect().top")
         assert 0 <= top < 844, top
         assert seen["errors"] == []
+
+
+# 在页面里把每一处看得见的字都量一遍：字的颜色和它底下那块底色的对比度（WCAG 的算法）。
+# 底色从最外层一层层往里叠出来（半透明的照透明度叠）。图里的字不在这里量，见 test_step3.py。
+# 给回来的是不够 LOW_CONTRAST_FLOOR 的那些，同一种写法只报一次。
+CONTRAST_JS = """floor => {
+  const parse = c => { const m = /rgba?\\(([^)]+)\\)/.exec(c); if (!m) { return null; }
+                       const p = m[1].split(/[ ,\\/]+/).filter(Boolean).map(parseFloat);
+                       return {r: p[0], g: p[1], b: p[2], a: p.length > 3 ? p[3] : 1}; };
+  const over = (top, under) => ({r: top.r * top.a + under.r * (1 - top.a), g: top.g * top.a + under.g * (1 - top.a),
+                                 b: top.b * top.a + under.b * (1 - top.a), a: 1});
+  const lin = v => { v /= 255; return v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
+  const lum = c => 0.2126 * lin(c.r) + 0.7152 * lin(c.g) + 0.0722 * lin(c.b);
+  const ratio = (a, b) => (Math.max(lum(a), lum(b)) + 0.05) / (Math.min(lum(a), lum(b)) + 0.05);
+  const chain = el => { const out = []; for (let n = el; n; n = n.parentElement) { out.unshift(n); } return out; };
+  const backdrop = el => chain(el).reduce((bg, n) => { const c = parse(getComputedStyle(n).backgroundColor);
+                                                         return c && c.a > 0 ? over(c, bg) : bg; }, {r: 255, g: 255, b: 255, a: 1});
+  const shown = el => el.getClientRects().length > 0 && getComputedStyle(el).visibility !== 'hidden'
+                      && !chain(el).some(n => getComputedStyle(n).clipPath !== 'none');
+  const hex = c => '#' + [c.r, c.g, c.b].map(v => Math.round(v).toString(16).padStart(2, '0')).join('');
+  const bad = {};
+  let measured = 0;
+  const measure = (el, colour, what) => {
+    const bg = backdrop(el);
+    let fg = parse(colour);
+    if (!fg) { bad[what + '：认不出的颜色写法 ' + colour] = 0; return; }
+    fg.a *= chain(el).reduce((o, n) => o * parseFloat(getComputedStyle(n).opacity), 1);
+    fg = over(fg, bg);
+    measured += 1;
+    const r = ratio(fg, bg);
+    if (r < floor) { bad[(el.className || el.tagName.toLowerCase()) + ' ' + hex(fg) + ' 在 ' + hex(bg) + ' 上（' + what + '）'] = Math.round(r * 100) / 100; }
+  };
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+  for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+    const el = node.parentElement;
+    if (!node.nodeValue.trim() || el.closest('svg, script, style, select, textarea') || !shown(el)) { continue; }
+    measure(el, getComputedStyle(el).color, node.nodeValue.trim().slice(0, 12));
+  }
+  for (const el of document.querySelectorAll('select, input, textarea')) {
+    if (!shown(el)) { continue; }
+    measure(el, getComputedStyle(el).color, '输入框里的字');
+    if (el.placeholder) { measure(el, getComputedStyle(el, '::placeholder').color, '输入框里的提示'); }
+  }
+  for (const el of document.querySelectorAll('[data-label]')) {
+    const before = getComputedStyle(el, '::before');
+    if (shown(el) && before.content !== 'none' && before.content !== 'normal') { measure(el, before.color, '格子前面的栏名'); }
+  }
+  return {measured: measured, bad: bad};
+}"""
+LOW_CONTRAST_FLOOR = 4.5   # WCAG 2 的 AA：正文大小的字和底色的对比度不低于 4.5
+# 能点的控件：页面导航、按钮、下拉框、输入框、做成按钮样子的链接。文字里的链接不算。给回来的是矮于 44 像素的
+SMALL_CONTROLS_JS = """() => Array.from(document.querySelectorAll('nav.pages a, button, select, input, a.btn'))
+  .filter(el => el.getClientRects().length > 0 && getComputedStyle(el).visibility !== 'hidden')
+  .map(el => [el.id || el.getAttribute('data-view') || el.className, Math.round(el.getBoundingClientRect().height)])
+  .filter(pair => pair[1] < 44)"""
+LOOK_SIZES = [(1280, 900), (390, 844)]
+
+
+def _look(page, where):
+    found = page.evaluate(CONTRAST_JS, LOW_CONTRAST_FLOOR)
+    assert found["measured"] > 5, f"{where}：没量到几处字，量法多半坏了"
+    assert found["bad"] == {}, f"{where}：字和底色的对比度不到 {LOW_CONTRAST_FLOOR}：{found['bad']}"
+    small = page.evaluate(SMALL_CONTROLS_JS)
+    assert small == [], f"{where}：能点的控件矮于 44 像素：{small}"
+
+
+def test_browser_text_is_readable_and_controls_are_big_enough():
+    """换配色、换控件样子的时候守住两条：每一处字和它的底色对比度够；能点的控件够高。
+    五页都看，证据全部展开了看，跳到对标视图的一行（带着“跳到这里”的底色）也看；宽屏、窄屏各一遍。"""
+    for size in LOOK_SIZES:
+        with opened(size=size) as (go, page, seen):
+            for view in ALL_VIEWS:
+                go(view)
+                wait_view(page, view)
+                _look(page, f"{size[0]} 宽，{view}")
+            go("evidence")
+            wait_view(page, "evidence")
+            page.click("#ev-expand")
+            wait_until(page, "document.querySelectorAll('tbody.ev.open').length === document.querySelectorAll('tbody.ev').length")
+            _look(page, f"{size[0]} 宽，证据全部展开")
+            go("CMP-000002--EV-000007-001")
+            wait_until(page, "!!document.querySelector('.target')")
+            _look(page, f"{size[0]} 宽，跳到对标视图的一行")
+            assert seen["errors"] == []
+
+
+def test_the_contrast_check_itself_catches_pale_text():
+    """量对比度的办法自己也要验一下：把次要文字的颜色故意调浅，它得报出来。"""
+    with opened() as (go, page, seen):
+        go("evidence")
+        wait_view(page, "evidence")
+        page.evaluate("document.documentElement.style.setProperty('--muted', '#9A9AA0')")
+        found = page.evaluate(CONTRAST_JS, LOW_CONTRAST_FLOOR)
+        assert found["bad"] and all(r < LOW_CONTRAST_FLOOR for r in found["bad"].values()), found
+        page.evaluate("Object.assign(document.querySelector('.chip').style, {minHeight: '0', height: '30px'})")
+        assert page.evaluate(SMALL_CONTROLS_JS), "控件矮了要报出来"
 
 
 def test_browser_hides_the_download_link_inside_a_viewer_frame():
