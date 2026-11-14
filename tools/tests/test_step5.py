@@ -477,7 +477,7 @@ def test_non_academic_blocks_match_the_sources():
     rels = [(r.attrs["id"], r.attrs["data-inferred"], r.one("span", "chip-static").text) for r in card(b, "na-relations").all("div", "rel")]
     assert rels == [("REL-000003", "yes", "AI 推断，还没有人确认"), ("REL-000004", "no", "有出处")], "只列和这四块有关的关系；推断的标明"
     gaps = {g.attrs["data-gap"]: g.clean for g in card(b, "na-gaps").all("div", "gap")}
-    assert gaps == {"jurisdiction": "还没有来源的法域：英国。", "abstract_only": "只读到仅摘要的：SRC-000011。",
+    assert gaps == {"jurisdiction": "还没有来源的法域：英国。", "abstract_only": "只读到摘要的：SRC-000011。",
                     "not_purchased": "付费没有买、只用了公开部分的：SRC-000011。",
                     "not_verified": "还没有人工核对、不能进报告的证据 3 条：EV-000004-002、EV-000011-001、EV-000006-001。"}
 

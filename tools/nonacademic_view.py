@@ -223,7 +223,7 @@ def build(m, ds, topic_id):
     none = [names.enum("jurisdiction", j) for j in MAIN_JURISDICTIONS if j not in used]
     if none and mine:
         gaps.append({"key": "jurisdiction", "text": f"还没有来源的法域：{'、'.join(none)}。", "ids": []})
-    for code, label in (("abstract_only", "只读到仅摘要的"), ("metadata_only", "只有题录、没有读到内容的")):
+    for code, label in (("abstract_only", "只读到摘要的"), ("metadata_only", "只有题录、没有读到内容的")):
         ids = [sid for sid, src in mine if src.get("access_scope") == code]
         if ids:
             gaps.append({"key": code, "text": f"{label}：", "ids": ids})
