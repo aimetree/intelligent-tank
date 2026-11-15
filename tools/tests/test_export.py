@@ -107,7 +107,14 @@ def test_views_carry_what_the_dashboard_computes():
     assert [r["id"] for r in t["rows"]] == [r["id"] for r in m["rows"]]
     for got, row in zip(t["rows"], m["rows"]):
         assert "e" not in got
+        got = dict(got)
+        x = got.pop("x")
         assert got == json.loads(json.dumps({k: v for k, v in row.items() if k != "e"})), row["id"]
+        assert set(x) == {"num", "unit", "mark"}
+    by = {r["id"]: r for r in t["rows"]}
+    assert by["EV-000001-001"]["x"] == {"num": 85.6, "unit": "%", "mark": [14, 18]}   # 片段 “X-1 98.1 87.3 85.6”
+    assert by["EV-000001-001"]["snippet"][14:18] == "85.6"
+    assert by["EV-000003-001"]["x"]["num"] is None or isinstance(by["EV-000003-001"]["x"]["num"], float)
     assert t["csv"] == B.evidence_csv(m) and t["stamp"] == B.stamp(m)
     for key in ("compare", "overview", "gaps", "nonacademic"):
         assert t[key] is not None, key
@@ -142,6 +149,15 @@ def test_html_fragments_round_trip_exactly():
         except ValueError:
             continue
         raise AssertionError(f"没关上的标签要报错：{bad}")
+
+
+def test_snippet_mark_only_when_sure():
+    assert S.snippet_mark("X-1 98.1 87.3 85.6", "85.6") == [14, 18]
+    assert S.snippet_mark("EE 85.6 % and 85.6 %", "85.6") is None, "出现两次不猜"
+    assert S.snippet_mark("X-1 185.6", "85.6") is None, "185.6 里的 85.6 不算"
+    assert S.snippet_mark("X-185.6", "85.6") is None
+    assert S.snippet_mark("ＥＥ 85.6", "85.6") is None, "片段要规范化才对得上的，不给位置"
+    assert S.snippet_mark("", "1") is None and S.snippet_mark("a 1", None) is None
 
 
 def test_to_json_refuses_what_it_cannot_write():

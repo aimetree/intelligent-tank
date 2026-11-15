@@ -93,6 +93,8 @@ export interface Row {
   extra: Array<[string, 'text' | 'evidence', string | string[]]>;
   f: Record<string, string>;
   tiers: string[];
+  /** 新前端用：出图用的数（标准单位下）、标准单位、数值在原文片段里的位置 */
+  x: { num: number | null; unit: string; mark: [number, number] | null };
 }
 
 export type FilterOption = [string, string, number];

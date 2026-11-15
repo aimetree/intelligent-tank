@@ -20,11 +20,13 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import access as A  # noqa: E402
 import build_dashboard as B  # noqa: E402
+import derive  # noqa: E402
+import textmatch  # noqa: E402
 import validate as V  # noqa: E402
 from display import TIER_HANDLING, Names, cls  # noqa: E402
 from htmlgen import VOID, Raw  # noqa: E402
 
-FORMAT = 1   # views.json 的写法改了、前端要跟着改的时候加一
+FORMAT = 2   # views.json 的写法改了、前端要跟着改的时候加一。2：每一行加了 x（出图用的数、标准单位、数值在原文片段里的位置）
 
 # HTMLParser 把标签名和属性名都改成小写；SVG 里有几个区分大小写的，照原样改回来
 SVG_CASE = {"viewbox": "viewBox", "preserveaspectratio": "preserveAspectRatio"}
@@ -142,6 +144,32 @@ def legend(labels, schema):
     }
 
 
+def snippet_mark(snippet, value):
+    """记录的数值在原文片段里的位置 [起, 止]，前端拿来高亮。
+    用机器核对同一套找法（textmatch.find_value）。只在片段里正好出现一次、而且片段不用规范化就能对上原文的位置时给；
+    别的情形（找不到、出现几次、片段里有上标全角这类排版差别）给 None，前端就不高亮，不猜。"""
+    if not isinstance(snippet, str) or not isinstance(value, str) or not snippet or not value:
+        return None
+    ends = textmatch.find_value(value, snippet)
+    if len(ends) != 1 or textmatch._prep(snippet) != snippet:
+        return None
+    v = textmatch._prep(value)
+    start = ends[0] - len(v)
+    return [start, ends[0]] if start >= 0 and snippet[start:ends[0]] == v else None
+
+
+def row_extras(row, names):
+    """一行在新前端里还要用的几样：出图用的数（标准单位下）、标准单位、数值在原文片段里的位置。"""
+    e = row.get("e") or {}
+    try:
+        _, _, measure, _ = names.measure(e)
+        num = derive.comparable_value(e, measure) if e.get("content_kind") == "numeric" else None
+        unit = names.unit((measure or {}).get("unit_std"))
+    except Exception:  # 这一行坏了：页面顶上已经写了，这里不再出数
+        num, unit = None, ""
+    return {"num": num, "unit": unit, "mark": snippet_mark(row.get("snippet"), e.get("value_reported"))}
+
+
 def topic_view(ds, schema, labels, topic_id, version):
     """一个题目五页要显示的内容。"""
     m = B.build_model(ds, schema, labels, topic_id, version)
@@ -149,7 +177,7 @@ def topic_view(ds, schema, labels, topic_id, version):
     out = {
         "topic_id": topic_id, "title": m["title"], "cutoff": m["cutoff"], "version": version, "stamp": B.stamp(m),
         "notice": m["notice"], "source_count": m["source_count"],
-        "rows": [to_json({k: v for k, v in r.items() if k != "e"}, {}) for r in m["rows"]],
+        "rows": [to_json(dict({k: v for k, v in r.items() if k != "e"}, x=row_extras(r, m["names"])), {}) for r in m["rows"]],
         "filters": to_json(m["filters"], rows),
         "issues": [[i.rule, B.s(i.record), i.message] for i in m["issues"]],
     }

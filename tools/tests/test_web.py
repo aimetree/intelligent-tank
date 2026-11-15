@@ -4,14 +4,12 @@
 先构建：cd web && npm ci && npm run build。要用机器上的 Chrome 和 node。
 环境变量 WEB_TESTS=required 时，没构建、没 node、没浏览器都算失败（GitHub Actions 上这样跑）；不设就跳过并写明。
 
-测三样：
-1. 新前端和旧看板逐项对得上（任务卡第 3 节第 6 条）：同一份数据，旧看板（tools/build_dashboard.py）和新前端各用 Chrome 打开，
-   五页、页头、图例、页脚、页面顶上的提示，逐个元素比标签、属性和字。数据换成二十几种样子再比：示例数据、仓库里的数据、
-   旧看板测试里改坏的各种数据、塞了网页代码的数据。只有几处是有意不同的，写在 IGNORED 里。
-2. 旧看板测试里用浏览器点的那些（换页、筛选、展开、跳转、复制、手机宽度、对比度、控件大小、嵌在框里），
-   原样对新前端再跑一遍：把它们用的“打开页面”换成打开新前端。三项是旧看板“不跑脚本时”的做法，新前端做不到，跳过并写明（BY_DESIGN）。
-3. 新前端自己的：在线版从旁边的 site-data/ 取数据、不向别处发请求；离线版是一个文件；数据文件的写法对不上时说明为什么；
-   一页画不出来时别的页照样出。
+A 2.0（Yu 2026-11-15 选的新样子）之后测四样：
+1. 页面上的数和数据对得上：证据表每一行、右边的详情、对标视图的每个点和比值、总览的核验四步和覆盖图的每一格，
+   都和导出的 views.json（由看板的 Python 函数算好）逐项比。期望值从数据文件里读，不从页面上抄。
+2. 还用旧写法的两页（数据概览与缺口、非学术来源）和旧看板逐个元素对得上；数据换成二十几种样子再比。
+3. 怎么点：筛选、查找、跳转、⌘K 查找面板、深浅色、复制、下载、嵌在框里；字和底色的对比度、控件大小、手机宽度，深浅两套都量。
+4. 在线版、离线版、数据版本对不上、一页出错、不跑脚本。
 """
 import contextlib
 import functools
@@ -44,38 +42,6 @@ DIST = os.path.join(WEB, "dist")
 EXAMPLE = T.EXAMPLE
 VERSION = T.VERSION
 REQUIRED = os.environ.get("WEB_TESTS") == "required"
-
-# 页面上要比的几块
-PARTS = ["header.top", "nav.pages", "#overview", "#evidence", "#compare", "#gaps", "#non-academic", "#legend", "footer.foot"]
-
-# 一个元素的样子：标签、属性、字。连着的几段字并成一段、空白并成一个空格再比。
-# 有意不同、不比的：随页面状态变的几个属性（展开没有、按下没有、是哪一页、标出来的那一处）；
-# SVG 的 xmlns（新前端由浏览器按 SVG 的命名空间建元素，不写这个属性）；
-# 下载链接的地址（旧看板指向旁边的表格文件，新前端是页面里现做的一份）。
-IGNORED = ("aria-expanded", "aria-pressed", "aria-current", "tabindex", "style", "xmlns")
-SIGNATURE = """(root) => {
-  const out = [];
-  let text = '';
-  const flush = () => { const t = text.replace(/\\s+/g, ' ').trim(); if (t) out.push('T ' + t); text = ''; };
-  const skip = %s;
-  const walk = (n) => {
-    if (n.nodeType === 3) { text += n.textContent; return; }
-    if (n.nodeType !== 1) return;
-    flush();
-    const tag = n.tagName.toLowerCase();
-    const attrs = [...n.attributes].map(a => a.name)
-      .filter(a => !skip.includes(a) && !(a === 'href' && n.id === 'ev-download'))
-      .sort()
-      .map(a => a + '=' + (a === 'class' ? n.getAttribute(a).split(/\\s+/).filter(c => c && !['active', 'open', 'target'].includes(c)).sort().join(' ') : n.getAttribute(a)));
-    out.push('E ' + tag + ' ' + attrs.join(' '));
-    for (const c of n.childNodes) walk(c);
-    flush();
-    out.push('/' + tag);
-  };
-  if (root) walk(root);
-  return out;
-}""" % json.dumps(list(IGNORED))
-
 
 def _need(what, ok):
     if ok:
@@ -154,22 +120,149 @@ def opened_web(data=EXAMPLE, script=True, size=(1280, 900), frame=False, change_
             def go(name=""):
                 page.goto(base + ("#" + name if name else ""))
                 (page.frames[1] if frame else page).wait_for_selector("#app > *", timeout=10000)
+                (page.frames[1] if frame else page).wait_for_timeout(50)
                 return page
 
             yield go, page, seen
 
 
-# ---------------------------------------------------------------- 1. 新旧逐项对得上
+# ---------------------------------------------------------------- 1. 页面上的数和数据对得上
+
+def views_of(data=EXAMPLE):
+    """导出的 views.json 里这个题目的那一块；写成 {"$row": 编号} 的地方换回那一行（和前端读进来时一样）。"""
+    topic = X.export(data, version=VERSION)["views.json"]["topics"][0]
+    rows = {r["id"]: r for r in topic["rows"]}
+
+    def back(x):
+        if isinstance(x, list):
+            return [back(v) for v in x]
+        if isinstance(x, dict):
+            if set(x) == {"$row"}:
+                return rows[x["$row"]]
+            if "$html" in x:
+                return x
+            return {k: back(v) for k, v in x.items()}
+        return x
+    return {k: (v if k == "rows" else back(v)) for k, v in topic.items()}
+
+
+def visible_rows(page):
+    return page.eval_on_selector_all("tr.ev-row", "rows => rows.map(r => r.id)")
+
+
+def side_text(page):
+    return page.inner_text("#ev-side")
+
+
+def test_evidence_rows_and_detail_match_the_data():
+    v = views_of()
+    with opened_web() as (go, page, seen):
+        go("evidence")
+        assert visible_rows(page) == [r["id"] for r in v["rows"]]
+        for r in v["rows"]:
+            row = page.inner_text(f"tr#{r['id']}")
+            assert r["value"] in row and r["measure"] in row and r["id"] in row, (r["id"], row)
+            page.click(f"tr#{r['id']} .pick")
+            assert page.get_attribute(f"tr#{r['id']}", "aria-selected") == "true"
+            side = side_text(page)
+            for want in [r["id"], r["value"], r["status_label"], r["type_label"]] + [c["text"] for c in r["conditions"]] + [t for _, t in r["history"]]:
+                assert want in side, (r["id"], want)
+            if r["snippet"]:
+                assert r["snippet"].replace("\n", " ").split()[0] in side
+        page.click("tr#EV-000001-001 .pick")
+        assert page.inner_text("#ev-side mark") == "85.6", "原文片段里把数值标出来"
+        assert seen["errors"] == []
+
+
+def test_compare_points_and_ratios_match_the_data():
+    v = views_of()
+    groups = [g for lv in v["compare"]["levels"] for g in lv["groups"]]
+    with opened_web() as (go, page, seen):
+        for g in groups:
+            go(g["id"])
+            T.wait_until(page, "id => document.querySelector(`[data-group='${id}']`).getAttribute('aria-pressed') === 'true'", g["id"])
+            with_ratio = [m for m in g["members"] if m["row"] and m["role"] != "baseline" and m["ratio"] and m["ratio"]["ratio"] is not None]
+            tabs = page.eval_on_selector_all("[data-tab]", "b => b.map(x => [x.dataset.tab, x.getAttribute('aria-selected')])")
+            if with_ratio:
+                assert tabs[0] == ["ratio", "true"], "有比值的组默认看与基准之比（Yu 2026-11-15 定）"
+                drawn = page.eval_on_selector_all("svg.chart g.hit", "gs => gs.map(g => [g.dataset.evidence, g.querySelector('text.val').textContent])")
+                assert drawn == [[m["id"], B.fmt_num(m["ratio"]["ratio"])] for m in with_ratio], drawn
+            page.click("[data-tab=table]")
+            body = page.inner_text("#compare table")
+            for m in g["members"]:
+                assert m["id"] in body, m["id"]
+                if m["row"]:
+                    assert m["row"]["value"] in body
+            page.click("[data-tab]")
+        assert seen["errors"] == []
+
+
+def test_overview_steps_and_coverage_match_the_data():
+    v = views_of()
+    model = v["overview"]
+    counts = {code: n for code, _, n in model["status"]}
+    depth = {"pending": 1, "machine_checked": 2, "human_verified": 3, "expert_reviewed": 4}
+    with opened_web() as (go, page, seen):
+        go("overview")
+        shown = page.eval_on_selector_all("button.step", "b => b.map(x => [x.dataset.step, x.querySelector('.n').textContent])")
+        live = sum(n for code, n in counts.items() if code != "void")
+        want = [["1", str(live)]] + [[str(d), str(sum(n for c, n in counts.items() if depth.get(c, 0) >= d))] for d in (2, 3, 4)]
+        assert shown == want
+        cells = page.eval_on_selector_all(".heat .cell", "cs => cs.map(c => [c.dataset.state, c.getAttribute('href'), c.textContent])")
+        expect = []
+        for r in model["coverage"]["rows"]:
+            for c in r["cells"]:
+                best = c["best"]
+                expect.append([c["state"], f"#{best['id']}" if best else None, best["value"] + (" · 疑" if c["disputed"] else "") if best else None])
+        assert [[s, h, (t if h else None)] for s, h, t in cells] == expect
+        page.click("button.step[data-step='4']")
+        dim = page.eval_on_selector_all(".heat .cell", "cs => cs.map(c => c.classList.contains('dim'))")
+        assert dim == [not (e[0] == "expert_reviewed") for e in expect], "点了“专业已复核”，只亮专业已复核的格子"
+        page.hover(".heat a.cell")
+        assert page.inner_text(".hoverline").count("EV-") >= 1
+        page.click(".heat a.cell")
+        T.wait_view(page, "evidence")
+        assert seen["errors"] == []
+
+
+# ---------------------------------------------------------------- 2. 还用旧写法的两页和旧看板逐项对得上
+
+# 页面上要比的几块：A 2.0 之后，只有这两页还是旧看板的写法
+PARTS = ["#gaps", "#non-academic"]
+
+# 一个元素的样子：标签、属性、字。连着的几段字并成一段、空白并成一个空格再比。
+# 有意不同、不比的：随页面状态变的几个属性；SVG 的 xmlns（新前端由浏览器按 SVG 的命名空间建元素）。
+IGNORED = ("aria-expanded", "aria-pressed", "aria-current", "tabindex", "style", "xmlns")
+SIGNATURE = """(root) => {
+  const out = [];
+  let text = '';
+  const flush = () => { const t = text.replace(/\\s+/g, ' ').trim(); if (t) out.push('T ' + t); text = ''; };
+  const skip = %s;
+  const walk = (n) => {
+    if (n.nodeType === 3) { text += n.textContent; return; }
+    if (n.nodeType !== 1) return;
+    flush();
+    const tag = n.tagName.toLowerCase();
+    const attrs = [...n.attributes].map(a => a.name).filter(a => !skip.includes(a)).sort()
+      .map(a => a + '=' + (a === 'class' ? n.getAttribute(a).split(/\\s+/).filter(c => c && !['active', 'open', 'target'].includes(c)).sort().join(' ') : n.getAttribute(a)));
+    out.push('E ' + tag + ' ' + attrs.join(' '));
+    for (const c of n.childNodes) walk(c);
+    flush();
+    out.push('/' + tag);
+  };
+  if (root) walk(root);
+  return out;
+}""" % json.dumps(list(IGNORED))
+
 
 def signatures(page):
     out = {part: page.eval_on_selector(part, SIGNATURE) if page.query_selector(part) else None for part in PARTS}
-    out["banners"] = page.eval_on_selector_all(".page > .banner", f"bs => bs.map({SIGNATURE})")
-    out["title"] = page.title()
+    out["banners"] = page.eval_on_selector_all(".banner", f"bs => bs.map({SIGNATURE})")
     return out
 
 
 def differences(data):
-    """同一份数据，旧看板和新前端的不同之处：[(哪一块, 头几处不同)]。"""
+    """同一份数据，旧看板和新前端在这两页、页面顶上的提示上的不同之处：[(哪一块, 头几处不同)]。"""
     import difflib
     with tempfile.TemporaryDirectory() as old, built_web(data) as new, browser() as context:
         assert B.build(data, old, version=VERSION, log=lambda *_: None) == 0
@@ -236,7 +329,7 @@ PARITY_CASES = (
 )
 
 
-def test_new_frontend_matches_the_old_dashboard():
+def test_two_old_style_pages_match_the_old_dashboard():
     ready()
     failed = []
     for name, change in PARITY_CASES:
@@ -247,133 +340,185 @@ def test_new_frontend_matches_the_old_dashboard():
         if diffs:
             failed.append((name, diffs))
     assert not failed, "\n".join(f"{name}：\n" + "\n".join(f"  {k}: " + "\n    ".join(lines) for k, lines in diffs) for name, diffs in failed)
-    print(f"      新旧对照：{len(PARITY_CASES)} 份数据，每份 {len(PARTS) + 2} 块，都一样")
+    print(f"      两页新旧对照：{len(PARITY_CASES)} 份数据都一样")
 
 
-def test_new_frontend_matches_on_the_repo_data():
+def test_two_old_style_pages_match_on_the_repo_data():
     ready()
     assert differences(V.DEFAULT_DATA) == []
 
 
-def test_new_frontend_matches_when_one_record_cannot_be_shown():
-    """旧看板测试里“有一条证据坏到显示不出来”：两边一样占一行、写明原因，问题列在页面顶上。"""
-    ready()
-    real = B.condition_items
-
-    def broken(e, measure, names):
-        if e.get("id") == "EV-000001-002":
-            raise RuntimeError("故意弄坏的")
-        return real(e, measure, names)
-
-    B.condition_items = broken
-    try:
-        assert differences(EXAMPLE) == []
-    finally:
-        B.condition_items = real
-
-
 def test_the_comparison_itself_catches_differences():
-    """比的办法本身要管用：新前端少一个字、多一个属性、换一个链接，都要比出来。"""
+    """比的办法本身要管用：少一个字、多一个属性、换一个链接，都要比出来。"""
     ready()
-
-    def tweak(js):
-        return functools.partial(_tweaked, js)
-
-    cases = [
-        "document.querySelector('#gaps-count').textContent += '。'",
-        "document.querySelector('#EV-000001-001').setAttribute('data-risk', 'x')",
-        "document.querySelector('#overview a[href=\"#evidence\"]').setAttribute('href', '#gaps')",
-        "document.querySelector('#legend .legend-item').remove()",
-        "document.querySelector('#compare svg.chart circle').setAttribute('cy', '1')",
-    ]
-    for js in cases:
-        assert tweak(js)(), f"没比出来：{js}"
-
-
-def _tweaked(js):
-    with tempfile.TemporaryDirectory() as old, built_web(EXAMPLE) as new, browser() as context:
-        assert B.build(EXAMPLE, old, version=VERSION, log=lambda *_: None) == 0
-        a = context.new_page()
-        a.goto("file://" + os.path.join(old, B.PAGE_NAME))
-        b = context.new_page()
-        b.goto("file://" + new)
-        b.wait_for_selector("main .view")
-        b.evaluate(js)
-        return signatures(a) != signatures(b)
+    for js in ["document.querySelector('#gaps-count').textContent += '。'",
+               "document.querySelector('#gaps a[href=\"#evidence\"]').setAttribute('href', '#compare')",
+               "document.querySelector('#non-academic .tile').remove()"]:
+        with tempfile.TemporaryDirectory() as old, built_web(EXAMPLE) as new, browser() as context:
+            assert B.build(EXAMPLE, old, version=VERSION, log=lambda *_: None) == 0
+            a = context.new_page()
+            a.goto("file://" + os.path.join(old, B.PAGE_NAME))
+            b = context.new_page()
+            b.goto("file://" + new)
+            b.wait_for_selector("main .view")
+            b.evaluate(js)
+            assert signatures(a) != signatures(b), f"没比出来：{js}"
 
 
-# ---------------------------------------------------------------- 2. 旧看板的浏览器测试，对新前端再跑一遍
+# ---------------------------------------------------------------- 3. 怎么点
 
-# 旧看板“不跑脚本时”的做法：五页摊开、内容照样看得到。新前端是用脚本画出来的，不跑脚本就只有一句“要开着脚本才能看”
-# （Yu 2026-11-15 同意）。这四项不整项搬：两项只有一半是不跑脚本的，另一半照抄在下面单独跑，新前端另有一项测这句提示。
-BY_DESIGN = {
-    "test_browser_without_script_shows_everything": "新前端不跑脚本时只显示一句提示（Yu 2026-11-15 同意）",
-    "test_browser_falls_back_when_the_script_fails": "旧看板出错时退回不跑脚本的样子；新前端是哪一页出错哪一页写明，另有一项测",
-    "test_browser_compare_view_on_a_narrow_screen_and_without_script": "后半是不跑脚本；前半（手机宽度）另在下面单独跑",
-    "test_browser_new_pages_jump_and_link": "后半是不跑脚本；前半（三页的跳转）另在下面单独跑",
-}
-
-
-def _old_browser_tests():
-    """旧看板测试里用浏览器打开页面的那些：调用了 opened 的测试函数。"""
-    import inspect
-    out = []
-    for module in (T, T3, T5):
-        for name, fn in sorted(vars(module).items()):
-            if name.startswith("test_") and callable(fn) and "opened(" in inspect.getsource(fn):
-                out.append((module, name, fn))
-    return out
-
-
-def test_old_browser_tests_pass_on_the_new_frontend():
-    ready()
-    real = T.opened
-    T.opened = opened_web
-    ran, skipped, failed = [], [], []
-    try:
-        for module, name, fn in _old_browser_tests():
-            if name in BY_DESIGN:
-                skipped.append(name)
-                continue
-            try:
-                fn()
-                ran.append(name)
-            except unittest.SkipTest:
-                raise
-            except Exception:  # noqa: BLE001
-                failed.append(f"{module.__name__}.{name}\n{traceback.format_exc(limit=3)}")
-    finally:
-        T.opened = real
-    assert not failed, "\n".join(failed)
-    assert len(ran) + len(skipped) == len(_old_browser_tests()) and len(ran) >= 13, ran
-    print(f"      旧看板的浏览器测试 {len(ran)} 项对新前端都通过；有意不搬 {len(skipped)} 项：{'、'.join(skipped)}")
-
-
-def test_compare_view_on_a_narrow_screen():
-    """旧看板那一项的前半：手机宽度上对标视图不用整页左右滑，表格在自己的框里滑。"""
-    with opened_web(size=(390, 844)) as (go, page, seen):
-        go("compare")
-        T.wait_view(page, "compare")
-        assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth + 1"), "整页不该左右滑"
-        assert page.is_visible("#CMP-000001 svg.chart")
-        assert seen["errors"] == []
-
-
-def test_new_pages_jump_and_link():
-    """旧看板那一项的前半：跳到一条陈述、一个来源，点覆盖图的一格跳到证据并展开。"""
+def test_pages_switch_and_hash_jumps():
     with opened_web() as (go, page, seen):
+        go()
+        T.wait_view(page, "overview")
+        for name in ("evidence", "compare", "gaps", "non-academic", "overview"):
+            page.click(f"nav.rail a[data-view='{name}']")
+            T.wait_view(page, name)
+            assert page.get_attribute(f"nav.rail a[data-view='{name}']", "aria-current") == "page"
+        go("no-such-thing")
+        T.wait_view(page, "overview")
+        go("EV-000007-002")
+        T.wait_view(page, "evidence")
+        assert page.get_attribute("tr#EV-000007-002", "aria-selected") == "true"
+        T.wait_until(page, "document.activeElement && document.activeElement.closest('tr') && document.activeElement.closest('tr').id === 'EV-000007-002'")
+        go("CMP-000003")
+        T.wait_view(page, "compare")
+        assert page.get_attribute("[data-group='CMP-000003']", "aria-pressed") == "true"
         go("ASM-000001")
         T.wait_view(page, "gaps")
         T.wait_until(page, "document.getElementById('ASM-000001').classList.contains('target')")
         go("SRC-000004")
         T.wait_view(page, "non-academic")
-        T.wait_until(page, "document.getElementById('SRC-000004').classList.contains('target')")
-        go("overview")
-        T.wait_view(page, "overview")
-        page.click("#coverage tr[data-membrane='SRC-000001|X-1'] a.cov-link")
-        T.wait_view(page, "evidence")
-        T.wait_until(page, "document.getElementById('EV-000001-001').classList.contains('open')")
+        page.go_back()
+        T.wait_view(page, "gaps")
         assert seen["errors"] == []
+
+
+def test_facets_filter_and_recount():
+    v = views_of()
+    rows = v["rows"]
+    with opened_web() as (go, page, seen):
+        go("evidence")
+        page.click("[data-filter=status][data-value=pending]")
+        assert visible_rows(page) == [r["id"] for r in rows if r["f"]["status"] == "pending"]
+        level_counts = page.eval_on_selector_all("[data-filter=level]", "b => b.map(x => [x.dataset.value, x.querySelector('.l .num').textContent])")
+        want = [[code, str(sum(1 for r in rows if r["f"]["status"] == "pending" and r["f"]["level"] == code))] for code, _, _ in v["filters"]["level"]]
+        assert level_counts == want, "别的筛选项的条数跟着变"
+        status_counts = page.eval_on_selector_all("[data-filter=status]", "b => b.map(x => [x.dataset.value, x.querySelector('.l .num').textContent])")
+        assert status_counts == [[code, str(n)] for code, _, n in v["filters"]["status"]], "选中的这一项自己的条数不跟着自己变，别的状态照样看得到有几条"
+        page.click("[data-filter=status][data-value=pending]")
+        assert len(visible_rows(page)) == len(rows)
+        page.fill("#ev-q", "AREA resistance")
+        assert visible_rows(page) == ["EV-000002-001"]
+        page.fill("#ev-q", "x-1  80 mA")
+        assert visible_rows(page) == [r["id"] for r in rows if r["sample"] == "X-1" and any("80 mA" in c["text"] for c in r["conditions"])]
+        page.fill("#ev-q", "这几个字哪里都没有")
+        assert visible_rows(page) == [] and page.is_visible("#ev-empty")
+        page.click("#ev-clear")
+        assert len(visible_rows(page)) == len(rows)
+        page.click("[data-filter=srctype][data-value=patent]")
+        go("EV-000001-001")   # 被筛选挡住的证据：跳过去时清掉筛选
+        T.wait_until(page, "!!document.getElementById('EV-000001-001')")
+        assert len(visible_rows(page)) == len(rows)
+        assert seen["errors"] == []
+
+
+def test_palette_finds_and_jumps():
+    with opened_web() as (go, page, seen):
+        go("overview")
+        page.keyboard.press("Control+k")
+        page.wait_for_selector("#palette-q")
+        page.fill("#palette-q", "Z-1")
+        first = page.inner_text("#palette-list li:first-child")
+        assert "EV-000007-001" in first, first
+        page.keyboard.press("Enter")
+        T.wait_view(page, "evidence")
+        assert page.get_attribute("tr#EV-000007-001", "aria-selected") == "true"
+        assert page.query_selector("#palette-q") is None
+        page.click("#find-open")
+        page.fill("#palette-q", "CMP-000002")
+        page.keyboard.press("Enter")
+        T.wait_view(page, "compare")
+        page.keyboard.press("/")
+        page.wait_for_selector("#palette-q")
+        page.keyboard.press("Escape")
+        assert page.query_selector("#palette-q") is None
+        assert seen["errors"] == []
+
+
+def test_theme_follows_the_system_and_toggles():
+    for scheme in ("light", "dark"):
+        with built_web() as f, browser() as context:
+            page = context.new_page()
+            page.emulate_media(color_scheme=scheme)
+            page.goto("file://" + f)
+            page.wait_for_selector("main .view")
+            assert page.get_attribute("html", "data-theme") == scheme
+            page.click("#theme-toggle")
+            assert page.get_attribute("html", "data-theme") == ("light" if scheme == "dark" else "dark")
+
+
+def test_text_is_readable_and_controls_are_big_enough_in_both_themes():
+    small_js = """() => Array.from(document.querySelectorAll('nav.rail a, button, select, input, a.btn, a.cell, summary'))
+      .filter(el => el.getClientRects().length > 0 && getComputedStyle(el).visibility !== 'hidden')
+      .map(el => [el.id || el.getAttribute('data-view') || el.className || el.tagName, Math.round(el.getBoundingClientRect().height)])
+      .filter(pair => pair[1] < 44)"""
+    for size in T.LOOK_SIZES:
+        for scheme in ("light", "dark"):
+            with built_web() as f, browser(size=size) as context:
+                page = context.new_page()
+                page.emulate_media(color_scheme=scheme)
+                seen = watch(page)
+                for where in ("overview", "evidence", "EV-000001-003", "compare", "CMP-000002", "gaps", "non-academic"):
+                    page.goto("file://" + f + "#" + where)
+                    page.wait_for_selector("main .view.active")
+                    found = page.evaluate(T.CONTRAST_JS, T.LOW_CONTRAST_FLOOR)
+                    label = f"{size[0]} 宽，{scheme}，{where}"
+                    assert found["measured"] > 5, label
+                    assert found["bad"] == {}, f"{label}：对比度不够：{found['bad']}"
+                    assert page.evaluate(small_js) == [], f"{label}：控件矮于 44 像素：{page.evaluate(small_js)}"
+                    widths = page.evaluate("[document.documentElement.scrollWidth, document.documentElement.clientWidth]")
+                    assert widths[0] <= widths[1] + 1, f"{label}：页面比屏幕宽 {widths}"
+                page.click("#legend-open")
+                found = page.evaluate(T.CONTRAST_JS, T.LOW_CONTRAST_FLOOR)
+                assert found["bad"] == {}, f"{size[0]} 宽，{scheme}，图例：{found['bad']}"
+                assert seen["errors"] == []
+
+
+def test_copy_download_and_viewer_frame():
+    with opened_web() as (go, page, seen):
+        go("evidence")
+        assert page.is_visible("#ev-download")
+        page.click("[data-filter=status][data-value=pending]")
+        page.click("#ev-copy")
+        T.wait_until(page, "!!document.getElementById('ev-copy-note')")
+        if not page.inner_text("#ev-copy-note").startswith("已复制"):
+            lines = page.input_value("#ev-copy-box").split("\n")
+            assert len(lines) == 1 + len(visible_rows(page)) and lines[1].split("\t")[0] == visible_rows(page)[0]
+    with opened_web(frame=True) as (go, page, seen):
+        go()
+        inner = page.frames[1]
+        inner.click("nav.rail a[data-view=evidence]")
+        inner.wait_for_selector("#ev-copy", state="visible", timeout=5000)
+        assert inner.query_selector("#ev-download") is None, "查看器的框里不让下载，不显示下载链接"
+
+
+def test_text_from_sources_is_never_markup():
+    with T.example_copy() as data:
+        _poison(data)
+        with opened_web(data) as (go, page, seen):
+            for where in ("overview", "EV-000001-001", "compare", "gaps", "non-academic"):
+                go(where)
+                page.wait_for_selector("main .view.active")
+                assert page.evaluate("document.querySelectorAll('img, iframe, b, script:not([type]), script[type=module]').length") <= 1
+                assert page.evaluate("[...document.querySelectorAll('*')].some(n => [...n.attributes].some(a => a.name.startsWith('on')))") is False
+                assert page.evaluate("[...document.querySelectorAll('a[href]')].every(a => /^(#|https?:|blob:)/.test(a.getAttribute('href')))")
+            go("EV-000001-001")
+            assert "<script>alert(1)</script>" in page.inner_text("#ev-side")
+            page.keyboard.press("Control+k")
+            page.fill("#palette-q", "img")
+            assert "<img src=x" in page.inner_text("#palette-list")
+            assert page.evaluate("typeof window.alert") == "function" and seen["errors"] == []
 
 
 # ---------------------------------------------------------------- 3. 新前端自己的
@@ -407,7 +552,7 @@ def test_online_version_reads_only_its_own_data_files():
             page = context.new_page()
             seen = watch(page)
             page.goto(url + "#EV-000001-003")
-            page.wait_for_selector("#EV-000001-003.open")
+            page.wait_for_selector("tr#EV-000001-003[aria-selected=true]")
             names = sorted({r[len(url):].split("?")[0] for r in seen["requests"]})
             assert all(r.startswith(url) for r in seen["requests"]), seen["requests"]
             assert [n for n in names if n.startswith("site-data/")] == ["site-data/labels.json", "site-data/meta.json", "site-data/views.json"]
@@ -433,8 +578,10 @@ def test_offline_version_is_one_file_and_asks_for_nothing():
             seen = watch(page)
             page.goto("file://" + a + "#compare")
             page.wait_for_selector("#compare.active")
-            page.click("nav.pages a[data-view=evidence]")
-            page.click("#ev-expand")
+            page.click("nav.rail a[data-view=evidence]")
+            page.click("[data-filter=status][data-value=pending]")
+            page.keyboard.press("Control+k")
+            page.fill("#palette-q", "Z-1")
             assert set(seen["requests"]) == {"file://" + a}, seen["requests"]
             assert seen["errors"] == [], seen["errors"]
 
@@ -468,7 +615,7 @@ def test_one_page_failing_does_not_take_the_others_down():
         assert "这一页生成不了" in page.inner_text("#compare")
         assert "对标视图：显示不出来" in page.text_content("#problems")
         go("evidence")
-        assert len(T.visible_ids(page)) == 13
+        assert len(visible_rows(page)) == 13
         go("gaps")
         assert page.is_visible("#summary-table")
 

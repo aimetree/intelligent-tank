@@ -6,7 +6,7 @@ import type { Html, Labels, Meta, Row, SiteData, Views } from './types';
 
 /** 前端认得的数据文件写法（meta.json 的 format、views.json 的 format）。导出脚本改了写法就加一，这里跟着改 */
 export const META_FORMAT = 2;
-export const VIEWS_FORMAT = 1;
+export const VIEWS_FORMAT = 2;
 export const FILES = ['meta.json', 'labels.json', 'views.json'] as const;
 export const DATA_DIR = 'site-data/';
 

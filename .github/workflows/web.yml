@@ -1,6 +1,6 @@
 name: 网页前端
 
-# 改了前端、导出脚本或看板的脚本就跑：类型检查、单元测试、构建，再用 Chrome 把新前端和旧看板逐项对照、把旧看板的浏览器测试对新前端再跑一遍。
+# 改了前端、导出脚本或看板的脚本就跑：类型检查、单元测试、构建，再用 Chrome 测新前端（数和数据对得上、两页和旧看板对照、点一遍、深浅两套的对比度）。
 # 在 main 上，把用仓库里的 data/ 构建的在线版（页面加 site-data/）和离线版（一个网页文件）存成这次运行的附件。构建产物不进仓库。
 # 只读仓库。除了装依赖，不联网取别的东西。
 on:
@@ -23,7 +23,7 @@ permissions:
 
 jobs:
   web:
-    name: 构建网页前端并和旧看板对照
+    name: 构建网页前端并在浏览器里测
     runs-on: ubuntu-latest
     timeout-minutes: 20
     defaults:
@@ -55,7 +55,7 @@ jobs:
           # 同一次提交在哪台机器上构建都应当逐字节相同：把校验和记在日志里
           (cd dist && find . -type f | sort | xargs sha256sum)
           sha256sum offline/index.html
-      - name: 新前端和旧看板逐项对照；旧看板的浏览器测试对新前端再跑一遍
+      - name: 浏览器里测新前端：页面上的数和数据对得上、两页和旧看板对照、点一遍、深浅两套的对比度
         env:
           WEB_TESTS: required            # 没构建、没浏览器都算失败，不许跳过
           DASHBOARD_BROWSER_TESTS: required

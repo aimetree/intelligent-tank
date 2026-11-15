@@ -1,21 +1,16 @@
-/* 证据表页（K2），照 tools/build_dashboard.py 的 render_evidence_view 和它用到的几块。
-   每一行要显示什么由 Python 算好（views.json 的 rows）；这里只摆出来，加上筛选、展开、复制、下载。 */
-import { defineComponent, h, nextTick, onMounted, ref, type PropType } from 'vue';
+/* 证据表（K2），A 2.0：左边筛选（每项带一条小柱，条数随别的筛选变）、中间一张表（数值带一条横条）、右边一条证据的详情
+   （核验进度、原文片段里把数值标出来、条件、来源、核验历史）。参考 Lens 的分面筛选和 Elicit 的“点一格看原文”。
+   每一行要显示什么由 Python 算好（views.json 的 rows）；这里只摆出来、筛选、选中、复制、下载。 */
+import { computed, defineComponent, h, onMounted, reactive, ref, type PropType } from 'vue';
 import { el, type Kid } from '../el';
-import { NOT_FILLED, NONE, type Names } from '../names';
-import { clearFilters, setFilter, state, visibleRows } from '../state';
+import { NOT_FILLED, NONE, fmtNum, type Names } from '../names';
+import { clearFilters, setFilter, state } from '../state';
 import type { FilterOption, Row, TopicView } from '../types';
-import { block, cls, flagged, kv, mark, sub } from './common';
+import { cls, mark } from './common';
 
 export const CSV_NAME = 'evidence-internal.csv';
 const DONE = '已复制，可以直接粘贴到表格软件里。';
 const FAILED = '浏览器没让自动复制。请在下面的框里全选，再复制。';
-
-const COLUMNS: Array<[string, string]> = [
-  ['c-id', '编号'], ['c-subject', '对象'], ['c-level', '层级'], ['c-measure', '指标或事实项'], ['c-value', '数值'],
-  ['c-cond', '关键条件'], ['c-type', '证据类型'], ['c-status', '核验状态'], ['c-group', '可比档和所在的组'],
-  ['c-risk', '风险档'],
-];
 
 export interface Ctx {
   view: TopicView;
@@ -24,216 +19,183 @@ export interface Ctx {
   groupIds: Set<string>;
 }
 
+// 核验这条路上的四步，核得越深数越大；存疑、作废不在这条路上
+export const DEPTH: Record<string, number> = { pending: 1, machine_checked: 2, human_verified: 3, expert_reviewed: 4 };
+
 // ---------------------------------------------------------------- 筛选
 
-const texts = new Map<string, string>(); // 每条证据的全部文字，第一次查找时才取
-
-function textOf(id: string): string {
-  let t = texts.get(id);
-  if (t === undefined) {
-    t = (document.getElementById(id)?.textContent || '').toLowerCase();
-    texts.set(id, t);
-  }
-  return t;
+/** 一行里供查找的字，全部小写 */
+export function textOf(r: Row): string {
+  const parts = [r.id, r.subject, r.sample, r.measure, r.value, ...r.value_notes, ...r.conditions.map((c) => `${c.name} ${c.text}`),
+    r.type_label, r.status_label, r.source_id, r.source_title, r.locator, r.snippet, r.level_label, ...r.groups.map((g) => g.id)];
+  return parts.join(' ').toLowerCase();
 }
 
 function values(row: Row, key: string): string[] {
   return key === 'tier' ? row.tiers : [row.f[key] ?? NONE];
 }
 
-export function matches(row: Row, filters: Record<string, string>, text: (id: string) => string = textOf): boolean {
+export function matches(row: Row, filters: Record<string, string>, query = '', skip = ''): boolean {
   for (const [key, want] of Object.entries(filters)) {
-    if (key === 'q') {
-      const terms = want.toLowerCase().split(/\s+/).filter(Boolean);
-      const body = terms.length ? text(row.id) : '';
-      if (terms.some((t) => !body.includes(t))) return false;
-    } else if (!values(row, key).includes(want)) {
-      return false;
-    }
+    if (key !== skip && !values(row, key).includes(want)) return false;
+  }
+  const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
+  if (terms.length) {
+    const body = textOf(row);
+    if (terms.some((t) => !body.includes(t))) return false;
   }
   return true;
 }
 
-function chipGroup(key: string, label: string, options: FilterOption[], total: number) {
+// 筛选项：先摆出来的四项，其余的点“更多”再看
+const MAIN_FACETS: Array<[string, string]> = [['status', '核验状态'], ['level', '层级'], ['type', '证据类型'], ['srctype', '来源类别']];
+const MORE_FACETS: Array<[string, string]> = [['tier', '可比档'], ['risk', '风险档'], ['measure', '指标或事实项'], ['subject', '对象'], ['source', '来源'], ['vis', '可见范围']];
+const SHOW_ITEMS = 6;
+
+function facet(v: TopicView, key: string, name: string, open: Record<string, boolean>) {
+  const options: FilterOption[] = v.filters[key] || [];
+  const total = v.rows.length || 1;
   const now = state.filters[key] || '';
-  const chip = (value: string, text: string, n: number) =>
-    el('button', { type: 'button', class: 'chip', 'data-filter': key, 'data-value': value, 'aria-pressed': now === value ? 'true' : 'false',
-      onClick: () => setFilter(key, value) }, text, el('span', { class: 'n' }, n));
-  return el('fieldset', { class: 'filter' }, el('legend', { class: 'filter-name' }, label),
-    el('div', { class: 'chips' }, chip('', '全部', total), options.map(([code, text, n]) => chip(code, text, n))));
-}
-
-function picker(key: string, label: string, options: FilterOption[]) {
-  return el('label', { class: 'picker' }, label,
-    h('select', {
-      'data-filter': key, value: state.filters[key] || undefined,
-      onChange: (e: Event) => setFilter(key, (e.target as HTMLSelectElement).value),
-    }, [h('option', { value: '' }, '全部'), ...options.map(([code, text, n]) => h('option', { value: code }, `${text}（${n}）`))]));
-}
-
-function renderFilters(v: TopicView) {
-  const f = v.filters;
-  const total = v.rows.length;
-  return el('section', { class: 'card filters needs-js', 'aria-label': '筛选' },
-    chipGroup('level', '层级', f.level, total),
-    chipGroup('status', '核验状态', f.status, total),
-    chipGroup('srctype', '来源类别', f.srctype, total),
-    chipGroup('risk', '风险档', f.risk, total),
-    el('div', { class: 'pickers' },
-      picker('type', '证据类型', f.type),
-      picker('tier', '可比档', f.tier),
-      picker('vis', '可见范围', f.vis),
-      picker('subject', '对象', f.subject),
-      picker('measure', '指标或事实项', f.measure),
-      picker('source', '来源', f.source),
-      el('label', { class: 'picker' }, '查找',
-        h('input', {
-          type: 'search', 'data-filter': 'q', autocomplete: 'off', placeholder: '编号、对象、数值、原文片段里的字',
-          value: state.filters.q || undefined,
-          onInput: (e: Event) => {
-            const value = (e.target as HTMLInputElement).value;
-            setFilter('q', value.trim() ? value : '');
-          },
-        }))));
-}
-
-// ---------------------------------------------------------------- 一行和展开的一块
-
-function renderConditions(items: Row['conditions']): Kid[] {
-  return items.map((c, i) => [i ? '；' : '', flagged(`${c.name} ${c.text}`, c.state !== 'reported')]);
-}
-
-function renderGroups(groups: Row['groups']): Kid {
-  if (!groups.length) return '未归组';
-  return groups.map((g, i) => {
-    const role = !['', 'member'].includes(g.role) ? `，${g.role_label}` : '';
-    return [i ? ' ' : '', el('span', { class: 'group' }, el('span', { class: 'strong' }, g.tier_label), sub(`${g.id}${role}`))];
+  const items = options.map(([code, label]) => {
+    const n = v.rows.filter((r) => matches(r, state.filters, state.query, key) && values(r, key).includes(code)).length;
+    return { code, label, n };
   });
+  const shown = open[key] ? items : items.slice(0, SHOW_ITEMS);
+  return el('div', { class: 'facet', role: 'group', 'aria-label': name },
+    el('div', { class: 'facet-name' }, name),
+    shown.map((it) => h('button', {
+      type: 'button', 'aria-pressed': now === it.code ? 'true' : 'false', 'data-filter': key, 'data-value': it.code,
+      onClick: () => setFilter(key, now === it.code ? '' : it.code),
+    }, [el('span', { class: 'l' }, el('span', null, it.label), el('span', { class: 'num mute' }, it.n)),
+      el('span', { class: 'bar' }, h('span', { style: { width: `${Math.round((it.n / total) * 100)}%` } }))])),
+    items.length > SHOW_ITEMS
+      ? h('button', { type: 'button', class: 'more', onClick: () => { open[key] = !open[key]; } }, open[key] ? '收起' : `另有 ${items.length - SHOW_ITEMS} 项`)
+      : null);
 }
 
-function evRefs(ids: string[], known: Set<string>): Kid[] {
-  return ids.map((x, i) => [i ? '、' : '', known.has(x) ? el('a', { href: `#${x}` }, x) : x]);
+// ---------------------------------------------------------------- 一行
+
+/** 同一个指标的数在多大的范围里：画横条用。只有一个数的不画 */
+function ranges(rows: Row[]): Map<string, [number, number]> {
+  const out = new Map<string, [number, number]>();
+  for (const r of rows) {
+    if (r.x.num === null || r.x.num === undefined || !r.measure_key) continue;
+    const cur = out.get(r.measure_key);
+    out.set(r.measure_key, cur ? [Math.min(cur[0], r.x.num), Math.max(cur[1], r.x.num)] : [r.x.num, r.x.num]);
+  }
+  for (const [k, [lo, hi]] of out) if (lo === hi) out.delete(k);
+  return out;
 }
 
-function renderDetail(r: Row, c: Ctx) {
-  const { names, ids } = c;
-  const left: Kid[] = [];
-  const right: Kid[] = [];
-  const f = (key: string) => names.field('evidence', key);
+function condSummary(r: Row): Kid {
+  const missing = r.conditions.filter((c) => c.state !== 'reported');
+  const first = r.conditions.find((c) => c.state === 'reported');
+  return [first ? el('span', null, `${first.name} ${first.text}`) : null,
+    missing.length ? [first ? ' · ' : '', el('span', { class: 'warnword' }, `缺${missing.map((c) => c.name).join('、')}`)] : null];
+}
 
+function groupSummary(r: Row): string {
+  if (!r.groups.length) return '—';
+  const top = r.groups[0].tier_label;
+  return r.groups.length > 1 ? `${top} 等 ${r.groups.length} 组` : top;
+}
+
+function statusDot(code: string, label: string) {
+  return el('span', { class: `dot s-${DEPTH[code] || code === 'disputed' || code === 'void' ? cls(code) : 'x'}`, title: label, role: 'img', 'aria-label': label });
+}
+
+const EvRow = defineComponent({
+  props: {
+    row: { type: Object as PropType<Row>, required: true },
+    span: { type: Array as unknown as PropType<[number, number] | null>, default: null },
+  },
+  setup(props) {
+    return () => {
+      const r = props.row;
+      const on = state.selected === r.id;
+      const span = props.span;
+      const num = r.x.num;
+      const bar = span && num !== null
+        ? el('span', { class: 'vbar', 'aria-hidden': 'true' },
+          h('span', { class: r.status === 'expert_reviewed' ? 'top' : '', style: { width: `${Math.max(4, Math.round(((num - span[0]) / (span[1] - span[0])) * 100))}%` } }))
+        : null;
+      return h('tr', {
+        class: 'ev-row', id: r.id, 'aria-selected': on ? 'true' : 'false',
+        'data-status': r.f.status, 'data-level': r.f.level,
+        onClick: () => { state.selected = r.id; },
+      }, [
+        el('td', { style: 'width: 18px; padding-left: 16px' }, statusDot(r.status, r.status_label)),
+        el('td', null, h('button', { type: 'button', class: 'pick', 'aria-label': `${r.id} ${r.subject} ${r.measure}`, onClick: () => { state.selected = r.id; } },
+          [r.sample || r.subject]), el('span', { class: 'id num' }, r.id)),
+        el('td', null, el('span', { class: r.measure_flag ? 'warnword' : '' }, r.measure),
+          el('span', { class: 'id' }, r.type_label)),
+        el('td', null, el('span', { class: 'vcell' }, el('span', { class: `v num${r.value_flag ? ' warnword' : ''}` }, r.value), bar)),
+        el('td', { class: 'small' }, r.error ? el('span', { class: 'warnword' }, `显示不出来：${r.error}`) : condSummary(r)),
+        el('td', { class: 'small', style: 'padding-right: 16px; white-space: nowrap' }, groupSummary(r)),
+      ]);
+    };
+  },
+});
+
+// ---------------------------------------------------------------- 右边的详情
+
+function snippetBlock(r: Row, names: Names): Kid {
+  const label = `${names.field('evidence', 'snippet')} · 只在内部看板显示`;
   if (r.snippet) {
-    left.push(block(`${f('snippet')}（只在内部看板显示）`, el('blockquote', { class: 'snippet', 'data-copy': f('snippet') }, r.snippet)));
-  } else {
-    left.push(block(f('snippet'), el('div', { 'data-copy': f('snippet') },
-      '这条没有原文片段。' + (r.figure_read.length ? '图上读数不留片段，读图的记录在下面。' : ''))));
+    const m = r.x.mark;
+    const body = m ? [r.snippet.slice(0, m[0]), el('mark', null, r.snippet.slice(m[0], m[1])), r.snippet.slice(m[1])] : r.snippet;
+    return el('div', null, el('div', { class: 'label' }, label), el('blockquote', { class: 'quote' }, body),
+      el('div', { class: 'small mute', style: 'margin-top: 6px' }, [r.source_id, r.locator, r.obtained_from_label].filter(Boolean).join(' · ')));
   }
-  if (r.figure_read.length) left.push(block(f('figure_read'), kv(r.figure_read)));
-  const where = [r.source_id, r.locator, r.obtained_from_label ? `${f('obtained_from')}：${r.obtained_from_label}` : '']
-    .filter(Boolean).join('｜');
-  left.push(block('出处', el('div', { 'data-copy': '出处' }, where || NOT_FILLED)));
-  const conds: Array<[Kid, Kid]> = r.conditions.map((x) => [x.name,
-    [flagged(x.text, x.state !== 'reported'), x.parsed ? sub(`解析为 ${x.parsed}`) : null]]);
-  if (conds.length) left.push(block(f('conditions'), kv(conds)));
-  if (r.cond_snippet || r.cond_locator) {
-    left.push(block(`${f('conditions_locator')}和${f('conditions_snippet')}`, el('div', null, r.cond_locator),
-      r.cond_snippet ? el('blockquote', { class: 'snippet' }, r.cond_snippet) : null));
-  }
-  const srcPairs: Array<[Kid, Kid]> = r.source_rows.map(([label, text, url, flag]) => {
-    const shown = url
-      ? el('a', { href: url, target: '_blank', rel: 'noopener noreferrer', referrerpolicy: 'no-referrer' }, text)
-      : text;
-    return [label, flag ? el('span', { class: 'flag' }, shown) : shown];
-  });
-  left.push(block('来源', srcPairs.length ? kv(srcPairs) : NOT_FILLED));
+  return el('div', null, el('div', { class: 'label' }, names.field('evidence', 'snippet')),
+    el('div', { class: 'small mute' }, r.figure_read.length ? '图上读数不留片段，读图的记录在下面。' : '这条没有原文片段。'),
+    r.figure_read.length ? el('dl', { class: 'kvs', style: 'margin-top: 8px' }, r.figure_read.map(([k, v]) => [el('dt', null, k), el('dd', null, v)])) : null,
+    el('div', { class: 'small mute', style: 'margin-top: 6px' }, [r.source_id, r.locator, r.obtained_from_label].filter(Boolean).join(' · ')));
+}
 
-  const steps = r.history.map(([d, t]) => el('li', null, d ? [el('span', { class: 'date' }, d), ' '] : null, t));
-  right.push(block('核验历史', steps.length ? el('ol', { class: 'history' }, steps) : '还没有记录'));
+function detail(r: Row | undefined, c: Ctx): Kid {
+  if (!r) return el('div', { class: 'empty-note' }, '点左边的一行，在这里看详情。');
+  if (r.error) return el('div', null, el('div', { class: 'num small mute' }, r.id), el('p', { class: 'warnword' }, `这条证据显示不出来：${r.error}`));
+  const { names } = c;
+  const depth = DEPTH[r.status] || 0;
   const risk = r.risk;
-  if (risk.tier) {
-    let line = risk.label + '：' + (risk.reasons.length ? risk.reasons.join('；') : '没有标出理由');
-    line += risk.note ? `。${risk.note}` : '';
-    right.push(block(`${f('risk')}和理由`, el('div', null, line)));
-  } else {
-    right.push(block(`${f('risk')}和理由`, el('div', null, '还没标。人工核对之前要标好。')));
-  }
-  if (r.groups.length) {
-    const items = r.groups.map((g) => {
-      const head = [g.tier_label, g.role_label, g.status_label].filter(Boolean).join('｜');
-      const gid = c.groupIds.has(g.id) ? el('a', { href: `#${g.id}` }, g.id) : g.id; // 点了去对标视图里这一组
-      return el('li', null, el('span', { class: 'strong' }, gid, head ? '｜' + head : null),
-        sub([g.title, g.tier_reason, g.note].filter(Boolean).join('　')));
-    });
-    right.push(block('所在可比组', el('ul', { class: 'plain' }, items)));
-  } else {
-    right.push(block('所在可比组', el('div', null, '未归组')));
-  }
-  const cited = [...r.asm_direct, ...r.asm_via.map(([a, g]) => `${a}（经可比组 ${g}）`)];
-  right.push(block('被这些数据概览引用', el('div', null, cited.length ? cited.join('、') : '还没有被引用')));
-  if (r.extra.length) {
-    const pairs: Array<[Kid, Kid]> = r.extra.map(([label, kind, value]) =>
-      [label, kind === 'evidence' ? evRefs(value as string[], ids) : (value as string)]);
-    right.push(block('其余字段', kv(pairs)));
-  }
-  return el('div', { class: 'detail' }, el('div', { class: 'detail-col' }, left), el('div', { class: 'detail-col' }, right));
+  return [
+    el('div', null,
+      el('div', { class: 'num small mute' }, r.id),
+      el('div', { class: `big num${r.value_flag ? ' warnword' : ''}` }, r.value),
+      el('div', { class: 'small', style: 'color: var(--sub)' }, [r.sample || r.subject, r.measure].filter(Boolean).join(' · ')),
+      r.value_notes.length ? el('div', { class: 'small mute' }, r.value_notes.join(' · ')) : null),
+    el('div', { class: 'chips' },
+      el('span', { class: `pill${r.status === 'expert_reviewed' ? ' solid' : r.status === 'disputed' ? ' amber' : r.status === 'pending' ? ' dashed' : ' accent'}` }, r.status_label),
+      el('span', { class: 'pill' }, mark(r.type), r.type_label),
+      el('span', { class: `pill${risk.tier === 'high' ? ' amber' : ''}` }, risk.tier ? `风险 ${risk.label}` : '风险档还没标'),
+      r.flags.map((f) => el('span', { class: 'pill amber' }, f))),
+    el('div', { class: 'progress', role: 'img', 'aria-label': `核到第 ${depth} 步：${r.status_label}` },
+      ['录入', '机器', '人工', '专业'].map((label, i) => el('div', null,
+        el('span', { class: i < depth ? (i === 3 ? 'on top' : 'on') : '' }), el('em', null, label)))),
+    snippetBlock(r, names),
+    r.conditions.length ? el('div', null, el('div', { class: 'label' }, names.field('evidence', 'conditions')),
+      el('div', { class: 'chips' }, r.conditions.map((x) => el('span', { class: `pill${x.state !== 'reported' ? ' amber' : ''}`, title: x.parsed ? `解析为 ${x.parsed}` : null },
+        `${x.name} ${x.text}`)))) : null,
+    el('div', null, el('div', { class: 'label' }, '来源'),
+      el('dl', { class: 'kvs' }, r.source_rows.map(([label, text, url, flag]) => [el('dt', null, label),
+        el('dd', { class: flag ? 'warnword' : '' }, url ? el('a', { href: url, target: '_blank', rel: 'noopener noreferrer', referrerpolicy: 'no-referrer' }, text) : text)]))),
+    el('div', null, el('div', { class: 'label' }, '可比组'),
+      r.groups.length
+        ? el('div', { class: 'chips' }, r.groups.map((g) => el('a', { href: `#${g.id}`, class: 'pill accent', title: [g.title, g.tier_reason].filter(Boolean).join('　') },
+          `${g.id} · ${g.tier_label}${g.role && g.role !== 'member' ? ' · ' + g.role_label : ''}`)))
+        : el('div', { class: 'small mute' }, '未归组')),
+    el('div', null, el('div', { class: 'label' }, '核验历史'),
+      r.history.length ? el('ol', { class: 'timeline' }, r.history.map(([d, t]) => el('li', null, t, d ? el('span', { class: 'when' }, d) : null)))
+        : el('div', { class: 'small mute' }, '还没有记录')),
+    risk.tier ? el('div', { class: 'small mute' }, `风险理由：${risk.reasons.join('；') || '没有标出理由'}${risk.note ? '。' + risk.note : ''}`) : null,
+    (r.asm_direct.length || r.asm_via.length)
+      ? el('div', { class: 'small mute' }, '被数据概览引用：', [...r.asm_direct, ...r.asm_via.map(([a, g]) => `${a}（经 ${g}）`)].join('、')) : null,
+    r.extra.length ? el('details', null, el('summary', { class: 'small mute', style: 'cursor: pointer' }, '其余字段'),
+      el('dl', { class: 'kvs', style: 'margin-top: 6px' }, r.extra.map(([label, kind, value]) => [el('dt', null, label),
+        el('dd', null, kind === 'evidence' ? (value as string[]).map((x, i) => [i ? '、' : '', c.ids.has(x) ? el('a', { href: `#${x}` }, x) : x]) : (value as string))]))) : null,
+  ];
 }
-
-function td(i: number, ...content: Kid[]) {
-  return el('td', { class: COLUMNS[i][0], 'data-label': COLUMNS[i][1] }, el('div', { class: 'c' }, content));
-}
-
-/** 一行的十栏。只在展开或收起时重画这一行 */
-const RowMain = defineComponent({
-  props: { row: { type: Object as PropType<Row>, required: true } },
-  setup(props) {
-    return () => {
-      const r = props.row;
-      const open = !!state.open[r.id];
-      const risk = r.risk;
-      return el('tr', { class: 'ev-main' },
-        td(0, h('button', {
-          type: 'button', class: 'ev-toggle', 'aria-expanded': open ? 'true' : 'false', 'aria-controls': `d-${r.id}`,
-          onClick: () => { state.open[r.id] = !open; },
-        }, r.id)),
-        td(1, el('span', { class: 'strong' }, flagged(r.subject, r.subject_flag)), r.sample ? sub(r.sample) : null),
-        td(2, r.level_label),
-        td(3, flagged(r.measure, r.measure_flag)),
-        td(4, flagged(r.value, r.value_flag), r.value_notes.map((n) => sub(n))),
-        td(5, renderConditions(r.conditions)),
-        td(6, el('span', { class: 'type' }, mark(r.type), r.type_label), r.flags.map((x) => sub(x))),
-        td(7, el('span', { class: `status s-${cls(r.status)}` }, r.status_label)),
-        td(8, renderGroups(r.groups)),
-        td(9, el('span', { class: `risk r-${cls(risk.tier || 'none')}` }, risk.label || '还没标')));
-    };
-  },
-});
-
-/** 展开的一块。内容不会变，画一次就不再重画 */
-const RowDetail = defineComponent({
-  props: { row: { type: Object as PropType<Row>, required: true }, ctx: { type: Object as PropType<Ctx>, required: true } },
-  setup(props) {
-    const r = props.row;
-    const detail = r.error
-      ? el('div', { class: 'detail' }, el('div', { class: 'flag' }, `这条证据显示不出来：${r.error}`))
-      : renderDetail(r, props.ctx);
-    return () => el('tr', { class: 'ev-detail', id: `d-${r.id}` }, el('td', { colspan: COLUMNS.length }, detail));
-  },
-});
-
-const EvidenceRow = defineComponent({
-  props: { row: { type: Object as PropType<Row>, required: true }, ctx: { type: Object as PropType<Ctx>, required: true } },
-  setup(props) {
-    return () => {
-      const r = props.row;
-      const f = r.f;
-      return el('tbody', {
-        class: state.open[r.id] ? 'ev open' : 'ev', id: r.id, hidden: !matches(r, state.filters),
-        'data-level': f.level, 'data-status': f.status, 'data-type': f.type, 'data-srctype': f.srctype,
-        'data-tier': r.tiers.join(' '), 'data-vis': f.vis, 'data-risk': f.risk, 'data-subject': f.subject,
-        'data-measure': f.measure, 'data-source': f.source,
-      }, h(RowMain, { row: r }), h(RowDetail, { row: r, ctx: props.ctx }));
-    };
-  },
-});
 
 // ---------------------------------------------------------------- 复制当前显示的行
 
@@ -244,16 +206,15 @@ export function clean(text: string): string {
   return value;
 }
 
-function tsv(): string {
-  const all = (sel: string, base: ParentNode = document) => Array.from(base.querySelectorAll(sel));
-  const rows = all('tbody.ev');
-  const head = all('table.ev-table thead th').map((c) => clean(c.textContent || ''));
-  if (rows.length) all('[data-copy]', rows[0]).forEach((n) => head.push(clean(n.getAttribute('data-copy') || '')));
+export function tsv(rows: Row[], names: Names): string {
+  const head = ['编号', '对象', '样品', '层级', '指标或事实项', '数值', '关键条件', '证据类型', '核验状态', '可比档和所在的组', '风险档',
+    names.field('evidence', 'snippet'), '出处'];
   const lines = [head.join('\t')];
-  for (const row of visibleRows()) {
-    const cells = all('tr.ev-main > td', row).map((c) => clean(c.textContent || ''));
-    all('[data-copy]', row).forEach((n) => cells.push(clean(n.textContent || '')));
-    lines.push(cells.join('\t'));
+  for (const r of rows) {
+    lines.push([r.id, r.subject, r.sample, r.level_label, r.measure, [r.value, ...r.value_notes].join(' '),
+      r.conditions.map((c) => `${c.name} ${c.text}`).join('；'), r.type_label, r.status_label,
+      r.groups.map((g) => `${g.tier_label} ${g.id}`).join(' ') || '未归组', r.risk.label || '还没标', r.snippet,
+      [r.source_id, r.locator].filter(Boolean).join('｜')].map((x) => clean(String(x ?? ''))).join('\t'));
   }
   return lines.join('\n');
 }
@@ -268,88 +229,78 @@ export const EvidenceView = defineComponent({
     question: { type: String, required: true },
   },
   setup(props) {
+    const open = reactive<Record<string, boolean>>({});
+    const more = ref(false);
     const copyNote = ref('');
     const copyText = ref('');
-    const copyFailed = ref(false);
-    const copyBox = ref<HTMLTextAreaElement | null>(null);
-    let framed = true; // 嵌在别的页面里看的时候（比如网页版的查看器），浏览器不让页面自己下载文件，下载的链接就不显示
+    const download = ref('');
+    let framed = true; // 嵌在别的页面里看的时候（网页版的查看器），浏览器不让页面自己下载文件，下载的链接就不显示
     try {
       framed = window.self !== window.top;
     } catch {
       framed = true;
     }
-    const download = ref('');
     onMounted(() => {
       if (!framed && props.ctx.view.rows.length) {
         download.value = URL.createObjectURL(new Blob([props.ctx.view.csv], { type: 'text/csv;charset=utf-8' }));
       }
     });
-
-    async function copied(ok: boolean, text: string) {
-      copyNote.value = ok ? DONE : FAILED;
-      copyFailed.value = !ok;
-      copyText.value = ok ? '' : text;
-      if (!ok) {
-        await nextTick();
-        copyBox.value?.focus();
-        copyBox.value?.select();
-      }
-    }
+    const spans = computed(() => ranges(props.ctx.view.rows));
+    const shown = computed(() => props.ctx.view.rows.filter((r) => matches(r, state.filters, state.query)));
 
     function copy() {
-      const text = tsv();
+      const text = tsv(shown.value, props.ctx.names);
+      const done = (ok: boolean) => {
+        copyNote.value = ok ? DONE : FAILED;
+        copyText.value = ok ? '' : text;
+      };
       try {
-        navigator.clipboard.writeText(text).then(() => copied(true, text), () => copied(false, text));
+        navigator.clipboard.writeText(text).then(() => done(true), () => done(false));
       } catch {
-        void copied(false, text);
+        done(false);
       }
-    }
-
-    function expandAll() {
-      const visible = visibleRows();
-      const open = !allOpen();
-      visible.forEach((row) => { state.open[row.id] = open; });
-    }
-
-    function allOpen(): boolean {
-      const shown = props.ctx.view.rows.filter((r) => matches(r, state.filters));
-      return shown.length > 0 && shown.every((r) => state.open[r.id]);
     }
 
     return () => {
       const { view } = props.ctx;
       const total = view.rows.length;
-      const head = el('div', { class: 'view-head' }, el('h2', null, props.title),
-        el('div', { class: 'note' }, `${props.question}｜${total} 条证据，来自 ${view.source_count} 个来源`));
       const attrs = { class: state.view === props.name ? 'view active' : 'view', id: props.name, 'aria-label': props.title };
       if (!total) {
-        return el('section', attrs, el('section', { class: 'card' }, head,
-          el('p', { class: 'empty', id: 'ev-none' }, '这个题目还没有证据。来源和证据登记进数据文件之后，重新生成，就会出现在这里。')));
+        return el('section', attrs, el('div', { class: 'panel' }, el('p', { class: 'empty-note', id: 'ev-none' },
+          '这个题目还没有证据。来源和证据登记进数据文件之后，重新导出，就会出现在这里。')));
       }
-      const shown = view.rows.filter((r) => matches(r, state.filters)).length;
-      const toolbar = el('div', { class: 'toolbar' },
-        el('div', { class: 'count needs-js', role: 'status' },
-          '显示 ', el('span', { class: 'strong', id: 'ev-shown' }, shown),
-          ` 条，共 ${total} 条。点编号看原文片段、出处、来源和核验历史。`),
-        el('div', { class: 'toolbar-buttons' },
-          h('button', { type: 'button', class: 'btn needs-js', id: 'ev-clear', hidden: !Object.keys(state.filters).length, onClick: clearFilters }, '清除筛选'),
-          h('button', { type: 'button', class: 'btn needs-js', id: 'ev-expand', 'data-open': '全部展开', 'data-close': '全部收起', onClick: expandAll }, allOpen() ? '全部收起' : '全部展开'),
-          h('button', { type: 'button', class: 'btn needs-js', id: 'ev-copy', 'data-done': DONE, 'data-failed': FAILED, onClick: copy }, '复制当前显示的行'),
-          h('a', { class: 'btn', id: 'ev-download', href: download.value || undefined, download: CSV_NAME, hidden: !download.value },
-            `下载表格文件（全部 ${total} 条，含只留内部的字段）`)),
-        el('div', { class: 'note needs-js', id: 'ev-copy-note', role: 'status' }, copyNote.value),
-        h('textarea', {
-          class: 'copy-box', id: 'ev-copy-box', hidden: !copyFailed.value, readonly: true, ref: copyBox,
-          'aria-label': '当前显示的行，制表符分隔', value: copyText.value || undefined,
-        }));
-      const table = el('table', { class: 'ev-table' },
-        el('thead', null, el('tr', null, COLUMNS.map(([c, label]) => el('th', { scope: 'col', class: c }, label)))),
-        view.rows.map((r) => h(EvidenceRow, { row: r, ctx: props.ctx, key: r.id })));
+      const rows = shown.value;
+      const sel = view.rows.find((r) => r.id === state.selected);
+      const filtered = Object.keys(state.filters).length > 0 || !!state.query;
       return el('section', attrs,
-        el('section', { class: 'card' }, head, toolbar),
-        renderFilters(view),
-        el('section', { class: 'card table-card' }, table,
-          el('p', { class: 'empty', id: 'ev-empty', hidden: shown > 0 }, '没有符合筛选条件的证据。')));
+        el('div', { class: 'ev-layout' },
+          el('aside', { class: 'facets', 'aria-label': '筛选' },
+            el('div', { class: 'head' }, el('span', { class: 'small mute' }, '筛选'),
+              el('span', { class: 'num small mute', id: 'ev-shown' }, `${rows.length} / ${total}`)),
+            MAIN_FACETS.map(([k, n]) => facet(view, k, n, open)),
+            more.value ? MORE_FACETS.map(([k, n]) => facet(view, k, n, open)) : null,
+            h('button', { type: 'button', class: 'btn', onClick: () => { more.value = !more.value; } }, more.value ? '少一些筛选' : '更多筛选'),
+            filtered ? h('button', { type: 'button', class: 'btn', id: 'ev-clear', onClick: clearFilters }, '清除筛选') : null),
+          el('div', { class: 'ev-main' },
+            el('div', { class: 'ev-tools' },
+              el('label', { class: 'vh', for: 'ev-q' }, '查找'),
+              h('input', { id: 'ev-q', type: 'search', placeholder: '查找：编号、对象、数值、原文里的字', autocomplete: 'off', value: state.query,
+                onInput: (e: Event) => { state.query = (e.target as HTMLInputElement).value; } }),
+              h('button', { type: 'button', class: 'btn', id: 'ev-copy', onClick: copy }, '复制显示的行'),
+              download.value ? el('a', { class: 'btn', id: 'ev-download', href: download.value, download: CSV_NAME }, '下载表格文件') : null),
+            copyNote.value ? el('div', { class: 'small mute', id: 'ev-copy-note', role: 'status', style: 'padding: 6px 16px' }, copyNote.value) : null,
+            copyText.value ? h('textarea', { id: 'ev-copy-box', readonly: true, value: copyText.value, 'aria-label': '显示的行，制表符分隔',
+              style: 'width: calc(100% - 32px); margin: 0 16px; min-height: 80px' }) : null,
+            el('div', { class: 'ev-scroll' },
+              el('table', { class: 'grid' },
+                el('thead', null, el('tr', null,
+                  el('th', { style: 'padding-left: 16px' }, el('span', { class: 'vh' }, '核验状态')), el('th', null, '对象'), el('th', null, '指标'),
+                  el('th', null, '数值'), el('th', null, '条件'), el('th', { style: 'padding-right: 16px' }, '可比'))),
+                el('tbody', null, rows.map((r) => h(EvRow, { key: r.id, row: r, span: spans.value.get(r.measure_key) || null }))))),
+            rows.length ? null : el('p', { class: 'empty-note', id: 'ev-empty', style: 'padding: 16px' }, '没有符合筛选条件的证据。')),
+          el('aside', { class: 'side', 'aria-label': sel ? `${sel.id} 的详情` : '详情', id: 'ev-side' }, detail(sel, props.ctx))));
     };
   },
 });
+
+export { fmtNum, NOT_FILLED };

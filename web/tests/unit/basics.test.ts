@@ -5,7 +5,8 @@ import { el, safeHref } from '../../src/el';
 import { renderToString } from 'vue/server-renderer';
 import { createSSRApp } from 'vue';
 import { Names, cls, fmtNum } from '../../src/names';
-import { matches, clean } from '../../src/pages/evidence';
+import { matches, clean, textOf } from '../../src/pages/evidence';
+import { scaleFor } from '../../src/scale';
 import { round } from '../../src/pages/common';
 import type { Row } from '../../src/types';
 
@@ -68,24 +69,28 @@ describe('链接只认页面里的 # 和 http、https', () => {
   ])('%s', (href, want) => expect(safeHref(href)).toBe(want));
 });
 
-function row(id: string, f: Record<string, string>, tiers = ['-']): Row {
-  return { id, f, tiers } as unknown as Row;
+function row(id: string, f: Record<string, string>, tiers = ['-'], extra: Partial<Row> = {}): Row {
+  return { id, f, tiers, subject: '', sample: '', measure: '', value: '', value_notes: [], conditions: [], type_label: '', status_label: '',
+    source_id: '', source_title: '', locator: '', snippet: '', level_label: '', groups: [], ...extra } as unknown as Row;
 }
 
-describe('筛选和旧看板的页面脚本一样', () => {
-  const r = row('EV-1', { level: 'material', status: 'pending' }, ['direct', 'reference']);
-  const text = () => 'ev-1 x-1 能量效率 85.6%';
-  it('每一项都要对上；可比档对上其中一个就算', () => {
-    expect(matches(r, {}, text)).toBe(true);
-    expect(matches(r, { level: 'material', status: 'pending' }, text)).toBe(true);
-    expect(matches(r, { level: 'device' }, text)).toBe(false);
-    expect(matches(r, { tier: 'reference' }, text)).toBe(true);
-    expect(matches(r, { tier: 'direct ' }, text)).toBe(false);
+describe('筛选', () => {
+  const r = row('EV-1', { level: 'material', status: 'pending' }, ['direct', 'reference'],
+    { sample: 'X-1', measure: '能量效率', value: '85.6%', conditions: [{ key: 'j', name: '电流密度', text: '80 mA cm-2', state: 'reported', parsed: '' }] });
+  it('每一项都要对上；可比档对上其中一个就算；skip 的那一项不管', () => {
+    expect(matches(r, {})).toBe(true);
+    expect(matches(r, { level: 'material', status: 'pending' })).toBe(true);
+    expect(matches(r, { level: 'device' })).toBe(false);
+    expect(matches(r, { level: 'device' }, '', 'level')).toBe(true);
+    expect(matches(r, { tier: 'reference' })).toBe(true);
+    expect(matches(r, { tier: 'direct ' })).toBe(false);
   });
-  it('查找：每个词都要出现，不分大小写', () => {
-    expect(matches(r, { q: 'X-1  能量' }, text)).toBe(true);
-    expect(matches(r, { q: 'x-1 电压' }, text)).toBe(false);
-    expect(matches(r, { q: '   ' }, text)).toBe(true);
+  it('查找：每个词都要出现，不分大小写，条件里的字也算', () => {
+    expect(matches(r, {}, 'x-1  能量')).toBe(true);
+    expect(matches(r, {}, 'x-1 80 MA')).toBe(true);
+    expect(matches(r, {}, 'x-1 电压')).toBe(false);
+    expect(matches(r, {}, '   ')).toBe(true);
+    expect(textOf(r)).toContain('ev-1');
   });
   it('复制成表格时，像公式的格子加撇号', () => {
     expect(clean('  =SUM(A1)\n')).toBe("'=SUM(A1)");
@@ -94,6 +99,22 @@ describe('筛选和旧看板的页面脚本一样', () => {
     expect(clean('-x')).toBe("'-x");
     expect(clean('+1')).toBe('+1');
     expect(clean('a   b')).toBe('a b');
+  });
+});
+
+describe('坐标轴和 tools/charts.py 的 scale_for 一样', () => {
+  // 期望值是 Python 的 scale_for 对同一批数算出来的
+  const cases: Array<[number[], number[], string[]]> = [
+    [[82, 85.6], [82, 83, 84, 85, 86], ['82', '83', '84', '85', '86']],
+    [[0.98, 1.0439, 1.0075, 1.0], [0.98, 1, 1.02, 1.04, 1.06], ['0.98', '1', '1.02', '1.04', '1.06']],
+    [[1e-7, 3e-5], [1e-7, 1e-6, 1e-5, 1e-4], ['10⁻⁷', '10⁻⁶', '10⁻⁵', '10⁻⁴']],
+    [[5, 5], [4.5, 5, 5.5], ['4.5', '5', '5.5']],
+  ];
+  it.each(cases)('%j', (vals, ticks, labels) => {
+    const s = scaleFor(vals, 0, 100);
+    expect(s.ticks.map((x) => Number(x.toPrecision(12)))).toEqual(ticks);
+    expect(s.ticks.map(s.label)).toEqual(labels);
+    expect(Math.round(s(vals[0]) * 1000) / 1000).toBe(vals[0] === vals[1] ? 50 : 18);
   });
 });
 
@@ -110,7 +131,7 @@ describe('读数据文件', () => {
   const base = () => ({
     'meta.json': { format: META_FORMAT, audience: 'internal' },
     'labels.json': {},
-    'views.json': { format: VIEWS_FORMAT, topics: [] },
+    'views.json': { format: VIEWS_FORMAT, topics: [] as unknown[] },
   });
   it('写法对不上、对外的导出，都说明为什么', () => {
     expect(() => prepare(base() as never)).not.toThrow();
