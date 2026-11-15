@@ -42,7 +42,7 @@
           "vanadium_permeability": "found",
           "ion_selectivity": "found",
           "oxidative_stability": "not_reported",
-          "fluorine_class": "not_reported",
+          "fluorine_class": "found",
           "coulombic_efficiency": "found",
           "voltage_efficiency": "found",
           "energy_efficiency": "found",
@@ -58,7 +58,7 @@
     "status_checked_at": "2026-11-15",
     "registered_by": "claude",
     "registered_at": "2026-11-15",
-    "notes": "方案附 B 试做名单第 4 篇。发布日期取首页印的上线日期（Available online 29 January 2022）。取得日期写的是 PDF 传进 Project 文件区的那天，成员下载的日期没有记。来源状态只看了 PDF 本身（没有印更正或撤稿的说明），没有到 Crossref 或出版商的页面查，待补查。原文还有一系列别的预处理温度和浓度的样品（图 1 至图 4），只有图，这次没有登记、没有读图",
+    "notes": "方案附 B 试做名单第 4 篇。发布日期取首页印的上线日期（Available online 29 January 2022）。取得日期写的是 PDF 传进 Project 文件区的那天，成员下载的日期没有记。来源状态只看了 PDF 本身（没有印更正或撤稿的说明），没有到 Crossref 或出版商的页面查，待补查。原文还有一系列别的预处理温度和浓度的样品（图 1 至图 4），只有图，这次没有登记、没有读图。表 2 的断裂伸长率（standard PBI 21.5、25C_10M 14.5）表头没有写单位，Yu 2026-11-15 定不收。第 6 页写 Nafion 212 约 50 µm，没说是不是自己量的，Yu 同日定不收",
     "id_check": {
       "result": "pass",
       "at": "2026-11-15",
@@ -1711,7 +1711,7 @@
       "entry_method": "ai",
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
-      "verification_status": "machine_checked",
+      "verification_status": "disputed",
       "visibility": "external",
       "machine_check": {
         "identifier": "pass",
@@ -1727,7 +1727,11 @@
         ],
         "set_by": "script",
         "set_at": "2026-11-15"
-      }
+      },
+      "dispute_note": "正文（第 9 页 3.6 节）写 25C_10M 在 50 mA/cm² 的库仑效率是 99.1%，图 8a 上同一个点读出约 99.28%，差约 0.18 个百分点，大于读图的误差。Yu 2026-11-15 定：两条都留，标存疑",
+      "conflicts_with": [
+        "EV-000001-099"
+      ]
     },
     {
       "id": "EV-000001-025",
@@ -7922,6 +7926,548 @@
         "set_by": "script",
         "set_at": "2026-11-15"
       }
+    },
+    {
+      "id": "EV-000001-092",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "created_by": "claude",
+      "created_at": "2026-11-15",
+      "sample_label": "25C_10M",
+      "subject_id": "ENT-000001",
+      "indicator": "proton_conductivity",
+      "level": "material",
+      "content_kind": "numeric",
+      "value_reported": "6.5",
+      "unit_reported": "mS/cm",
+      "value_std": 6.5,
+      "conditions": {
+        "test_solution": {
+          "reported": "1.5M V；V4+ containing electrolyte",
+          "value": "V4+ 1.5 mol/L"
+        },
+        "temperature": "not_reported",
+        "direction": {
+          "reported": "Through-plane",
+          "value": "through_plane"
+        },
+        "method": {
+          "reported": "electrochemical impedance spectroscopy (EIS)"
+        }
+      },
+      "conditions_locator": {
+        "page": "1",
+        "section": "Abstract",
+        "text": "第 1 页，摘要（含 V4+ 的电解液）；浓度“1.5M V”在第 6 页图 3b 的横轴标注上；测法见第 3 页 2.4.3 节"
+      },
+      "conditions_snippet": "In V4+ containing electrolyte, the area specific resistance was 262 mΩ cm2 , which is 3.3 and 1.7 times better than for 10 µm thick standard PBI (13 µm thick in 2 M SA) and 54 µm thick Nafion 212 membranes, respectively.",
+      "evidence_type": "experimental",
+      "obtained_from": "text",
+      "locator": {
+        "page": "6",
+        "section": "3.3",
+        "text": "第 6 页，3.3 节第 3 段（跨到右栏）"
+      },
+      "snippet": "the proton conductivity of the 25C_10M PBI membrane only decreased by 29% from 9.1 mS cm− 1 to 6.5 mS cm− 1",
+      "internal_note": "测试溶液：浓度取自图 3b 的横轴标注“25C_10M (1.5M V)”，V4+ 取自摘要（In V4+ containing electrolyte）；酸的种类和浓度原文没写，没有补。实验部分（2.4.3 节）只写了在 2 M SA 里的测法，含钒溶液里的测法没有另写，方向和方法是按 2.4.3 节记的；测量温度没写。",
+      "source_id": "SRC-000001",
+      "entry_method": "ai",
+      "double_extraction": "resolved",
+      "obtained_at": "2026-11-15",
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "extraction_mismatch",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
+    },
+    {
+      "id": "EV-000001-093",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "created_by": "claude",
+      "created_at": "2026-11-15",
+      "sample_label": "25C_10M",
+      "subject_id": "ENT-000001",
+      "indicator": "proton_conductivity",
+      "level": "material",
+      "content_kind": "numeric",
+      "value_reported": "9.6",
+      "unit_reported": "mS/cm",
+      "value_std": 9.6,
+      "conditions": {
+        "test_solution": {
+          "reported": "2 M SA",
+          "value": "H2SO4 2 mol/L"
+        },
+        "temperature": "not_reported",
+        "direction": {
+          "reported": "Through-plane",
+          "value": "through_plane"
+        },
+        "method": {
+          "reported": "electrochemical impedance spectroscopy (EIS)"
+        },
+        "pretreatment": {
+          "reported": "after 8 days of immersion"
+        }
+      },
+      "conditions_locator": {
+        "page": "3",
+        "section": "2.4.3",
+        "text": "第 3 页，2.4.3 节（节标题写 Through-plane，正文写测试溶液和测法）"
+      },
+      "conditions_snippet": "Through-plane ionic conductivity A fully equilibrated membrane was placed between two platinum disk electrodes with an active area (A) of 1.767 cm2, and the gap be­ tween electrode and membrane was filled with 2 M SA. The resistance (R) was taken by using electrochemical impedance spectroscopy (EIS)",
+      "evidence_type": "experimental",
+      "obtained_from": "text",
+      "locator": {
+        "page": "6",
+        "section": "3.3",
+        "text": "第 6 页，3.3 节第 2 段"
+      },
+      "snippet": "we measured the conductivity of 25C_10M PBI after 8 days of immersion, and the conductivity remained at 9.6 mS cm− 1",
+      "scope_note": "膜在 2 M 硫酸里浸泡 8 天之后测的值",
+      "internal_note": "原文说这个数见补充材料 Table S2 和 Figure S2，补充材料不在手上。条件取自 2.4.3 节；测量温度没写。这一条和表 1 的 9.11 mS/cm 是同一个样品、同一种测试溶液，差别只在浸泡时间；为了分得开，把 after 8 days of immersion 写进了可选条件 pretreatment（文字型，说明里说这一版不记）。",
+      "source_id": "SRC-000001",
+      "entry_method": "ai",
+      "double_extraction": "resolved",
+      "obtained_at": "2026-11-15",
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "extraction_mismatch",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
+    },
+    {
+      "id": "EV-000001-094",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "created_by": "claude",
+      "created_at": "2026-11-15",
+      "sample_label": "Nafion 212",
+      "subject_id": "ENT-000003",
+      "indicator": "proton_conductivity",
+      "level": "material",
+      "content_kind": "numeric",
+      "value_reported": "12.2",
+      "unit_reported": "mS/cm",
+      "value_std": 12.2,
+      "conditions": {
+        "test_solution": {
+          "reported": "1.5M V；V4+ containing electrolyte",
+          "value": "V4+ 1.5 mol/L"
+        },
+        "temperature": "not_reported",
+        "direction": {
+          "reported": "Through-plane",
+          "value": "through_plane"
+        },
+        "method": {
+          "reported": "electrochemical impedance spectroscopy (EIS)"
+        }
+      },
+      "conditions_locator": {
+        "page": "1",
+        "section": "Abstract",
+        "text": "第 1 页，摘要（含 V4+ 的电解液）；浓度“1.5M V”在第 6 页图 3b 的横轴标注上；测法见第 3 页 2.4.3 节"
+      },
+      "conditions_snippet": "In V4+ containing electrolyte, the area specific resistance was 262 mΩ cm2 , which is 3.3 and 1.7 times better than for 10 µm thick standard PBI (13 µm thick in 2 M SA) and 54 µm thick Nafion 212 membranes, respectively.",
+      "evidence_type": "experimental",
+      "obtained_from": "text",
+      "locator": {
+        "page": "6",
+        "section": "3.3",
+        "text": "第 6 页，3.3 节第 3 段（右栏）"
+      },
+      "snippet": "the conductivity of Nafion 212 dropped by 76% from 50.5 mS cm− 1 to 12.2 mS cm− 1",
+      "internal_note": "测试溶液：浓度取自图 3b 的横轴标注“Nafion 212 (1.5M V)”，V4+ 取自摘要（In V4+ containing electrolyte）；酸的种类和浓度原文没写，没有补。实验部分（2.4.3 节）只写了在 2 M SA 里的测法，含钒溶液里的测法没有另写，方向和方法是按 2.4.3 节记的；测量温度没写。",
+      "source_id": "SRC-000001",
+      "entry_method": "ai",
+      "double_extraction": "resolved",
+      "obtained_at": "2026-11-15",
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "extraction_mismatch",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
+    },
+    {
+      "id": "EV-000001-095",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "created_by": "claude",
+      "created_at": "2026-11-15",
+      "sample_label": "25C_10M",
+      "subject_id": "ENT-000001",
+      "indicator": "area_resistance",
+      "level": "material",
+      "content_kind": "numeric",
+      "value_reported": "262",
+      "unit_reported": "mohm*cm2",
+      "value_std": 0.262,
+      "conditions": {
+        "test_solution": {
+          "reported": "1.5M V；V4+ containing electrolyte",
+          "value": "V4+ 1.5 mol/L"
+        },
+        "temperature": "not_reported",
+        "direction": {
+          "reported": "Through-plane",
+          "value": "through_plane"
+        },
+        "method": {
+          "reported": "electrochemical impedance spectroscopy (EIS)"
+        }
+      },
+      "conditions_locator": {
+        "page": "1",
+        "section": "Abstract",
+        "text": "第 1 页，摘要（含 V4+ 的电解液）；浓度“1.5M V”在第 6 页图 3b 的横轴标注上；测法见第 3 页 2.4.3 节"
+      },
+      "conditions_snippet": "In V4+ containing electrolyte, the area specific resistance was 262 mΩ cm2 , which is 3.3 and 1.7 times better than for 10 µm thick standard PBI (13 µm thick in 2 M SA) and 54 µm thick Nafion 212 membranes, respectively.",
+      "evidence_type": "experimental",
+      "obtained_from": "text",
+      "locator": {
+        "page": "9",
+        "section": "3.6",
+        "text": "第 9 页，3.6 节第 2 段"
+      },
+      "snippet": "then the actual ASRs would be 872 mΩ cm2, 262 mΩ cm2, and 435 mΩ cm2 for standard PBI, 25C_10M PBI, and Nafion 212 membranes, respectively",
+      "scope_note": "按最终湿膜厚度 17 µm 算的面电阻",
+      "internal_note": "摘要也写了这个数（the area specific resistance was 262 mΩ cm2），同一个数没有另记。测试溶液：浓度取自图 3b 的横轴标注“25C_10M (1.5M V)”，V4+ 取自摘要（In V4+ containing electrolyte）；酸的种类和浓度原文没写，没有补。实验部分（2.4.3 节）只写了在 2 M SA 里的测法，含钒溶液里的测法没有另写，方向和方法是按 2.4.3 节记的；测量温度没写。",
+      "source_id": "SRC-000001",
+      "entry_method": "ai",
+      "double_extraction": "resolved",
+      "obtained_at": "2026-11-15",
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "extraction_mismatch",
+          "unit_converted",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
+    },
+    {
+      "id": "EV-000001-096",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "created_by": "claude",
+      "created_at": "2026-11-15",
+      "sample_label": "Nafion 212",
+      "subject_id": "ENT-000003",
+      "indicator": "area_resistance",
+      "level": "material",
+      "content_kind": "numeric",
+      "value_reported": "435",
+      "unit_reported": "mohm*cm2",
+      "value_std": 0.435,
+      "conditions": {
+        "test_solution": {
+          "reported": "1.5M V；V4+ containing electrolyte",
+          "value": "V4+ 1.5 mol/L"
+        },
+        "temperature": "not_reported",
+        "direction": {
+          "reported": "Through-plane",
+          "value": "through_plane"
+        },
+        "method": {
+          "reported": "electrochemical impedance spectroscopy (EIS)"
+        }
+      },
+      "conditions_locator": {
+        "page": "1",
+        "section": "Abstract",
+        "text": "第 1 页，摘要（含 V4+ 的电解液）；浓度“1.5M V”在第 6 页图 3b 的横轴标注上；测法见第 3 页 2.4.3 节"
+      },
+      "conditions_snippet": "In V4+ containing electrolyte, the area specific resistance was 262 mΩ cm2 , which is 3.3 and 1.7 times better than for 10 µm thick standard PBI (13 µm thick in 2 M SA) and 54 µm thick Nafion 212 membranes, respectively.",
+      "evidence_type": "experimental",
+      "obtained_from": "text",
+      "locator": {
+        "page": "9",
+        "section": "3.6",
+        "text": "第 9 页，3.6 节第 2 段"
+      },
+      "snippet": "then the actual ASRs would be 872 mΩ cm2, 262 mΩ cm2, and 435 mΩ cm2 for standard PBI, 25C_10M PBI, and Nafion 212 membranes, respectively",
+      "scope_note": "按最终湿膜厚度 53 µm 算的面电阻",
+      "internal_note": "测试溶液：浓度取自图 3b 的横轴标注“Nafion 212 (1.5M V)”，V4+ 取自摘要（In V4+ containing electrolyte）；酸的种类和浓度原文没写，没有补。实验部分（2.4.3 节）只写了在 2 M SA 里的测法，含钒溶液里的测法没有另写，方向和方法是按 2.4.3 节记的；测量温度没写。",
+      "source_id": "SRC-000001",
+      "entry_method": "ai",
+      "double_extraction": "resolved",
+      "obtained_at": "2026-11-15",
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "extraction_mismatch",
+          "unit_converted",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
+    },
+    {
+      "id": "EV-000001-097",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "created_by": "claude",
+      "created_at": "2026-11-15",
+      "sample_label": "25C_10M",
+      "subject_id": "ENT-000001",
+      "indicator": "area_resistance",
+      "level": "material",
+      "content_kind": "numeric",
+      "value_reported": "150",
+      "unit_reported": "mohm*cm2",
+      "value_std": 0.15,
+      "conditions": {
+        "test_solution": {
+          "reported": "1.5M V；V4+ containing electrolyte",
+          "value": "V4+ 1.5 mol/L"
+        },
+        "temperature": "not_reported",
+        "direction": {
+          "reported": "Through-plane",
+          "value": "through_plane"
+        },
+        "method": {
+          "reported": "electrochemical impedance spectroscopy (EIS)"
+        }
+      },
+      "conditions_locator": {
+        "page": "1",
+        "section": "Abstract",
+        "text": "第 1 页，摘要（含 V4+ 的电解液）；浓度“1.5M V”在第 6 页图 3b 的横轴标注上；测法见第 3 页 2.4.3 节"
+      },
+      "conditions_snippet": "In V4+ containing electrolyte, the area specific resistance was 262 mΩ cm2 , which is 3.3 and 1.7 times better than for 10 µm thick standard PBI (13 µm thick in 2 M SA) and 54 µm thick Nafion 212 membranes, respectively.",
+      "evidence_type": "experimental",
+      "obtained_from": "figure_read",
+      "locator": {
+        "page": "6",
+        "figure": "3b",
+        "item": "25C_10M (1.5M V) 上方的黑色方块（ASR，右轴）",
+        "text": "第 6 页，图 3b，横轴 25C_10M (1.5M V) 处的 ASR 点"
+      },
+      "figure_read": {
+        "method": "把第 6 页按 300 dpi 渲染成图片量像素行：右轴（ASR）取 1200（第 308.83 行）和 0（第 845.33 行）两个大刻度，量 25C_10M (1.5M V) 处黑色方块中心所在的行，按行号线性插值；右轴最小刻度间隔是 100，读数写到十位。",
+        "read_by": "claude",
+        "source_data_checked": "not_checked"
+      },
+      "scope_note": "按假定的 10 µm 膜厚算出来的面电阻（图 3 题注：the ASR calculated for 10 µm thick PBI membranes）",
+      "internal_note": "25C_10M 在含钒溶液里、按 10 µm 膜厚算的面电阻只有图 3b 上有；正文给的 262 mΩ cm2 是按 17 µm 的最终湿膜厚度算的，另记了一条。黑色方块中心在像素行 776.41，量出来是 154.1，取到十位写 150。同一张图上正文有数的点用同样的量法核对过：25C_2M 量出 391（正文 390），Nafion 212 (1.5M V) 量出 435（正文 435）。测试溶液：浓度取自图 3b 的横轴标注“25C_10M (1.5M V)”，V4+ 取自摘要（In V4+ containing electrolyte）；酸的种类和浓度原文没写，没有补。实验部分（2.4.3 节）只写了在 2 M SA 里的测法，含钒溶液里的测法没有另写，方向和方法是按 2.4.3 节记的；测量温度没写。",
+      "source_id": "SRC-000001",
+      "entry_method": "ai",
+      "double_extraction": "resolved",
+      "obtained_at": "2026-11-15",
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "na",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "figure_read",
+          "extraction_mismatch",
+          "unit_converted",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
+    },
+    {
+      "id": "EV-000001-098",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "created_by": "claude",
+      "created_at": "2026-11-15",
+      "sample_label": "25C_10M",
+      "subject_id": "ENT-000001",
+      "indicator": "fluorine_class",
+      "level": "material",
+      "content_kind": "category",
+      "category_value": "non_fluorinated",
+      "conditions": {},
+      "evidence_type": "experimental",
+      "obtained_from": "text",
+      "locator": {
+        "page": "2",
+        "section": "2.1",
+        "text": "第 2 页，2.1 节"
+      },
+      "snippet": "meta-PBI powder (Mw ≈ 58.000 g/mol) was purchased from Danish Power Systems (now Blue World Technologies)",
+      "internal_note": "判断理由：膜是用 meta-PBI（聚苯并咪唑）粉末溶在 DMAc 里浇铸的致密膜（2.2 节），之后只用硫酸预处理和掺杂；第 4 页方案 1 的结构式里主链是苯并咪唑环和苯环，没有含氟基团，原文也没有提侧链、增强层或共混组分，所以记 non_fluorinated。照说明第 7 节，系列变体里只给“读图”是“是”的 studied 样品写了这一条（25C_12M 和循环后的膜没有另写）。",
+      "source_id": "SRC-000001",
+      "entry_method": "ai",
+      "double_extraction": "resolved",
+      "obtained_at": "2026-11-15",
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "extraction_mismatch",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
+    },
+    {
+      "id": "EV-000001-099",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "created_by": "claude",
+      "created_at": "2026-11-15",
+      "sample_label": "25C_10M",
+      "subject_id": "ENT-000001",
+      "indicator": "coulombic_efficiency",
+      "level": "component",
+      "content_kind": "numeric",
+      "value_reported": "99.28",
+      "unit_reported": "%",
+      "value_std": 99.28,
+      "conditions": {
+        "current_density": {
+          "reported": "50 mA cm-2",
+          "value": 50,
+          "unit": "mA/cm2"
+        },
+        "vanadium_conc": {
+          "reported": "1.5 M VO2+ in 3 M SA and the anolyte was 1.5 M V3+",
+          "value": 1.5,
+          "unit": "mol/L"
+        },
+        "acid": {
+          "reported": "3 M SA",
+          "value": "H2SO4 3 mol/L"
+        },
+        "temperature": {
+          "reported": "room temperature"
+        },
+        "electrode_area": {
+          "reported": "25 cm2",
+          "value": 25,
+          "unit": "cm2"
+        },
+        "electrolyte_volume": {
+          "reported": "50 ml",
+          "value": 50,
+          "unit": "mL"
+        },
+        "cutoff_voltage": {
+          "reported": "1.6 V and 0.7 V",
+          "low": 0.7,
+          "high": 1.6,
+          "unit": "V"
+        },
+        "flow_rate": {
+          "reported": "50 ml min− 1",
+          "value": 50,
+          "unit": "mL/min"
+        }
+      },
+      "conditions_locator": {
+        "page": "3",
+        "section": "2.5",
+        "text": "第 3 页，2.5 节"
+      },
+      "conditions_snippet": "The catholyte was 1.5 M VO2+ in 3 M SA and the anolyte was 1.5 M V3+ in 3 M SA [40]. A volume of 50 ml of each electrolyte was kept in separate glass bottles and circulated through the cell with a peristaltic pump at the flow rate of 50 ml min− 1.",
+      "evidence_type": "experimental",
+      "obtained_from": "figure_read",
+      "locator": {
+        "page": "10",
+        "figure": "8a",
+        "item": "25C_10M PBI 曲线，50 mA cm-2 处的点",
+        "text": "第 10 页，图 8a，25C_10M PBI 曲线在 50 mA cm-2 处的点"
+      },
+      "figure_read": {
+        "method": "第 10 页渲染成 300 dpi 图片；纵轴取刻度 100（像素行 239.5）和 90（像素行 803.6），数据点中心在像素行 280.2，两刻度间线性插值；数据点中心：三角形取形心（从底边起三分之一高处）；纵轴最小刻度间隔 0.5，写到百分位。",
+        "read_by": "claude",
+        "source_data_checked": "not_checked"
+      },
+      "scope_note": "图上读数；原文称图 8 为各电流密度下的平均效率。",
+      "internal_note": "按像素插值是 99.277。正文（第 9 页 3.6 节）写这个量是 99.1%（“The CE rises up from 99.1% at 50 mA cm-2”），和图上读数差约 0.18，远大于读图误差（约 ±0.02）；照说明第 2 节第 6 条两处各记一条，不判断哪个对。按第 8 节，正文有数的本来不读图，这一条是因为不一致才记的。图 8 是各电流密度下的平均效率，平均了哪几圈原文没有写（50 mA cm-2 做了两段各 5 圈，100 mA cm-2 做了 5 圈后又做了 100 圈）。器件条件取自 2.5 节；条件片段限 300 字符，只抄了写电解液和流速的两句，温度和截止电压在其后一句，电极面积（25 cm2）在该节第一句。",
+      "source_id": "SRC-000001",
+      "entry_method": "ai",
+      "double_extraction": "resolved",
+      "obtained_at": "2026-11-15",
+      "verification_status": "disputed",
+      "visibility": "external",
+      "dispute_note": "正文（第 9 页 3.6 节）写 25C_10M 在 50 mA/cm² 的库仑效率是 99.1%，图 8a 上同一个点读出约 99.28%，差约 0.18 个百分点，大于读图的误差。Yu 2026-11-15 定：两条都留，标存疑",
+      "conflicts_with": [
+        "EV-000001-024"
+      ]
     }
   ]
 }
