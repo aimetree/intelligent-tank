@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""校验 data/ 是否符合《数据结构_字段规格》v0.2（docs/03_技术与开发/数据结构_字段规格_v0.2.md）。
+"""校验 data/ 是否符合《数据结构_字段规格》（docs/03_技术与开发/，现在是哪一版见 data/schema/ 里 schema 的 $id）。
 
 用法
   python3 tools/validate.py                         校验仓库里的 data/
@@ -7,9 +7,10 @@
   python3 tools/validate.py --external CMP-000001   假设这些可比组要对外，多查对外门槛（V-61 至 V-63）
   python3 tools/validate.py --base <提交>            V-72（日志只追加）和这次提交比，GitHub Actions 上用
 
-做两件事
-  1. 结构：每条记录的字段名、类型、枚举和录入时就必填的字段，对照 data/schema/ 里的定义。
-  2. 规则：规格第 5 节的 V-xx，包括带条件的必填项和跨记录的检查。
+做三件事
+  1. 版本：数据的规格版本（meta.json 的 spec_version）和 schema 的版本是不是同一个。不是的话先跑 tools/migrate.py。
+  2. 结构：每条记录的字段名、类型、枚举和录入时就必填的字段，对照 data/schema/ 里的定义。
+  3. 规则：规格第 5 节的 V-xx，包括带条件的必填项和跨记录的检查。
 
 退出码  0 通过；1 有问题；2 用法或环境不对。
 依赖    jsonschema（pip install -r tools/requirements.txt）。
@@ -236,6 +237,35 @@ def load_dataset(data_dir):
 def load_schema(path=DEFAULT_SCHEMA):
     with open(path, encoding="utf-8") as f:
         return json.load(f)
+
+
+def spec_version_of(schema):
+    """schema 是规格的哪一版：$id 末尾的那个号（urn:intelligent-tank:schema:0.3 就是 0.3）。脚本要的就是这一版的数据。"""
+    return str(schema.get("$id") or "").rsplit(":", 1)[-1]
+
+
+def version_key(version):
+    """版本号拆成一串数，好比大小：0.10 比 0.9 新。认不出来的写法返回 None。"""
+    if not isinstance(version, str) or not re.match(r"^\d+(\.\d+)*$", version):
+        return None
+    return tuple(int(x) for x in version.split("."))
+
+
+def check_version(ds, schema):
+    """数据的规格版本要和 schema 的版本一样（规格 1.7）。不一样时别的检查报出来的多半是版本的事，所以单独先说清楚。"""
+    meta = ds["meta"]
+    have = meta.get("spec_version") if isinstance(meta, dict) else None
+    want = spec_version_of(schema)
+    if not isinstance(have, str) or have == want:
+        return []      # 没有 meta.json、没写版本号，另有问题会报（V-00）
+    a, b = version_key(have), version_key(want)
+    if a is None or b is None:
+        how = "这个版本号认不出来"
+    elif a < b:
+        how = "数据是旧版的，先跑 python3 tools/migrate.py 把它升上来"
+    else:
+        how = "数据比脚本新，先把脚本更新到和数据一样的版本"
+    return [Issue("V-00", "meta.json", f"数据的规格版本是 {have}，脚本要的是 {want}：{how}")]
 
 
 # ---------------------------------------------------------------- 结构
@@ -1320,12 +1350,12 @@ def check_append_only(data_dir, base="HEAD"):
 
 
 def validate(ds, schema, external=()):
-    """结构加规则。不含 V-72（它要看 git，用 check_append_only）。"""
-    return list(ds["problems"]) + check_structure(ds, schema) + check_rules(ds, external)
+    """版本、结构加规则。不含 V-72（它要看 git，用 check_append_only）。"""
+    return list(ds["problems"]) + check_version(ds, schema) + check_structure(ds, schema) + check_rules(ds, external)
 
 
 def main(argv=None):
-    ap = argparse.ArgumentParser(description="校验 data/ 是否符合字段规格 v0.2")
+    ap = argparse.ArgumentParser(description="校验 data/ 是否符合字段规格")
     ap.add_argument("--data", default=DEFAULT_DATA, help="数据目录，默认是仓库里的 data/")
     ap.add_argument("--schema", default=DEFAULT_SCHEMA, help="schema 文件")
     ap.add_argument("--external", nargs="*", default=[], metavar="CMP-编号", help="假设这些可比组要对外，多查对外门槛")

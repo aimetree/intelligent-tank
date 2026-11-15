@@ -1,6 +1,6 @@
 name: 校验与测试
 
-# 改了数据或脚本就跑：校验 data/，跑六组测试，再用仓库里的 data/ 生成一遍看板。
+# 改了数据或脚本就跑：校验 data/，跑八组测试，再用仓库里的 data/ 生成一遍看板。
 # 在 main 上，生成的看板存成这次运行的附件（Artifacts），有仓库权限的人可以下载；前面任何一步没过就不存。
 # 只读仓库。除了装依赖，不联网取别的东西。
 on:
@@ -64,6 +64,10 @@ jobs:
         env:
           DASHBOARD_BROWSER_TESTS: required
         run: python3 tools/tests/test_step5.py
+      - name: 取数模块的测试
+        run: python3 tools/tests/test_access.py
+      - name: 迁移脚本的测试
+        run: python3 tools/tests/test_migrate.py
       - name: 用仓库里的 data/ 生成看板
         run: |
           python3 tools/build_dashboard.py --out site --strict

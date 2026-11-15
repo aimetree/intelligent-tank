@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:intelligent-tank:schema:0.2",
-  "title": "Intelligent Tank 数据结构 v0.2",
-  "description": "对应 docs/03_技术与开发/数据结构_字段规格_v0.2.md。每类对象是 $defs 里的一项；各文件用哪一项见 data/README.md。这里只管字段名、类型、枚举和录入时就必填的字段；带条件的要求和跨记录的规则在 tools/validate.py 里。",
+  "$id": "urn:intelligent-tank:schema:0.3",
+  "title": "Intelligent Tank 数据结构 v0.3",
+  "description": "对应 docs/03_技术与开发/数据结构_字段规格_v0.3.md。每类对象是 $defs 里的一项；各文件用哪一项见 data/README.md。这里只管字段名、类型、枚举和录入时就必填的字段；带条件的要求和跨记录的规则在 tools/validate.py 里。",
   "$defs": {
     "id_TOP": {
       "type": "string",
