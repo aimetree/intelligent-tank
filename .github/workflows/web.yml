@@ -1,0 +1,82 @@
+name: 网页前端
+
+# 改了前端、导出脚本或看板的脚本就跑：类型检查、单元测试、构建，再用 Chrome 把新前端和旧看板逐项对照、把旧看板的浏览器测试对新前端再跑一遍。
+# 在 main 上，把用仓库里的 data/ 构建的在线版（页面加 site-data/）和离线版（一个网页文件）存成这次运行的附件。构建产物不进仓库。
+# 只读仓库。除了装依赖，不联网取别的东西。
+on:
+  push:
+    paths:
+      - "web/**"
+      - "tools/**"
+      - "data/**"
+      - ".github/workflows/web.yml"
+  pull_request:
+    paths:
+      - "web/**"
+      - "tools/**"
+      - "data/**"
+      - ".github/workflows/web.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  web:
+    name: 构建网页前端并和旧看板对照
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: 装依赖
+        run: |
+          npm ci
+          pip install -r ../tools/requirements.txt -r ../tools/requirements-test.txt
+      - name: 类型检查
+        run: npm run typecheck
+      - name: 单元测试
+        run: npm test
+      - name: 用仓库里的 data/ 导出数据文件，构建在线版和离线版
+        run: |
+          npm run data:repo
+          npm run build
+          npm run offline
+          # 同一次提交在哪台机器上构建都应当逐字节相同：把校验和记在日志里
+          (cd dist && find . -type f | sort | xargs sha256sum)
+          sha256sum offline/index.html
+      - name: 新前端和旧看板逐项对照；旧看板的浏览器测试对新前端再跑一遍
+        env:
+          WEB_TESTS: required            # 没构建、没浏览器都算失败，不许跳过
+          DASHBOARD_BROWSER_TESTS: required
+        run: python3 ../tools/tests/test_web.py
+      - name: 给这次构建起名（只在 main 上）
+        id: name
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        run: echo "sha=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+      - name: 把在线版存成这次运行的附件
+        if: steps.name.outputs.sha != ''
+        uses: actions/upload-artifact@v7
+        with:
+          name: web-${{ steps.name.outputs.sha }}   # 解压后要用网页服务器打开（浏览器不让本机打开的页面读旁边的文件）
+          path: web/dist/
+          retention-days: 14
+          if-no-files-found: error
+      - name: 把离线版存成这次运行的附件
+        if: steps.name.outputs.sha != ''
+        uses: actions/upload-artifact@v7
+        with:
+          name: web-offline-${{ steps.name.outputs.sha }}   # 解压后双击 index.html 就能打开
+          path: web/offline/index.html
+          retention-days: 14
+          if-no-files-found: error

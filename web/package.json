@@ -1,0 +1,27 @@
+{
+  "name": "intelligent-tank-web",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "data": "python3 ../tools/export_site_data.py --data ../tools/tests/example --out public/site-data",
+    "data:repo": "python3 ../tools/export_site_data.py --out public/site-data",
+    "dev": "vite",
+    "typecheck": "vue-tsc --noEmit",
+    "build": "vue-tsc --noEmit && vite build",
+    "offline": "node scripts/offline.mjs",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "vue": "3.5.45"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "6.0.11",
+    "typescript": "6.0.3",
+    "vite": "8.3.8",
+    "vitest": "5.1.0",
+    "vue-tsc": "3.3.14"
+  }
+}

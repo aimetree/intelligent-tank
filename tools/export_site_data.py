@@ -12,13 +12,15 @@
   relations.json   看关联：关系
   logs.json        查：变化记录、工作记录
   labels.json      页面上的中文名
+  views.json       五页要显示的内容，由看板的 Python 函数算好（tools/site_views.py；Yu 2026-11-15 定“甲”）。只在给内部看的导出里有
 
 --audience internal（默认）原样导出，含只留内部的字段（原文片段等，D-56），只能放在有登录的地方。
 --audience external 去掉只留内部的字段，只留可对外、并且至少人工已核的证据，和可对外的实体、关系；复核单、工作记录不导出。
+  views.json 也不导出：五页是对内看板，里面有原文片段、风险档这些只留内部的东西。对外给谁看、看哪几页还没有定。
 来源登记现在原样导出（含条款要点和备注），对外之前要不要再删，等定了对外给谁看再做。
 同一份数据、同一次提交导出两遍，文件逐字节相同。
 
-用法  python3 tools/export_site_data.py --out site-data [--data DIR] [--audience internal|external]
+用法  python3 tools/export_site_data.py --out site-data [--data DIR] [--audience internal|external] [--version 版本]
 """
 import argparse
 import json
@@ -28,11 +30,12 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import access as A  # noqa: E402
 import build_dashboard as B  # noqa: E402
+import site_views  # noqa: E402
 import store  # noqa: E402
 import validate as V  # noqa: E402
 
 AUDIENCES = ("internal", "external")
-FORMAT = 1   # 这几个文件的写法改了、前端要跟着改的时候加一
+FORMAT = 2   # 这几个文件的写法改了、前端要跟着改的时候加一。2：加了 views.json
 
 
 OUTSIDE_OK = ("human_verified", "expert_reviewed")   # 对外至少人工已核（方案 5.2，V-60）
@@ -42,8 +45,8 @@ def _visible(rec, audience):
     return audience == "internal" or rec.get("visibility") == "external"
 
 
-def export(data_dir, audience="internal"):
-    """返回 {文件名: 内容}。不写文件。"""
+def export(data_dir, audience="internal", version=None):
+    """返回 {文件名: 内容}。不写文件。version 不给就用 git 的提交号（和看板一样）。"""
     if audience not in AUDIENCES:
         raise ValueError(f"不认识的 audience：{audience}")
     ds = A.load(data_dir)
@@ -66,17 +69,19 @@ def export(data_dir, audience="internal"):
         labels_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "labels.json")
     with open(labels_path, encoding="utf-8") as f:
         labels = json.load(f)
+    if version is None:
+        version = B.data_version(data_dir)
     meta = {
         "format": FORMAT,
         "audience": audience,
-        "data_version": B.data_version(data_dir),
+        "data_version": version,
         "spec_version": A.spec_version(ds),
         "counts": {"topics": len(topics), "sources": len(sources), "entities": len(entities), "evidence": len(evidence),
                    "relations": len(relations), "comparisons": len(comparisons), "assessments": len(assessments),
                    "reviews": len(reviews)},
         "problems": [str(p) for p in A.problems(ds)] if inside else [],
     }
-    return {
+    files = {
         "meta.json": meta,
         "topics.json": topics,
         "sources.json": sources,
@@ -88,6 +93,11 @@ def export(data_dir, audience="internal"):
                       "worklog": A.worklog(ds) if inside else []},
         "labels.json": labels,
     }
+    if inside:
+        files["views.json"] = site_views.views(ds, V.load_schema(), labels,
+                                               version or "没有版本号（不在 git 仓库里）")
+    meta["files"] = sorted(files)
+    return files
 
 
 def main(argv=None):
@@ -95,11 +105,12 @@ def main(argv=None):
     ap.add_argument("--data", default=os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data"))
     ap.add_argument("--out", required=True)
     ap.add_argument("--audience", choices=AUDIENCES, default="internal")
+    ap.add_argument("--version", help="写进数据文件的数据版本；不写就用 git 的提交号")
     args = ap.parse_args(argv)
     if not os.path.isdir(args.data):
         print(f"没有这个数据目录：{args.data}", file=sys.stderr)
         return 2
-    files = export(args.data, args.audience)
+    files = export(args.data, args.audience, args.version)
     os.makedirs(args.out, exist_ok=True)
     for name, content in files.items():
         store.write_json(os.path.join(args.out, name), content)

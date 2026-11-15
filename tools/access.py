@@ -35,7 +35,8 @@ import validate as V  # noqa: E402
 
 # 读数据要走这里的脚本（tools/tests/test_access.py 照这张单子查它们有没有自己去翻 ds）
 USERS = ("build_dashboard.py", "compare_view.py", "overview_view.py", "gaps_view.py", "nonacademic_view.py",
-         "topicdata.py", "derive.py", "report_export.py", "review_sheet.py", "export_site_data.py", "verify_sheet.py")
+         "topicdata.py", "derive.py", "report_export.py", "review_sheet.py", "export_site_data.py", "verify_sheet.py",
+         "site_views.py")
 
 # 能按编号问“有没有”的几类记录（exists 用）
 KINDS = ("topics", "sources", "entities", "evidence", "relations", "comparisons", "assessments", "reports", "reviews")

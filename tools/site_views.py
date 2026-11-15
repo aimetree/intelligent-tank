@@ -1,0 +1,166 @@
+"""网页前端的“页面要显示的内容”（views.json），由 tools/export_site_data.py 写出。
+
+Yu 2026-11-15 定（选“甲”）：五页要显示的内容照旧由看板的 Python 函数算（build_dashboard.build_model 和四个页面脚本的 build），
+前端只管显示、筛选、跳转和画 SVG。算法只有一套，新前端和旧看板显示的东西不会两样。
+
+这里只做一件事：把 build_model 算好的那一大块变成能写成 JSON 的样子，不改任何一个数或一个字。
+- 证据表的每一行只在 rows 里出现一次；页面模型里别处用到同一行的，写成 {"$row": 证据编号}，前端读进来时换回那一行。
+- 一行里的原始记录 e 不写（前端要原始记录读 evidence.json）。
+- 页面模型里有几处是已经写好的 HTML 片段（图、最近的变化里指向证据的链接、证据类型的记号），写成 {"$html": [节点]}。
+  节点是 {"t": 标签, "a": 属性, "c": [子节点]}，文字节点就是字符串。前端照白名单把它画出来，不当网页代码插进页面。
+- 键是 frozenset 的字典（可比性矩阵：谁和谁）写成 {"$pairs": [[[a, b], 内容], ...]}，a、b 排好序。
+- 元组写成数组，集合写成排好序的数组。别的类型一律报错，免得悄悄丢了东西。
+同一份数据写出来逐字节相同。
+"""
+import os
+import sys
+from html.parser import HTMLParser
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+import access as A  # noqa: E402
+import build_dashboard as B  # noqa: E402
+import validate as V  # noqa: E402
+from display import TIER_HANDLING, Names, cls  # noqa: E402
+from htmlgen import VOID, Raw  # noqa: E402
+
+FORMAT = 1   # views.json 的写法改了、前端要跟着改的时候加一
+
+# HTMLParser 把标签名和属性名都改成小写；SVG 里有几个区分大小写的，照原样改回来
+SVG_CASE = {"viewbox": "viewBox", "preserveaspectratio": "preserveAspectRatio"}
+
+
+class _Tree(HTMLParser):
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.root = {"c": []}
+        self.stack = [self.root]
+
+    def handle_starttag(self, tag, attrs):
+        node = {"t": tag, "a": {SVG_CASE.get(k, k): ("" if v is None else v) for k, v in attrs}, "c": []}
+        self.stack[-1]["c"].append(node)
+        if tag not in VOID:
+            self.stack.append(node)
+
+    def handle_startendtag(self, tag, attrs):
+        self.handle_starttag(tag, attrs)
+        if tag not in VOID:
+            self.stack.pop()
+
+    def handle_endtag(self, tag):
+        # 看板的片段都是 htmlgen 写的，开和关一定配对；对不上就是哪里错了，不猜
+        if len(self.stack) < 2 or self.stack[-1]["t"] != tag:
+            raise ValueError(f"结束标签 </{tag}> 和开着的标签对不上")
+        self.stack.pop()
+
+    def handle_data(self, data):
+        if data != "\n":   # htmlgen 在一些标签后面加的换行，只为了文件好读
+            self.stack[-1]["c"].append(data)
+
+
+def _clean(nodes):
+    for n in nodes:
+        if isinstance(n, dict):
+            if n["c"]:
+                _clean(n["c"])
+            else:
+                del n["c"]
+            if not n["a"]:
+                del n["a"]
+    return nodes
+
+
+def html_nodes(raw):
+    p = _Tree()
+    p.feed(raw)
+    p.close()
+    if len(p.stack) != 1:
+        raise ValueError("HTML 片段里有没关上的标签")
+    return _clean(p.root["c"])
+
+
+def to_json(x, rows):
+    """rows：{id(一行): 证据编号}。"""
+    if isinstance(x, Raw):
+        return {"$html": html_nodes(x)}
+    if x is None or isinstance(x, (str, bool, int, float)):
+        return x
+    if isinstance(x, dict):
+        if id(x) in rows:
+            return {"$row": rows[id(x)]}
+        if any(isinstance(k, frozenset) for k in x):
+            pairs = [[sorted(k), to_json(v, rows)] for k, v in x.items()]
+            return {"$pairs": sorted(pairs, key=lambda p: p[0])}
+        out = {}
+        for k, v in x.items():
+            if not isinstance(k, str):
+                raise TypeError(f"键不是字符串：{k!r}")
+            out[k] = to_json(v, rows)
+        return out
+    if isinstance(x, (list, tuple)):
+        return [to_json(v, rows) for v in x]
+    if isinstance(x, (set, frozenset)):
+        return [to_json(v, rows) for v in sorted(x)]
+    raise TypeError(f"写不成 JSON：{type(x).__name__}")
+
+
+def field_titles(schema):
+    """字段的显示名（schema 的 title）：{对象: {字段: 名字, "字段.里面的字段": 名字}}。前端的 names.field 照这个取。"""
+    out = {}
+    for obj, d in sorted(((schema or {}).get("$defs") or {}).items()):
+        props = (d or {}).get("properties") if isinstance(d, dict) else None
+        if not isinstance(props, dict):
+            continue
+        table = {}
+        for key, prop in props.items():
+            if not isinstance(prop, dict):
+                continue
+            if prop.get("title"):
+                table[key] = prop["title"]
+            inner = prop.get("properties") or ((prop.get("items") or {}).get("properties") if isinstance(prop.get("items"), dict) else None) or {}
+            for sub, p in inner.items():
+                if isinstance(p, dict) and p.get("title"):
+                    table[f"{key}.{sub}"] = p["title"]
+        if table:
+            out[obj] = table
+    return out
+
+
+def legend(labels, schema):
+    """全站共用的图例：和旧看板 render_legend 一样的四栏。"""
+    names = Names(labels, None, schema)
+    by_tier = {}
+    for reason, tier in V.RISK_REASON_TIER.items():
+        by_tier.setdefault(tier, []).append(names.enum("risk_reason", reason))
+    return {
+        "types": [{"code": c, "label": names.enum("evidence_type", c)} for c in names.enum_order("evidence_type")],
+        "statuses": [{"code": c, "cls": cls(c), "label": names.enum("verification_status", c)} for c in names.enum_order("verification_status")],
+        "tiers": [{"code": c, "text": names.enum("tier", c) + (f"：{TIER_HANDLING[c]}" if c in TIER_HANDLING else "")}
+                  for c in names.enum_order("tier")],
+        "risks": [{"code": c, "label": names.enum("risk_tier", c), "text": "；".join(by_tier[c]) if by_tier.get(c) else "以上都没有"}
+                  for c in ("high", "medium", "low")],
+    }
+
+
+def topic_view(ds, schema, labels, topic_id, version):
+    """一个题目五页要显示的内容。"""
+    m = B.build_model(ds, schema, labels, topic_id, version)
+    rows = {id(r): r["id"] for r in m["rows"]}
+    out = {
+        "topic_id": topic_id, "title": m["title"], "cutoff": m["cutoff"], "version": version, "stamp": B.stamp(m),
+        "notice": m["notice"], "source_count": m["source_count"],
+        "rows": [to_json({k: v for k, v in r.items() if k != "e"}, {}) for r in m["rows"]],
+        "filters": to_json(m["filters"], rows),
+        "issues": [[i.rule, B.s(i.record), i.message] for i in m["issues"]],
+    }
+    for key in ("compare", "overview", "gaps", "nonacademic"):
+        out[key] = to_json(m[key], rows)
+    out["errors"] = to_json(m["errors"], rows)   # 页面模型都算完才定：哪一页生成不了也记在这里
+    out["csv"] = B.evidence_csv(m)
+    return out
+
+
+def views(ds, schema, labels, version):
+    return {"format": FORMAT, "fields": field_titles(schema), "legend": legend(labels, schema), "sprite": to_json(B.sprite(), {}),
+            "views": [{"key": name, "code": code, "title": title, "question": q} for name, code, title, q in B.VIEWS],
+            "topics": [topic_view(ds, schema, labels, t, version) for t in A.topic_ids(ds)]}
