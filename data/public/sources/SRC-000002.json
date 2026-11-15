@@ -58,7 +58,7 @@
     "status_checked_at": "2026-11-15",
     "registered_by": "claude",
     "registered_at": "2026-11-15",
-    "notes": "方案附 B 试做名单第 10 篇。发布日期取首页印的上线日期（Available online 4 September 2023）。取得日期写的是 PDF 传进 Project 文件区的那天，成员下载的日期没有记。来源状态只看了 PDF 本身（没有印更正或撤稿的说明），没有到 Crossref 或出版商的页面查，待补查",
+    "notes": "方案附 B 试做名单第 10 篇。发布日期取首页印的上线日期（Available online 4 September 2023）。取得日期写的是 PDF 传进 Project 文件区的那天，成员下载的日期没有记。来源状态只看了 PDF 本身（没有印更正或撤稿的说明），没有到 Crossref 或出版商的页面查，待补查。ZW-60% 的自放电时间，结果部分写大于 840 h，摘要和结论写大于 800 h，Yu 2026-11-15 定只记 840",
     "id_check": {
       "result": "pass",
       "at": "2026-11-15",
@@ -1087,6 +1087,1321 @@
         "tier": "high",
         "reasons": [
           "figure_read",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
+    },
+    {
+      "id": "EV-000002-014",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "created_by": "claude",
+      "created_at": "2026-11-15",
+      "sample_label": "ZW-50%",
+      "subject_id": "ENT-000004",
+      "indicator": "cycle_number",
+      "level": "component",
+      "content_kind": "numeric",
+      "value_reported": "50",
+      "unit_reported": "cycles",
+      "value_std": 50.0,
+      "conditions": {
+        "current_density": {
+          "reported": "130 mA cm-2",
+          "value": 130,
+          "unit": "mA/cm2"
+        },
+        "vanadium_conc": {
+          "reported": "1.6 M mixture of V3+/V4+ electrolyte in 2 M H2SO4；V3.5+ in 2 M H2SO4",
+          "value": 1.6,
+          "unit": "mol/L"
+        },
+        "acid": {
+          "reported": "2 M H2SO4",
+          "value": "H2SO4 2 mol/L"
+        },
+        "temperature": {
+          "reported": "room temperature；temperature of 24 °C",
+          "value": 24,
+          "unit": "degC"
+        },
+        "electrode_area": {
+          "reported": "effective area of 5 cm2",
+          "value": 5,
+          "unit": "cm2"
+        },
+        "electrolyte_volume": {
+          "reported": "13 mL",
+          "value": 13,
+          "unit": "mL"
+        },
+        "cutoff_voltage": {
+          "reported": "1.7 V and 0.8 V",
+          "low": 0.8,
+          "high": 1.7,
+          "unit": "V"
+        },
+        "flow_rate": {
+          "reported": "20 mL min-1；40 mL min-1"
+        }
+      },
+      "conditions_locator": {
+        "page": "4",
+        "section": "2.5.5",
+        "text": "第 4 页，2.5.5 节（每侧体积、酸、流速、电流密度、温度）；电极面积 5 cm2 和截止电压 1.7 V、0.8 V 在同一节的前后几句；钒浓度 1.6 M 在第 2 页 2.1 节；图 3、图 4 的题注另写了 1.6 M、40 mL min-1、24 ℃"
+      },
+      "conditions_snippet": "volumes of 13 mL vanadium electrolyte\nsolution (V3.5+ in 2 M H2SO4) were used on both sides of the cell with a\ncirculation flow rate of 20 mL min− 1 using a dual-channel peristaltic\npump (BT600L, Zhengzhou Mingyi Instrument Equipment Co., Ltd). The\nanolyte was under continuous nitrogen flow and the cell was galva­\nnostatically charged-discharged at 130 mA cm− 2 for 50 cycles at room\ntemperature",
+      "evidence_type": "experimental",
+      "obtained_from": "text",
+      "locator": {
+        "page": "7",
+        "section": "3.2.2",
+        "text": "第 7 页，3.2.2 节，左栏第 1 段"
+      },
+      "snippet": "has been significantly reduced using ZW-40%, − 50% and − 60%\n(ranging from 1.14 to 1.33 %Qloss/cycle in 50 cycles)",
+      "internal_note": "片段里样品写成“− 50%”，即 ZW-50%。50 圈的做法见实验部分 2.5.5 节。条件取自实验部分 2.5.5 节。温度：实验部分写 room temperature，图 3、图 4 的题注写 24 ℃，value 取题注的 24。流速：实验部分写 20 mL min-1，题注写 40 mL min-1，两处不一致，只抄了 reported，没有写 value。钒浓度 1.6 M 出自 2.1 节（商品电解液）和题注。",
+      "source_id": "SRC-000002",
+      "entry_method": "ai",
+      "double_extraction": "resolved",
+      "obtained_at": "2026-11-15",
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "extraction_mismatch",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
+    },
+    {
+      "id": "EV-000002-015",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "created_by": "claude",
+      "created_at": "2026-11-15",
+      "sample_label": "ZW-40%",
+      "subject_id": "ENT-000004",
+      "indicator": "cycle_number",
+      "level": "component",
+      "content_kind": "numeric",
+      "value_reported": "50",
+      "unit_reported": "cycles",
+      "value_std": 50.0,
+      "conditions": {
+        "current_density": {
+          "reported": "130 mA cm-2",
+          "value": 130,
+          "unit": "mA/cm2"
+        },
+        "vanadium_conc": {
+          "reported": "1.6 M mixture of V3+/V4+ electrolyte in 2 M H2SO4；V3.5+ in 2 M H2SO4",
+          "value": 1.6,
+          "unit": "mol/L"
+        },
+        "acid": {
+          "reported": "2 M H2SO4",
+          "value": "H2SO4 2 mol/L"
+        },
+        "temperature": {
+          "reported": "room temperature；temperature of 24 °C",
+          "value": 24,
+          "unit": "degC"
+        },
+        "electrode_area": {
+          "reported": "effective area of 5 cm2",
+          "value": 5,
+          "unit": "cm2"
+        },
+        "electrolyte_volume": {
+          "reported": "13 mL",
+          "value": 13,
+          "unit": "mL"
+        },
+        "cutoff_voltage": {
+          "reported": "1.7 V and 0.8 V",
+          "low": 0.8,
+          "high": 1.7,
+          "unit": "V"
+        },
+        "flow_rate": {
+          "reported": "20 mL min-1；40 mL min-1"
+        }
+      },
+      "conditions_locator": {
+        "page": "4",
+        "section": "2.5.5",
+        "text": "第 4 页，2.5.5 节（每侧体积、酸、流速、电流密度、温度）；电极面积 5 cm2 和截止电压 1.7 V、0.8 V 在同一节的前后几句；钒浓度 1.6 M 在第 2 页 2.1 节；图 3、图 4 的题注另写了 1.6 M、40 mL min-1、24 ℃"
+      },
+      "conditions_snippet": "volumes of 13 mL vanadium electrolyte\nsolution (V3.5+ in 2 M H2SO4) were used on both sides of the cell with a\ncirculation flow rate of 20 mL min− 1 using a dual-channel peristaltic\npump (BT600L, Zhengzhou Mingyi Instrument Equipment Co., Ltd). The\nanolyte was under continuous nitrogen flow and the cell was galva­\nnostatically charged-discharged at 130 mA cm− 2 for 50 cycles at room\ntemperature",
+      "evidence_type": "experimental",
+      "obtained_from": "text",
+      "locator": {
+        "page": "7",
+        "section": "3.2.2",
+        "text": "第 7 页，3.2.2 节，左栏第 1 段"
+      },
+      "snippet": "has been significantly reduced using ZW-40%, − 50% and − 60%\n(ranging from 1.14 to 1.33 %Qloss/cycle in 50 cycles)",
+      "internal_note": "50 圈的做法见实验部分 2.5.5 节。条件取自实验部分 2.5.5 节。温度：实验部分写 room temperature，图 3、图 4 的题注写 24 ℃，value 取题注的 24。流速：实验部分写 20 mL min-1，题注写 40 mL min-1，两处不一致，只抄了 reported，没有写 value。钒浓度 1.6 M 出自 2.1 节（商品电解液）和题注。",
+      "source_id": "SRC-000002",
+      "entry_method": "ai",
+      "double_extraction": "resolved",
+      "obtained_at": "2026-11-15",
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "extraction_mismatch",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
+    },
+    {
+      "id": "EV-000002-016",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "created_by": "claude",
+      "created_at": "2026-11-15",
+      "sample_label": "N212",
+      "subject_id": "ENT-000003",
+      "indicator": "self_discharge_time",
+      "level": "component",
+      "content_kind": "numeric",
+      "value_reported": "67",
+      "unit_reported": "h",
+      "value_std": 67.0,
+      "conditions": {
+        "current_density": "not_applicable",
+        "vanadium_conc": {
+          "reported": "1.6 M V3+ as negative electrolyte and 1.6 M VO2+ as positive electrolyte",
+          "value": 1.6,
+          "unit": "mol/L"
+        },
+        "acid": {
+          "reported": "2 M H2SO4",
+          "value": "H2SO4 2 mol/L"
+        },
+        "temperature": {
+          "reported": "room temperature；temperature of 24 °C",
+          "value": 24,
+          "unit": "degC"
+        },
+        "electrode_area": {
+          "reported": "5 cm2",
+          "value": 5,
+          "unit": "cm2"
+        },
+        "electrolyte_volume": {
+          "reported": "13 mL",
+          "value": 13,
+          "unit": "mL"
+        },
+        "cutoff_voltage": "not_applicable"
+      },
+      "conditions_locator": {
+        "page": "4",
+        "section": "2.5.5",
+        "text": "第 4 页，2.5.5 节（电流密度、室温、截止电压）；同一节前面几句写了电极面积 5 cm2、每侧 13 mL、2 M H2SO4、流速 20 mL min-1；总钒浓度 1.6 M 见第 2 页 2.1 节和第 6、7 页图 3、图 4 的题注；24 °C 和 40 mL min-1 见图 3、图 4 的题注；自放电的做法在第 5 页 2.5.5 节最后一句"
+      },
+      "conditions_snippet": "The\nanolyte was under continuous nitrogen flow and the cell was galva­\nnostatically charged-discharged at 130 mA cm− 2 for 50 cycles at room\ntemperature using an 8-channel battery test system CT2001A (Landt\nInstruments) in the four-wire configuration. To avoid damage to the\nelectrodes, and to preserve the stability of the electrolyte, the upper and\nlower limit of cut-off voltages was set at 1.7 V and 0.8 V",
+      "evidence_type": "experimental",
+      "obtained_from": "text",
+      "locator": {
+        "page": "8",
+        "section": "3.2.2",
+        "text": "第 8 页，3.2.2 节，“The self-discharge using N212”一句"
+      },
+      "snippet": "The self-discharge using N212 was\n67 h (around three days)",
+      "scope_note": "充到 100% SoC 后开路放置的时间；原文没有写开路电压降到多少伏算结束（图 4b 的纵轴下端是 0.8 V）。",
+      "internal_note": "自放电是充到 100% SoC 之后开路放置，电流密度、充放电截止电压对这条数据说不通，写了不适用；充电只说 at a slow current rate，没有给数。钒浓度、酸、面积、体积取自实验部分的电池装置，温度取图 4 题注。流速原文两处不一致：实验部分写 20 mL min-1，图 3、图 4 的题注写 40 mL min-1，所以 flow_rate 只写了 reported、没有写 value。温度实验部分写 room temperature，题注写 24 °C，value 取题注的 24。字典里这项指标没有 flow_rate 这个条件键，流速没有写进 conditions。",
+      "source_id": "SRC-000002",
+      "entry_method": "ai",
+      "double_extraction": "resolved",
+      "obtained_at": "2026-11-15",
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "extraction_mismatch",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
+    },
+    {
+      "id": "EV-000002-017",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "created_by": "claude",
+      "created_at": "2026-11-15",
+      "sample_label": "ZW-60%",
+      "subject_id": "ENT-000004",
+      "indicator": "self_discharge_time",
+      "level": "component",
+      "content_kind": "numeric",
+      "value_reported": "840",
+      "unit_reported": "h",
+      "value_qualifier": "gt",
+      "value_std": 840.0,
+      "conditions": {
+        "current_density": "not_applicable",
+        "vanadium_conc": {
+          "reported": "1.6 M V3+ as negative electrolyte and 1.6 M VO2+ as positive electrolyte",
+          "value": 1.6,
+          "unit": "mol/L"
+        },
+        "acid": {
+          "reported": "2 M H2SO4",
+          "value": "H2SO4 2 mol/L"
+        },
+        "temperature": {
+          "reported": "room temperature；temperature of 24 °C",
+          "value": 24,
+          "unit": "degC"
+        },
+        "electrode_area": {
+          "reported": "5 cm2",
+          "value": 5,
+          "unit": "cm2"
+        },
+        "electrolyte_volume": {
+          "reported": "13 mL",
+          "value": 13,
+          "unit": "mL"
+        },
+        "cutoff_voltage": "not_applicable"
+      },
+      "conditions_locator": {
+        "page": "4",
+        "section": "2.5.5",
+        "text": "第 4 页，2.5.5 节（电流密度、室温、截止电压）；同一节前面几句写了电极面积 5 cm2、每侧 13 mL、2 M H2SO4、流速 20 mL min-1；总钒浓度 1.6 M 见第 2 页 2.1 节和第 6、7 页图 3、图 4 的题注；24 °C 和 40 mL min-1 见图 3、图 4 的题注；自放电的做法在第 5 页 2.5.5 节最后一句"
+      },
+      "conditions_snippet": "The\nanolyte was under continuous nitrogen flow and the cell was galva­\nnostatically charged-discharged at 130 mA cm− 2 for 50 cycles at room\ntemperature using an 8-channel battery test system CT2001A (Landt\nInstruments) in the four-wire configuration. To avoid damage to the\nelectrodes, and to preserve the stability of the electrolyte, the upper and\nlower limit of cut-off voltages was set at 1.7 V and 0.8 V",
+      "evidence_type": "experimental",
+      "obtained_from": "text",
+      "locator": {
+        "page": "8",
+        "section": "3.2.2",
+        "text": "第 8 页，3.2.2 节，“However, with ZW-60%”一句"
+      },
+      "snippet": "ZW-60%, the self-discharge remarkably took over 840 h (35 days)",
+      "scope_note": "充到 100% SoC 后开路放置的时间；原文没有写开路电压降到多少伏算结束（图 4b 的纵轴下端是 0.8 V）。",
+      "internal_note": "摘要写 more than 800 h，结论写 greater than 800 h，都是下限，和这里的 over 840 h 不矛盾，没有另记。自放电是充到 100% SoC 之后开路放置，电流密度、充放电截止电压对这条数据说不通，写了不适用；充电只说 at a slow current rate，没有给数。钒浓度、酸、面积、体积取自实验部分的电池装置，温度取图 4 题注。流速原文两处不一致：实验部分写 20 mL min-1，图 3、图 4 的题注写 40 mL min-1，所以 flow_rate 只写了 reported、没有写 value。温度实验部分写 room temperature，题注写 24 °C，value 取题注的 24。字典里这项指标没有 flow_rate 这个条件键，流速没有写进 conditions。",
+      "source_id": "SRC-000002",
+      "entry_method": "ai",
+      "double_extraction": "resolved",
+      "obtained_at": "2026-11-15",
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "extraction_mismatch",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables",
+          "qualified_value"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
+    },
+    {
+      "id": "EV-000002-018",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "created_by": "claude",
+      "created_at": "2026-11-15",
+      "sample_label": "N212",
+      "subject_id": "ENT-000003",
+      "indicator": "cell_area_resistance",
+      "level": "component",
+      "content_kind": "numeric",
+      "value_reported": "0.69",
+      "unit_reported": "ohm*cm2",
+      "value_std": 0.69,
+      "conditions": {
+        "current_density": {
+          "reported": "from 2 to 160 mA cm-2"
+        },
+        "vanadium_conc": {
+          "reported": "1.6 M mixture of V3+/V4+ electrolyte in 2 M H2SO4；V3.5+ in 2 M H2SO4",
+          "value": 1.6,
+          "unit": "mol/L"
+        },
+        "acid": {
+          "reported": "2 M H2SO4",
+          "value": "H2SO4 2 mol/L"
+        },
+        "temperature": {
+          "reported": "room temperature"
+        },
+        "electrode_area": {
+          "reported": "effective area of 5 cm2",
+          "value": 5,
+          "unit": "cm2"
+        },
+        "electrolyte_volume": {
+          "reported": "13 mL",
+          "value": 13,
+          "unit": "mL"
+        },
+        "cutoff_voltage": "not_applicable",
+        "method": {
+          "reported": "polarization curves; charged at 50 % of SoC and then polarized at different current rates, from 2 to 160 mA cm-2; R determined according to Ohm's law"
+        },
+        "cycle_index": {
+          "reported": "before cycling"
+        }
+      },
+      "conditions_locator": {
+        "page": "5",
+        "section": "2.5.5",
+        "text": "第 5 页，2.5.5 节左栏（测法、流速、电流范围、温度）；电解液 13 mL、2 M H2SO4 和电极面积 5 cm2 在第 4 页 2.5.5 节；钒浓度 1.6 M 在第 2 页 2.1 节"
+      },
+      "conditions_snippet": "Furthermore, the total resistance (R) of the cell was measured for\nboth N212 and the zwitterionic membranes by placing the samples into\nthe flow cell containing the vanadium electrolyte at a continuous flow\nrate of 20 mL min− 1. First, the cell was charged at 50 % of SoC and then\npolarized at different current rates, from 2 to 160 mA cm− 2, while the\naverage cell potential was simultaneously recorded for 1 min. The\nmeasurements were conducted at room temperature, and R can be\ndetermined according to Ohm’s law.",
+      "evidence_type": "experimental",
+      "obtained_from": "table",
+      "locator": {
+        "page": "6",
+        "table": "1",
+        "item": "第 1 行，循环前一列",
+        "text": "第 6 页，表 1，第 1 行，循环前的电阻"
+      },
+      "snippet": "N212           only SO-3          n/a             0.69             0.85",
+      "scope_note": "这是电池的总电阻（由极化曲线得到），不是膜自己的面电阻；循环测试之前测的。",
+      "internal_note": "表里样品写成 N212。电流密度是一段范围（极化时扫的），只抄了 reported；极化测试没有截止电压，写了不适用。循环前、循环后两条用 cycle_index 分开（字典里这项指标的可选条件没有列 cycle_index）。一行里有循环前、循环后两个数，片段是整行。",
+      "source_id": "SRC-000002",
+      "entry_method": "ai",
+      "double_extraction": "resolved",
+      "obtained_at": "2026-11-15",
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "extraction_mismatch",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
+    },
+    {
+      "id": "EV-000002-019",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "created_by": "claude",
+      "created_at": "2026-11-15",
+      "sample_label": "N212",
+      "subject_id": "ENT-000003",
+      "indicator": "cell_area_resistance",
+      "level": "component",
+      "content_kind": "numeric",
+      "value_reported": "0.85",
+      "unit_reported": "ohm*cm2",
+      "value_std": 0.85,
+      "conditions": {
+        "current_density": {
+          "reported": "from 2 to 160 mA cm-2"
+        },
+        "vanadium_conc": {
+          "reported": "1.6 M mixture of V3+/V4+ electrolyte in 2 M H2SO4；V3.5+ in 2 M H2SO4",
+          "value": 1.6,
+          "unit": "mol/L"
+        },
+        "acid": {
+          "reported": "2 M H2SO4",
+          "value": "H2SO4 2 mol/L"
+        },
+        "temperature": {
+          "reported": "room temperature"
+        },
+        "electrode_area": {
+          "reported": "effective area of 5 cm2",
+          "value": 5,
+          "unit": "cm2"
+        },
+        "electrolyte_volume": {
+          "reported": "13 mL",
+          "value": 13,
+          "unit": "mL"
+        },
+        "cutoff_voltage": "not_applicable",
+        "method": {
+          "reported": "polarization curves; charged at 50 % of SoC and then polarized at different current rates, from 2 to 160 mA cm-2; R determined according to Ohm's law"
+        },
+        "cycle_index": {
+          "reported": "after cycling"
+        }
+      },
+      "conditions_locator": {
+        "page": "5",
+        "section": "2.5.5",
+        "text": "第 5 页，2.5.5 节左栏（测法、流速、电流范围、温度）；电解液 13 mL、2 M H2SO4 和电极面积 5 cm2 在第 4 页 2.5.5 节；钒浓度 1.6 M 在第 2 页 2.1 节"
+      },
+      "conditions_snippet": "Furthermore, the total resistance (R) of the cell was measured for\nboth N212 and the zwitterionic membranes by placing the samples into\nthe flow cell containing the vanadium electrolyte at a continuous flow\nrate of 20 mL min− 1. First, the cell was charged at 50 % of SoC and then\npolarized at different current rates, from 2 to 160 mA cm− 2, while the\naverage cell potential was simultaneously recorded for 1 min. The\nmeasurements were conducted at room temperature, and R can be\ndetermined according to Ohm’s law.",
+      "evidence_type": "experimental",
+      "obtained_from": "table",
+      "locator": {
+        "page": "6",
+        "table": "1",
+        "item": "第 1 行，循环后一列",
+        "text": "第 6 页，表 1，第 1 行，循环后的电阻"
+      },
+      "snippet": "N212           only SO-3          n/a             0.69             0.85",
+      "scope_note": "这是电池的总电阻（由极化曲线得到），不是膜自己的面电阻；循环测试之后测的，原文没有写是多少圈之后。",
+      "internal_note": "表里样品写成 N212。电流密度是一段范围（极化时扫的），只抄了 reported；极化测试没有截止电压，写了不适用。循环前、循环后两条用 cycle_index 分开（字典里这项指标的可选条件没有列 cycle_index）。一行里有循环前、循环后两个数，片段是整行。",
+      "source_id": "SRC-000002",
+      "entry_method": "ai",
+      "double_extraction": "resolved",
+      "obtained_at": "2026-11-15",
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "extraction_mismatch",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
+    },
+    {
+      "id": "EV-000002-020",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "created_by": "claude",
+      "created_at": "2026-11-15",
+      "sample_label": "ZW-0%",
+      "subject_id": "ENT-000004",
+      "indicator": "cell_area_resistance",
+      "level": "component",
+      "content_kind": "numeric",
+      "value_reported": "1.57",
+      "unit_reported": "ohm*cm2",
+      "value_std": 1.57,
+      "conditions": {
+        "current_density": {
+          "reported": "from 2 to 160 mA cm-2"
+        },
+        "vanadium_conc": {
+          "reported": "1.6 M mixture of V3+/V4+ electrolyte in 2 M H2SO4；V3.5+ in 2 M H2SO4",
+          "value": 1.6,
+          "unit": "mol/L"
+        },
+        "acid": {
+          "reported": "2 M H2SO4",
+          "value": "H2SO4 2 mol/L"
+        },
+        "temperature": {
+          "reported": "room temperature"
+        },
+        "electrode_area": {
+          "reported": "effective area of 5 cm2",
+          "value": 5,
+          "unit": "cm2"
+        },
+        "electrolyte_volume": {
+          "reported": "13 mL",
+          "value": 13,
+          "unit": "mL"
+        },
+        "cutoff_voltage": "not_applicable",
+        "method": {
+          "reported": "polarization curves; charged at 50 % of SoC and then polarized at different current rates, from 2 to 160 mA cm-2; R determined according to Ohm's law"
+        },
+        "cycle_index": {
+          "reported": "before cycling"
+        }
+      },
+      "conditions_locator": {
+        "page": "5",
+        "section": "2.5.5",
+        "text": "第 5 页，2.5.5 节左栏（测法、流速、电流范围、温度）；电解液 13 mL、2 M H2SO4 和电极面积 5 cm2 在第 4 页 2.5.5 节；钒浓度 1.6 M 在第 2 页 2.1 节"
+      },
+      "conditions_snippet": "Furthermore, the total resistance (R) of the cell was measured for\nboth N212 and the zwitterionic membranes by placing the samples into\nthe flow cell containing the vanadium electrolyte at a continuous flow\nrate of 20 mL min− 1. First, the cell was charged at 50 % of SoC and then\npolarized at different current rates, from 2 to 160 mA cm− 2, while the\naverage cell potential was simultaneously recorded for 1 min. The\nmeasurements were conducted at room temperature, and R can be\ndetermined according to Ohm’s law.",
+      "evidence_type": "experimental",
+      "obtained_from": "table",
+      "locator": {
+        "page": "6",
+        "table": "1",
+        "item": "第 2 行，循环前一列",
+        "text": "第 6 页，表 1，第 2 行，循环前的电阻"
+      },
+      "snippet": "ZW-0               0              100             1.57             1.77",
+      "scope_note": "这是电池的总电阻（由极化曲线得到），不是膜自己的面电阻；循环测试之前测的。",
+      "internal_note": "表里样品写成 ZW-0。电流密度是一段范围（极化时扫的），只抄了 reported；极化测试没有截止电压，写了不适用。循环前、循环后两条用 cycle_index 分开（字典里这项指标的可选条件没有列 cycle_index）。一行里有循环前、循环后两个数，片段是整行。",
+      "source_id": "SRC-000002",
+      "entry_method": "ai",
+      "double_extraction": "resolved",
+      "obtained_at": "2026-11-15",
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "extraction_mismatch",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
+    },
+    {
+      "id": "EV-000002-021",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "created_by": "claude",
+      "created_at": "2026-11-15",
+      "sample_label": "ZW-0%",
+      "subject_id": "ENT-000004",
+      "indicator": "cell_area_resistance",
+      "level": "component",
+      "content_kind": "numeric",
+      "value_reported": "1.77",
+      "unit_reported": "ohm*cm2",
+      "value_std": 1.77,
+      "conditions": {
+        "current_density": {
+          "reported": "from 2 to 160 mA cm-2"
+        },
+        "vanadium_conc": {
+          "reported": "1.6 M mixture of V3+/V4+ electrolyte in 2 M H2SO4；V3.5+ in 2 M H2SO4",
+          "value": 1.6,
+          "unit": "mol/L"
+        },
+        "acid": {
+          "reported": "2 M H2SO4",
+          "value": "H2SO4 2 mol/L"
+        },
+        "temperature": {
+          "reported": "room temperature"
+        },
+        "electrode_area": {
+          "reported": "effective area of 5 cm2",
+          "value": 5,
+          "unit": "cm2"
+        },
+        "electrolyte_volume": {
+          "reported": "13 mL",
+          "value": 13,
+          "unit": "mL"
+        },
+        "cutoff_voltage": "not_applicable",
+        "method": {
+          "reported": "polarization curves; charged at 50 % of SoC and then polarized at different current rates, from 2 to 160 mA cm-2; R determined according to Ohm's law"
+        },
+        "cycle_index": {
+          "reported": "after cycling"
+        }
+      },
+      "conditions_locator": {
+        "page": "5",
+        "section": "2.5.5",
+        "text": "第 5 页，2.5.5 节左栏（测法、流速、电流范围、温度）；电解液 13 mL、2 M H2SO4 和电极面积 5 cm2 在第 4 页 2.5.5 节；钒浓度 1.6 M 在第 2 页 2.1 节"
+      },
+      "conditions_snippet": "Furthermore, the total resistance (R) of the cell was measured for\nboth N212 and the zwitterionic membranes by placing the samples into\nthe flow cell containing the vanadium electrolyte at a continuous flow\nrate of 20 mL min− 1. First, the cell was charged at 50 % of SoC and then\npolarized at different current rates, from 2 to 160 mA cm− 2, while the\naverage cell potential was simultaneously recorded for 1 min. The\nmeasurements were conducted at room temperature, and R can be\ndetermined according to Ohm’s law.",
+      "evidence_type": "experimental",
+      "obtained_from": "table",
+      "locator": {
+        "page": "6",
+        "table": "1",
+        "item": "第 2 行，循环后一列",
+        "text": "第 6 页，表 1，第 2 行，循环后的电阻"
+      },
+      "snippet": "ZW-0               0              100             1.57             1.77",
+      "scope_note": "这是电池的总电阻（由极化曲线得到），不是膜自己的面电阻；循环测试之后测的，原文没有写是多少圈之后。",
+      "internal_note": "表里样品写成 ZW-0。电流密度是一段范围（极化时扫的），只抄了 reported；极化测试没有截止电压，写了不适用。循环前、循环后两条用 cycle_index 分开（字典里这项指标的可选条件没有列 cycle_index）。一行里有循环前、循环后两个数，片段是整行。",
+      "source_id": "SRC-000002",
+      "entry_method": "ai",
+      "double_extraction": "resolved",
+      "obtained_at": "2026-11-15",
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "extraction_mismatch",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
+    },
+    {
+      "id": "EV-000002-022",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "created_by": "claude",
+      "created_at": "2026-11-15",
+      "sample_label": "ZW-40%",
+      "subject_id": "ENT-000004",
+      "indicator": "cell_area_resistance",
+      "level": "component",
+      "content_kind": "numeric",
+      "value_reported": "1.81",
+      "unit_reported": "ohm*cm2",
+      "value_std": 1.81,
+      "conditions": {
+        "current_density": {
+          "reported": "from 2 to 160 mA cm-2"
+        },
+        "vanadium_conc": {
+          "reported": "1.6 M mixture of V3+/V4+ electrolyte in 2 M H2SO4；V3.5+ in 2 M H2SO4",
+          "value": 1.6,
+          "unit": "mol/L"
+        },
+        "acid": {
+          "reported": "2 M H2SO4",
+          "value": "H2SO4 2 mol/L"
+        },
+        "temperature": {
+          "reported": "room temperature"
+        },
+        "electrode_area": {
+          "reported": "effective area of 5 cm2",
+          "value": 5,
+          "unit": "cm2"
+        },
+        "electrolyte_volume": {
+          "reported": "13 mL",
+          "value": 13,
+          "unit": "mL"
+        },
+        "cutoff_voltage": "not_applicable",
+        "method": {
+          "reported": "polarization curves; charged at 50 % of SoC and then polarized at different current rates, from 2 to 160 mA cm-2; R determined according to Ohm's law"
+        },
+        "cycle_index": {
+          "reported": "before cycling"
+        }
+      },
+      "conditions_locator": {
+        "page": "5",
+        "section": "2.5.5",
+        "text": "第 5 页，2.5.5 节左栏（测法、流速、电流范围、温度）；电解液 13 mL、2 M H2SO4 和电极面积 5 cm2 在第 4 页 2.5.5 节；钒浓度 1.6 M 在第 2 页 2.1 节"
+      },
+      "conditions_snippet": "Furthermore, the total resistance (R) of the cell was measured for\nboth N212 and the zwitterionic membranes by placing the samples into\nthe flow cell containing the vanadium electrolyte at a continuous flow\nrate of 20 mL min− 1. First, the cell was charged at 50 % of SoC and then\npolarized at different current rates, from 2 to 160 mA cm− 2, while the\naverage cell potential was simultaneously recorded for 1 min. The\nmeasurements were conducted at room temperature, and R can be\ndetermined according to Ohm’s law.",
+      "evidence_type": "experimental",
+      "obtained_from": "table",
+      "locator": {
+        "page": "6",
+        "table": "1",
+        "item": "第 3 行，循环前一列",
+        "text": "第 6 页，表 1，第 3 行，循环前的电阻"
+      },
+      "snippet": "ZW-40             40               60             1.81             2.10",
+      "scope_note": "这是电池的总电阻（由极化曲线得到），不是膜自己的面电阻；循环测试之前测的。",
+      "internal_note": "表里样品写成 ZW-40。电流密度是一段范围（极化时扫的），只抄了 reported；极化测试没有截止电压，写了不适用。循环前、循环后两条用 cycle_index 分开（字典里这项指标的可选条件没有列 cycle_index）。一行里有循环前、循环后两个数，片段是整行。",
+      "source_id": "SRC-000002",
+      "entry_method": "ai",
+      "double_extraction": "resolved",
+      "obtained_at": "2026-11-15",
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "extraction_mismatch",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
+    },
+    {
+      "id": "EV-000002-023",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "created_by": "claude",
+      "created_at": "2026-11-15",
+      "sample_label": "ZW-40%",
+      "subject_id": "ENT-000004",
+      "indicator": "cell_area_resistance",
+      "level": "component",
+      "content_kind": "numeric",
+      "value_reported": "2.10",
+      "unit_reported": "ohm*cm2",
+      "value_std": 2.1,
+      "conditions": {
+        "current_density": {
+          "reported": "from 2 to 160 mA cm-2"
+        },
+        "vanadium_conc": {
+          "reported": "1.6 M mixture of V3+/V4+ electrolyte in 2 M H2SO4；V3.5+ in 2 M H2SO4",
+          "value": 1.6,
+          "unit": "mol/L"
+        },
+        "acid": {
+          "reported": "2 M H2SO4",
+          "value": "H2SO4 2 mol/L"
+        },
+        "temperature": {
+          "reported": "room temperature"
+        },
+        "electrode_area": {
+          "reported": "effective area of 5 cm2",
+          "value": 5,
+          "unit": "cm2"
+        },
+        "electrolyte_volume": {
+          "reported": "13 mL",
+          "value": 13,
+          "unit": "mL"
+        },
+        "cutoff_voltage": "not_applicable",
+        "method": {
+          "reported": "polarization curves; charged at 50 % of SoC and then polarized at different current rates, from 2 to 160 mA cm-2; R determined according to Ohm's law"
+        },
+        "cycle_index": {
+          "reported": "after cycling"
+        }
+      },
+      "conditions_locator": {
+        "page": "5",
+        "section": "2.5.5",
+        "text": "第 5 页，2.5.5 节左栏（测法、流速、电流范围、温度）；电解液 13 mL、2 M H2SO4 和电极面积 5 cm2 在第 4 页 2.5.5 节；钒浓度 1.6 M 在第 2 页 2.1 节"
+      },
+      "conditions_snippet": "Furthermore, the total resistance (R) of the cell was measured for\nboth N212 and the zwitterionic membranes by placing the samples into\nthe flow cell containing the vanadium electrolyte at a continuous flow\nrate of 20 mL min− 1. First, the cell was charged at 50 % of SoC and then\npolarized at different current rates, from 2 to 160 mA cm− 2, while the\naverage cell potential was simultaneously recorded for 1 min. The\nmeasurements were conducted at room temperature, and R can be\ndetermined according to Ohm’s law.",
+      "evidence_type": "experimental",
+      "obtained_from": "table",
+      "locator": {
+        "page": "6",
+        "table": "1",
+        "item": "第 3 行，循环后一列",
+        "text": "第 6 页，表 1，第 3 行，循环后的电阻"
+      },
+      "snippet": "ZW-40             40               60             1.81             2.10",
+      "scope_note": "这是电池的总电阻（由极化曲线得到），不是膜自己的面电阻；循环测试之后测的，原文没有写是多少圈之后。",
+      "internal_note": "表里样品写成 ZW-40。电流密度是一段范围（极化时扫的），只抄了 reported；极化测试没有截止电压，写了不适用。循环前、循环后两条用 cycle_index 分开（字典里这项指标的可选条件没有列 cycle_index）。一行里有循环前、循环后两个数，片段是整行。",
+      "source_id": "SRC-000002",
+      "entry_method": "ai",
+      "double_extraction": "resolved",
+      "obtained_at": "2026-11-15",
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "extraction_mismatch",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
+    },
+    {
+      "id": "EV-000002-024",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "created_by": "claude",
+      "created_at": "2026-11-15",
+      "sample_label": "ZW-50%",
+      "subject_id": "ENT-000004",
+      "indicator": "cell_area_resistance",
+      "level": "component",
+      "content_kind": "numeric",
+      "value_reported": "1.68",
+      "unit_reported": "ohm*cm2",
+      "value_std": 1.68,
+      "conditions": {
+        "current_density": {
+          "reported": "from 2 to 160 mA cm-2"
+        },
+        "vanadium_conc": {
+          "reported": "1.6 M mixture of V3+/V4+ electrolyte in 2 M H2SO4；V3.5+ in 2 M H2SO4",
+          "value": 1.6,
+          "unit": "mol/L"
+        },
+        "acid": {
+          "reported": "2 M H2SO4",
+          "value": "H2SO4 2 mol/L"
+        },
+        "temperature": {
+          "reported": "room temperature"
+        },
+        "electrode_area": {
+          "reported": "effective area of 5 cm2",
+          "value": 5,
+          "unit": "cm2"
+        },
+        "electrolyte_volume": {
+          "reported": "13 mL",
+          "value": 13,
+          "unit": "mL"
+        },
+        "cutoff_voltage": "not_applicable",
+        "method": {
+          "reported": "polarization curves; charged at 50 % of SoC and then polarized at different current rates, from 2 to 160 mA cm-2; R determined according to Ohm's law"
+        },
+        "cycle_index": {
+          "reported": "before cycling"
+        }
+      },
+      "conditions_locator": {
+        "page": "5",
+        "section": "2.5.5",
+        "text": "第 5 页，2.5.5 节左栏（测法、流速、电流范围、温度）；电解液 13 mL、2 M H2SO4 和电极面积 5 cm2 在第 4 页 2.5.5 节；钒浓度 1.6 M 在第 2 页 2.1 节"
+      },
+      "conditions_snippet": "Furthermore, the total resistance (R) of the cell was measured for\nboth N212 and the zwitterionic membranes by placing the samples into\nthe flow cell containing the vanadium electrolyte at a continuous flow\nrate of 20 mL min− 1. First, the cell was charged at 50 % of SoC and then\npolarized at different current rates, from 2 to 160 mA cm− 2, while the\naverage cell potential was simultaneously recorded for 1 min. The\nmeasurements were conducted at room temperature, and R can be\ndetermined according to Ohm’s law.",
+      "evidence_type": "experimental",
+      "obtained_from": "table",
+      "locator": {
+        "page": "6",
+        "table": "1",
+        "item": "第 4 行，循环前一列",
+        "text": "第 6 页，表 1，第 4 行，循环前的电阻"
+      },
+      "snippet": "ZW-50             50               50             1.68             2.05",
+      "scope_note": "这是电池的总电阻（由极化曲线得到），不是膜自己的面电阻；循环测试之前测的。",
+      "internal_note": "表里样品写成 ZW-50。电流密度是一段范围（极化时扫的），只抄了 reported；极化测试没有截止电压，写了不适用。循环前、循环后两条用 cycle_index 分开（字典里这项指标的可选条件没有列 cycle_index）。一行里有循环前、循环后两个数，片段是整行。",
+      "source_id": "SRC-000002",
+      "entry_method": "ai",
+      "double_extraction": "resolved",
+      "obtained_at": "2026-11-15",
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "extraction_mismatch",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
+    },
+    {
+      "id": "EV-000002-025",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "created_by": "claude",
+      "created_at": "2026-11-15",
+      "sample_label": "ZW-50%",
+      "subject_id": "ENT-000004",
+      "indicator": "cell_area_resistance",
+      "level": "component",
+      "content_kind": "numeric",
+      "value_reported": "2.05",
+      "unit_reported": "ohm*cm2",
+      "value_std": 2.05,
+      "conditions": {
+        "current_density": {
+          "reported": "from 2 to 160 mA cm-2"
+        },
+        "vanadium_conc": {
+          "reported": "1.6 M mixture of V3+/V4+ electrolyte in 2 M H2SO4；V3.5+ in 2 M H2SO4",
+          "value": 1.6,
+          "unit": "mol/L"
+        },
+        "acid": {
+          "reported": "2 M H2SO4",
+          "value": "H2SO4 2 mol/L"
+        },
+        "temperature": {
+          "reported": "room temperature"
+        },
+        "electrode_area": {
+          "reported": "effective area of 5 cm2",
+          "value": 5,
+          "unit": "cm2"
+        },
+        "electrolyte_volume": {
+          "reported": "13 mL",
+          "value": 13,
+          "unit": "mL"
+        },
+        "cutoff_voltage": "not_applicable",
+        "method": {
+          "reported": "polarization curves; charged at 50 % of SoC and then polarized at different current rates, from 2 to 160 mA cm-2; R determined according to Ohm's law"
+        },
+        "cycle_index": {
+          "reported": "after cycling"
+        }
+      },
+      "conditions_locator": {
+        "page": "5",
+        "section": "2.5.5",
+        "text": "第 5 页，2.5.5 节左栏（测法、流速、电流范围、温度）；电解液 13 mL、2 M H2SO4 和电极面积 5 cm2 在第 4 页 2.5.5 节；钒浓度 1.6 M 在第 2 页 2.1 节"
+      },
+      "conditions_snippet": "Furthermore, the total resistance (R) of the cell was measured for\nboth N212 and the zwitterionic membranes by placing the samples into\nthe flow cell containing the vanadium electrolyte at a continuous flow\nrate of 20 mL min− 1. First, the cell was charged at 50 % of SoC and then\npolarized at different current rates, from 2 to 160 mA cm− 2, while the\naverage cell potential was simultaneously recorded for 1 min. The\nmeasurements were conducted at room temperature, and R can be\ndetermined according to Ohm’s law.",
+      "evidence_type": "experimental",
+      "obtained_from": "table",
+      "locator": {
+        "page": "6",
+        "table": "1",
+        "item": "第 4 行，循环后一列",
+        "text": "第 6 页，表 1，第 4 行，循环后的电阻"
+      },
+      "snippet": "ZW-50             50               50             1.68             2.05",
+      "scope_note": "这是电池的总电阻（由极化曲线得到），不是膜自己的面电阻；循环测试之后测的，原文没有写是多少圈之后。",
+      "internal_note": "表里样品写成 ZW-50。电流密度是一段范围（极化时扫的），只抄了 reported；极化测试没有截止电压，写了不适用。循环前、循环后两条用 cycle_index 分开（字典里这项指标的可选条件没有列 cycle_index）。一行里有循环前、循环后两个数，片段是整行。",
+      "source_id": "SRC-000002",
+      "entry_method": "ai",
+      "double_extraction": "resolved",
+      "obtained_at": "2026-11-15",
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "extraction_mismatch",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
+    },
+    {
+      "id": "EV-000002-026",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "created_by": "claude",
+      "created_at": "2026-11-15",
+      "sample_label": "ZW-60%",
+      "subject_id": "ENT-000004",
+      "indicator": "cell_area_resistance",
+      "level": "component",
+      "content_kind": "numeric",
+      "value_reported": "1.45",
+      "unit_reported": "ohm*cm2",
+      "value_std": 1.45,
+      "conditions": {
+        "current_density": {
+          "reported": "from 2 to 160 mA cm-2"
+        },
+        "vanadium_conc": {
+          "reported": "1.6 M mixture of V3+/V4+ electrolyte in 2 M H2SO4；V3.5+ in 2 M H2SO4",
+          "value": 1.6,
+          "unit": "mol/L"
+        },
+        "acid": {
+          "reported": "2 M H2SO4",
+          "value": "H2SO4 2 mol/L"
+        },
+        "temperature": {
+          "reported": "room temperature"
+        },
+        "electrode_area": {
+          "reported": "effective area of 5 cm2",
+          "value": 5,
+          "unit": "cm2"
+        },
+        "electrolyte_volume": {
+          "reported": "13 mL",
+          "value": 13,
+          "unit": "mL"
+        },
+        "cutoff_voltage": "not_applicable",
+        "method": {
+          "reported": "polarization curves; charged at 50 % of SoC and then polarized at different current rates, from 2 to 160 mA cm-2; R determined according to Ohm's law"
+        },
+        "cycle_index": {
+          "reported": "before cycling"
+        }
+      },
+      "conditions_locator": {
+        "page": "5",
+        "section": "2.5.5",
+        "text": "第 5 页，2.5.5 节左栏（测法、流速、电流范围、温度）；电解液 13 mL、2 M H2SO4 和电极面积 5 cm2 在第 4 页 2.5.5 节；钒浓度 1.6 M 在第 2 页 2.1 节"
+      },
+      "conditions_snippet": "Furthermore, the total resistance (R) of the cell was measured for\nboth N212 and the zwitterionic membranes by placing the samples into\nthe flow cell containing the vanadium electrolyte at a continuous flow\nrate of 20 mL min− 1. First, the cell was charged at 50 % of SoC and then\npolarized at different current rates, from 2 to 160 mA cm− 2, while the\naverage cell potential was simultaneously recorded for 1 min. The\nmeasurements were conducted at room temperature, and R can be\ndetermined according to Ohm’s law.",
+      "evidence_type": "experimental",
+      "obtained_from": "table",
+      "locator": {
+        "page": "6",
+        "table": "1",
+        "item": "第 5 行，循环前一列",
+        "text": "第 6 页，表 1，第 5 行，循环前的电阻"
+      },
+      "snippet": "ZW-60             60               40             1.45             1.57",
+      "scope_note": "这是电池的总电阻（由极化曲线得到），不是膜自己的面电阻；循环测试之前测的。",
+      "internal_note": "表里样品写成 ZW-60。电流密度是一段范围（极化时扫的），只抄了 reported；极化测试没有截止电压，写了不适用。循环前、循环后两条用 cycle_index 分开（字典里这项指标的可选条件没有列 cycle_index）。一行里有循环前、循环后两个数，片段是整行。",
+      "source_id": "SRC-000002",
+      "entry_method": "ai",
+      "double_extraction": "resolved",
+      "obtained_at": "2026-11-15",
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "extraction_mismatch",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
+    },
+    {
+      "id": "EV-000002-027",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "created_by": "claude",
+      "created_at": "2026-11-15",
+      "sample_label": "ZW-60%",
+      "subject_id": "ENT-000004",
+      "indicator": "cell_area_resistance",
+      "level": "component",
+      "content_kind": "numeric",
+      "value_reported": "1.57",
+      "unit_reported": "ohm*cm2",
+      "value_std": 1.57,
+      "conditions": {
+        "current_density": {
+          "reported": "from 2 to 160 mA cm-2"
+        },
+        "vanadium_conc": {
+          "reported": "1.6 M mixture of V3+/V4+ electrolyte in 2 M H2SO4；V3.5+ in 2 M H2SO4",
+          "value": 1.6,
+          "unit": "mol/L"
+        },
+        "acid": {
+          "reported": "2 M H2SO4",
+          "value": "H2SO4 2 mol/L"
+        },
+        "temperature": {
+          "reported": "room temperature"
+        },
+        "electrode_area": {
+          "reported": "effective area of 5 cm2",
+          "value": 5,
+          "unit": "cm2"
+        },
+        "electrolyte_volume": {
+          "reported": "13 mL",
+          "value": 13,
+          "unit": "mL"
+        },
+        "cutoff_voltage": "not_applicable",
+        "method": {
+          "reported": "polarization curves; charged at 50 % of SoC and then polarized at different current rates, from 2 to 160 mA cm-2; R determined according to Ohm's law"
+        },
+        "cycle_index": {
+          "reported": "after cycling"
+        }
+      },
+      "conditions_locator": {
+        "page": "5",
+        "section": "2.5.5",
+        "text": "第 5 页，2.5.5 节左栏（测法、流速、电流范围、温度）；电解液 13 mL、2 M H2SO4 和电极面积 5 cm2 在第 4 页 2.5.5 节；钒浓度 1.6 M 在第 2 页 2.1 节"
+      },
+      "conditions_snippet": "Furthermore, the total resistance (R) of the cell was measured for\nboth N212 and the zwitterionic membranes by placing the samples into\nthe flow cell containing the vanadium electrolyte at a continuous flow\nrate of 20 mL min− 1. First, the cell was charged at 50 % of SoC and then\npolarized at different current rates, from 2 to 160 mA cm− 2, while the\naverage cell potential was simultaneously recorded for 1 min. The\nmeasurements were conducted at room temperature, and R can be\ndetermined according to Ohm’s law.",
+      "evidence_type": "experimental",
+      "obtained_from": "table",
+      "locator": {
+        "page": "6",
+        "table": "1",
+        "item": "第 5 行，循环后一列",
+        "text": "第 6 页，表 1，第 5 行，循环后的电阻"
+      },
+      "snippet": "ZW-60             60               40             1.45             1.57",
+      "scope_note": "这是电池的总电阻（由极化曲线得到），不是膜自己的面电阻；循环测试之后测的，原文没有写是多少圈之后。",
+      "internal_note": "表里样品写成 ZW-60。电流密度是一段范围（极化时扫的），只抄了 reported；极化测试没有截止电压，写了不适用。循环前、循环后两条用 cycle_index 分开（字典里这项指标的可选条件没有列 cycle_index）。一行里有循环前、循环后两个数，片段是整行。",
+      "source_id": "SRC-000002",
+      "entry_method": "ai",
+      "double_extraction": "resolved",
+      "obtained_at": "2026-11-15",
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "extraction_mismatch",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
+    },
+    {
+      "id": "EV-000002-028",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "created_by": "claude",
+      "created_at": "2026-11-15",
+      "sample_label": "ZW-60%",
+      "subject_id": "ENT-000004",
+      "indicator": "post_cycling_membrane_change",
+      "level": "component",
+      "content_kind": "statement",
+      "summary": "在 130 mA/cm2 下循环 500 圈之后，膜的核磁共振氢谱和原始样品相比，分子结构没有变化。",
+      "conditions": {
+        "current_density": {
+          "reported": "130 mA cm-2",
+          "value": 130,
+          "unit": "mA/cm2"
+        },
+        "vanadium_conc": {
+          "reported": "1.6 M V3+ as negative electrolyte and 1.6 M VO2+ as positive electrolyte",
+          "value": 1.6,
+          "unit": "mol/L"
+        },
+        "acid": {
+          "reported": "2 M H2SO4",
+          "value": "H2SO4 2 mol/L"
+        },
+        "temperature": {
+          "reported": "room temperature；temperature of 24 °C",
+          "value": 24,
+          "unit": "degC"
+        },
+        "electrode_area": {
+          "reported": "5 cm2",
+          "value": 5,
+          "unit": "cm2"
+        },
+        "electrolyte_volume": {
+          "reported": "13 mL",
+          "value": 13,
+          "unit": "mL"
+        },
+        "cutoff_voltage": {
+          "reported": "1.7 V and 0.8 V",
+          "low": 0.8,
+          "high": 1.7,
+          "unit": "V"
+        }
+      },
+      "conditions_locator": {
+        "page": "4",
+        "section": "2.5.5",
+        "text": "第 4 页，2.5.5 节（电流密度、室温、截止电压）；同一节前面几句写了电极面积 5 cm2、每侧 13 mL、2 M H2SO4、流速 20 mL min-1；总钒浓度 1.6 M 见第 2 页 2.1 节和第 6、7 页图 3、图 4 的题注；24 °C 和 40 mL min-1 见图 3、图 4 的题注"
+      },
+      "conditions_snippet": "The\nanolyte was under continuous nitrogen flow and the cell was galva­\nnostatically charged-discharged at 130 mA cm− 2 for 50 cycles at room\ntemperature using an 8-channel battery test system CT2001A (Landt\nInstruments) in the four-wire configuration. To avoid damage to the\nelectrodes, and to preserve the stability of the electrolyte, the upper and\nlower limit of cut-off voltages was set at 1.7 V and 0.8 V",
+      "evidence_type": "experimental",
+      "obtained_from": "text",
+      "locator": {
+        "page": "9",
+        "section": "3.2.2",
+        "text": "第 9 页，3.2.2 节讲氧化稳定性的一段，“Similar 1H NMR results”一句"
+      },
+      "snippet": "Similar 1H NMR results were achieved after 500 cycles with no change in\nthe molecular structure compared to the pristine samples.",
+      "internal_note": "这一句没有点样品名；做了 500 圈的只有 ZW-60%，第 8 页图 5 的题注写明 (c) after VRFB test 是 ZW-60% 的谱。同一页上一段还说膜在 500 圈里 remained stable with no damage or cracks，是对 the membranes 说的，没有另记。流速原文两处不一致：实验部分写 20 mL min-1，图 3、图 4 的题注写 40 mL min-1，所以 flow_rate 只写了 reported、没有写 value。温度实验部分写 room temperature，题注写 24 °C，value 取题注的 24。字典里这项指标没有 flow_rate 这个条件键，流速没有写进 conditions。",
+      "source_id": "SRC-000002",
+      "entry_method": "ai",
+      "double_extraction": "resolved",
+      "obtained_at": "2026-11-15",
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "extraction_mismatch",
           "conditions_elsewhere",
           "multiple_samples_or_tables"
         ],
