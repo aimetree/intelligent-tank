@@ -200,6 +200,21 @@ def test_views_are_written_compact_and_without_unused_parts():
             assert fh.read() == text
 
 
+def test_required_jurisdictions_come_from_the_topic_card():
+    """法域表里必查的列：题目卡写了“必查的法域”就照它，没写照 D-96 的四个（Yu 2026-11-15 定）。"""
+    import test_dashboard as T
+    na = X.export(EXAMPLE, version="v")["views.json"]["topics"][0]["nonacademic"]
+    assert na["cols"] == ["中国", "英国", "欧盟", "美国", "国际组织和多国"] and na["cols_need"] == [True, True, True, True, False]
+    assert any(g["key"] == "jurisdiction" and "英国" in g["text"] for g in na["gaps"])
+    with T.example_copy() as data:
+        T.edit_json(data, "public/topics/TOP-000001/topic.json", lambda t: t.update(jurisdictions=["cn", "intl", "other"]))
+        na = X.export(data, version="v")["views.json"]["topics"][0]["nonacademic"]
+    assert na["cols"] == ["中国", "欧盟", "美国", "国际组织和多国", "其他"], "英国不必查、又没有来源，不列；欧盟、美国有来源照列"
+    assert na["cols_need"] == [True, False, False, True, True] and na["cols_empty"] == [False, False, False, False, True]
+    gap = next(g for g in na["gaps"] if g["key"] == "jurisdiction")
+    assert gap["text"] == "还没有来源的法域：其他。"
+
+
 def test_views_survive_broken_pages():
     """哪一页的数据坏到算不出来：这一页是 null，原因记在 errors 里，别的照出（和旧看板一样）。"""
     real = B.gaps_view.build

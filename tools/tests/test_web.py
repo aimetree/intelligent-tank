@@ -409,6 +409,19 @@ def test_gaps_and_nonacademic_hold_up_on_many_kinds_of_data():
     print(f"      两页在 {len(CASES) + 1} 份数据上都对得上")
 
 
+def test_required_jurisdictions_follow_the_topic_card():
+    with T.example_copy() as data:
+        T.edit_json(data, "public/topics/TOP-000001/topic.json", lambda t: t.update(jurisdictions=["cn", "intl", "other"]))
+        v = views_of(data)
+        with opened_web(data) as (go, page, seen):
+            go("non-academic")
+            cols = page.eval_on_selector_all(".jcol", "s => s.map(x => [x.textContent, x.classList.contains('warnword')])")
+            assert cols == [["中国", False], ["欧盟*", False], ["美国*", False], ["国际组织和多国", False], ["其他", True]], cols
+            assert "其他还没有来源" in page.inner_text("#by-jurisdiction")
+            check_nonacademic(page, v["nonacademic"])
+            assert seen["errors"] == []
+
+
 def test_banners_match_the_old_dashboard():
     """页面顶上的提示（示例数据、校验问题等）和旧看板逐个元素一样。"""
     ready()

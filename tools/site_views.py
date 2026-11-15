@@ -23,7 +23,6 @@ import access as A  # noqa: E402
 import build_dashboard as B  # noqa: E402
 import derive  # noqa: E402
 import textmatch  # noqa: E402
-import nonacademic_view as NA  # noqa: E402
 import topicdata as T  # noqa: E402
 import validate as V  # noqa: E402
 from display import TIER_HANDLING, Names, cls  # noqa: E402
@@ -213,7 +212,7 @@ def gaps_extras(view):
 
 def nonacademic_extras(view, names):
     """非学术来源：
-    每块有哪些来源类别（法域表里亮哪几行）；法域表的每一列是不是必查的（题目按 D-96 的四个法域问，没有来源的标出来）；
+    每块有哪些来源类别（法域表里亮哪几行）；法域表的每一列有没有来源（必查的列由 nonacademic_view 照题目卡定）；
     每张来源卡片挑三项放在最上面，其余照旧在“全部登记项目”里；政策法规的事项按来源分好。"""
     na = view.get("nonacademic")
     if not isinstance(na, dict):
@@ -228,8 +227,6 @@ def nonacademic_extras(view, names):
             by_label[x] = key
     for r in na.get("matrix") or []:
         r["block"] = by_label.get(r["type"], "")
-    need = {names.enum("jurisdiction", j) for j in NA.MAIN_JURISDICTIONS}
-    na["cols_need"] = [c in need for c in na.get("cols") or []]
     na["cols_empty"] = [not any(r["cells"][i] for r in na.get("matrix") or []) for i in range(len(na.get("cols") or []))]
     f = lambda part, key: names.field(part, key)   # noqa: E731
     pick = {

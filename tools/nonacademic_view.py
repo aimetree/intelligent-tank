@@ -13,7 +13,16 @@ import validate as V
 from display import NOT_FILLED, cls, fmt_num, s
 from htmlgen import el
 
-MAIN_JURISDICTIONS = ("cn", "uk", "eu", "us")   # 题目按这四个法域问（D-96）；国际和其他有来源才列
+MAIN_JURISDICTIONS = ("cn", "uk", "eu", "us")   # 题目卡没写“必查的法域”时照这四个（D-96）；别的有来源才列
+
+
+def required_jurisdictions(ds, topic_id):
+    """必查的法域：题目卡的 jurisdictions（Yu 2026-11-15 加），没写或写坏了就照 D-96 的四个。"""
+    t = A.topic(ds, topic_id)
+    got = t.get("jurisdictions") if isinstance(t, dict) else None
+    if isinstance(got, list) and got and all(isinstance(x, str) and x for x in got):
+        return tuple(dict.fromkeys(got))
+    return MAIN_JURISDICTIONS
 
 
 def doc_of(src):
@@ -207,7 +216,9 @@ def build(m, ds, topic_id):
     # 按法域：每一类来源有几个
     types = [k for k, _ in T.counted([s(src.get("source_type")) for _, src in mine], names.enum_order("source_type"))]
     used = {s(src.get("jurisdiction")) for _, src in mine}
-    cols = [j for j in names.enum_order("jurisdiction") if j in MAIN_JURISDICTIONS or j in used] + (["" ] if "" in used else [])
+    need = required_jurisdictions(ds, topic_id)
+    order = list(names.enum_order("jurisdiction")) + [j for j in need if j not in names.enum_order("jurisdiction")]
+    cols = [j for j in order if j in need or j in used] + (["" ] if "" in used else [])
     matrix = [{"type": names.enum("source_type", t) or NOT_FILLED,
                "cells": [sum(1 for _, src in mine if s(src.get("source_type")) == t and s(src.get("jurisdiction")) == j) for j in cols]} for t in types]
 
@@ -222,7 +233,7 @@ def build(m, ds, topic_id):
     for b in blocks:
         if not b["n"]:
             gaps.append({"key": f"empty_{b['key']}", "text": f"{b['title']}：这一批里还没有来源。", "ids": []})
-    none = [names.enum("jurisdiction", j) for j in MAIN_JURISDICTIONS if j not in used]
+    none = [names.enum("jurisdiction", j) or j for j in need if j not in used]
     if none and mine:
         gaps.append({"key": "jurisdiction", "text": f"还没有来源的法域：{'、'.join(none)}。", "ids": []})
     for code, label in (("abstract_only", "只读到摘要的"), ("metadata_only", "只有题录、没有读到内容的")):
@@ -241,7 +252,8 @@ def build(m, ds, topic_id):
     if waiting:
         gaps.append({"key": "not_verified", "text": f"还没有人工核对、不能进报告的证据 {len(waiting)} 条：", "ids": waiting})
 
-    return {"blocks": blocks, "matrix": matrix, "cols": [names.enum("jurisdiction", j) or NOT_FILLED for j in cols],
+    return {"blocks": blocks, "matrix": matrix, "cols": [names.enum("jurisdiction", j) or j or NOT_FILLED for j in cols],
+            "cols_need": [j in need for j in cols],
             "by_status": by_status, "evidence_total": len(all_rows), "checks": checks, "stale": stale,
             "events": events_of(policy["sources"]), "market": market_groups(market["rows"], ds, names),
             "market_waiting": [r["id"] for r in market["rows"] if r["status"] not in V.VERIFIED],
