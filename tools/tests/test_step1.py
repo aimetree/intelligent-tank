@@ -365,6 +365,10 @@ COMPARE_CASES = [
      "mismatch", "conditions.temperature"),
     ("一遍写了未报告", lambda p: _by_sample(p, "X-0")["conditions"].__setitem__("temperature", "not_reported"),
      "mismatch", "conditions.temperature"),
+    ("一遍解析出了条件的值，另一遍只照抄了原文", lambda p: _by_sample(p, "X-0")["conditions"].__setitem__("temperature", {"reported": "25 °C"}),
+     "mismatch", "conditions.temperature"),
+    ("文字条件一遍写了，另一遍写未报告", lambda p: _by_sample(p, "X-0")["conditions"].__setitem__("electrode", {"reported": "carbon felt"}),
+     "mismatch", "conditions.electrode"),
     ("限定符不一样", lambda p: _by_sample(p, "P-212").__setitem__("value_qualifier", "approx"), "mismatch", "value_qualifier"),
     ("出处不在同一张表", lambda p: _by_sample(p, "P-212")["locator"].__setitem__("table", "3"), "mismatch", "locator.table"),
     ("数值挂到了另一个样品上", lambda p: _by_sample(p, "X-1").update(sample_label="X-9"), "mismatch", "sample_label"),
@@ -385,6 +389,22 @@ def test_compare_reports_each_difference():
         if len(hit) != 1 or (field and field not in fields) or report["summary"]["mismatch_rate"] <= 0:
             missed.append(f"{name}：{report['summary']}，报出的字段 {sorted(fields)}")
     assert not missed, missed
+
+
+def test_compare_ignores_wording_of_text_conditions():
+    """文字条件两遍各自照抄的那一小段不一样长，不算不一致；写成规范一句的（有 value）照样逐字比。"""
+    p1, p2 = a_pass(), a_pass()
+    for p, words in ((p1, "carbon felt (XF-30A)"), (p2, "two pieces of carbon felt electrodes")):
+        for r in p:
+            if r.get("conditions"):
+                r["conditions"]["electrode"] = {"reported": words}
+    s = X.compare(p1, p2)["summary"]
+    assert (s["mismatch"], s["only_pass1"], s["only_pass2"], s["mismatch_rate"]) == (0, 0, 0, 0.0), s
+    for p, value in ((p1, "H2SO4 3 mol/L"), (p2, "H2SO4 2 mol/L")):
+        _by_sample(p, "X-1")["conditions"]["acid"] = {"reported": "in sulfuric acid", "value": value}
+    report = X.compare(p1, p2)
+    assert report["summary"]["mismatch"] == 1, report["summary"]
+    assert {d["field"] for d in report["mismatch"][0]["differences"]} == {"conditions.acid"}
 
 
 def test_compare_figure_readings_and_statements():
