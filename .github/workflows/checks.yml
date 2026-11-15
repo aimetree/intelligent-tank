@@ -68,6 +68,8 @@ jobs:
         run: python3 tools/tests/test_access.py
       - name: 迁移脚本的测试
         run: python3 tools/tests/test_migrate.py
+      - name: 核对单的测试
+        run: python3 tools/tests/test_verify.py
       - name: 导出给网页前端的数据文件的测试
         run: python3 tools/tests/test_export.py
       - name: 用仓库里的 data/ 生成看板
