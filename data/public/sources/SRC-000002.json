@@ -58,7 +58,12 @@
     "status_checked_at": "2026-11-15",
     "registered_by": "claude",
     "registered_at": "2026-11-15",
-    "notes": "方案附 B 试做名单第 10 篇。发布日期取首页印的上线日期（Available online 4 September 2023）。取得日期写的是 PDF 传进 Project 文件区的那天，成员下载的日期没有记。来源状态只看了 PDF 本身（没有印更正或撤稿的说明），没有到 Crossref 或出版商的页面查，待补查"
+    "notes": "方案附 B 试做名单第 10 篇。发布日期取首页印的上线日期（Available online 4 September 2023）。取得日期写的是 PDF 传进 Project 文件区的那天，成员下载的日期没有记。来源状态只看了 PDF 本身（没有印更正或撤稿的说明），没有到 Crossref 或出版商的页面查，待补查",
+    "id_check": {
+      "result": "pass",
+      "at": "2026-11-15",
+      "method": "doi_registry"
+    }
   },
   "samples": [
     {
