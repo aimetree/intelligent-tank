@@ -208,7 +208,10 @@ def test_required_jurisdictions_come_from_the_topic_card():
     assert any(g["key"] == "jurisdiction" and "英国" in g["text"] for g in na["gaps"])
     with T.example_copy() as data:
         T.edit_json(data, "public/topics/TOP-000001/topic.json", lambda t: t.update(jurisdictions=["cn", "intl", "other"]))
+        assert V.validate(V.load_dataset(data), V.load_schema()) == [], "规格 0.4 起题目卡可以写必查的法域"
         na = X.export(data, version="v")["views.json"]["topics"][0]["nonacademic"]
+        T.edit_json(data, "public/topics/TOP-000001/topic.json", lambda t: t.update(jurisdictions=["cn", "xx"]))
+        assert [i.rule for i in V.validate(V.load_dataset(data), V.load_schema())] == ["V-03"], "取值不在法域的枚举里要报"
     assert na["cols"] == ["中国", "欧盟", "美国", "国际组织和多国", "其他"], "英国不必查、又没有来源，不列；欧盟、美国有来源照列"
     assert na["cols_need"] == [True, False, False, True, True] and na["cols_empty"] == [False, False, False, False, True]
     gap = next(g for g in na["gaps"] if g["key"] == "jurisdiction")

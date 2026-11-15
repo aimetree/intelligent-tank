@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:intelligent-tank:schema:0.3",
-  "title": "Intelligent Tank 数据结构 v0.3",
-  "description": "对应 docs/03_技术与开发/数据结构_字段规格_v0.3.md。每类对象是 $defs 里的一项；各文件用哪一项见 data/README.md。这里只管字段名、类型、枚举和录入时就必填的字段；带条件的要求和跨记录的规则在 tools/validate.py 里。",
+  "$id": "urn:intelligent-tank:schema:0.4",
+  "title": "Intelligent Tank 数据结构 v0.4",
+  "description": "对应 docs/03_技术与开发/数据结构_字段规格_v0.4.md（v0.4 是 v0.3 加一项，正文仍看 数据结构_字段规格_v0.3.md）。每类对象是 $defs 里的一项；各文件用哪一项见 data/README.md。这里只管字段名、类型、枚举和录入时就必填的字段；带条件的要求和跨记录的规则在 tools/validate.py 里。",
   "$defs": {
     "id_TOP": {
       "type": "string",
@@ -2244,6 +2244,16 @@
             "$ref": "#/$defs/enum_source_type"
           },
           "minItems": 1
+        },
+        "jurisdictions": {
+          "type": "array",
+          "title": "必查的法域",
+          "items": {
+            "$ref": "#/$defs/enum_jurisdiction"
+          },
+          "minItems": 1,
+          "uniqueItems": true,
+          "description": "非学术来源要系统地收的法域。网页的法域表照这一项列，没有来源的标出来；别的法域有来源才列。不写就照 D-96：中国、英国、欧盟、美国"
         },
         "facets": {
           "type": "array",

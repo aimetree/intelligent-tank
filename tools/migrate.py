@@ -62,6 +62,7 @@ def _nothing_to_change(files):
 # 每改一次 schema 加一步，接在最后。前一步的 target 就是后一步的 source；最后一步的 target 是 schema 现在的版本。
 STEPS = [
     Step("0.2", "0.3", "规格正文补上已经认可的六处做法，并写明版本和迁移的规矩；数据的写法没有变", _nothing_to_change),
+    Step("0.3", "0.4", "题目卡加可选的“必查的法域”（jurisdictions）；数据的写法没有变", _nothing_to_change),
 ]
 
 

@@ -27,6 +27,9 @@
   "evidence_source_types": [
     "<必填：paper｜review｜preprint｜thesis｜supplement｜erratum｜patent｜datasheet｜company_web｜filing｜policy｜standard｜consultancy_report｜government_report｜funder_report｜grant_record｜institution_report｜metadata_db｜open_database｜news｜client_material｜other>"
   ],
+  "jurisdictions": [
+    "<cn｜uk｜eu｜us｜intl｜other>"
+  ],
   "facets": [
     {
       "key": "<必填：键，英文小写加下划线>",
