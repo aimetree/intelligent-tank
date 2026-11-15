@@ -247,9 +247,8 @@ def build_page(ds, source_id, data_version):
         path = os.path.join(V.DEFAULT_DATA, "labels.json")
     with open(path, encoding="utf-8") as f:
         all_labels = json.load(f)
-    for group in all_labels.values():
-        if isinstance(group, dict) and "figure_read" in group and "extraction_mismatch" in group:
-            labels = {k: (v.get("zh") if isinstance(v, dict) else v) for k, v in group.items()}
+    for k, v in ((all_labels.get("enums") or {}).get("risk_reason") or {}).items():
+        labels[k] = (v.get("zh") or v.get("name_zh") or k) if isinstance(v, dict) else str(v)
     data = {"source_id": source_id, "data_version": data_version, "rows": rows}
     title = f"核对单 {source_id}（只留内部）"
     sub = f"{src.get('title', '')}｜{src.get('container', '')}｜等着核对的 {len(rows)} 条，其中图上读数 {sum(1 for r in rows if r['figure'])} 条｜数据版本 {data_version}"
