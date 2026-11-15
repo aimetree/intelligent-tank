@@ -35,7 +35,7 @@ import validate as V  # noqa: E402
 
 # 读数据要走这里的脚本（tools/tests/test_access.py 照这张单子查它们有没有自己去翻 ds）
 USERS = ("build_dashboard.py", "compare_view.py", "overview_view.py", "gaps_view.py", "nonacademic_view.py",
-         "topicdata.py", "derive.py", "report_export.py", "review_sheet.py")
+         "topicdata.py", "derive.py", "report_export.py", "review_sheet.py", "export_site_data.py")
 
 # 能按编号问“有没有”的几类记录（exists 用）
 KINDS = ("topics", "sources", "entities", "evidence", "relations", "comparisons", "assessments", "reports", "reviews")
@@ -92,6 +92,16 @@ def source(ds, source_id):
 def samples(ds, source_id):
     """这个来源自己的样品登记，照登记的次序；它没有登记时是 None（补充材料用所属论文的，见 lookups().register_of）。"""
     return ds["samples"].get(source_id)
+
+
+def entity_ids(ds):
+    """全部实体的编号，按编号排。"""
+    return _ids(ds["entities"])
+
+
+def spec_version(ds):
+    """数据写的规格版本（meta.json）。"""
+    return (ds.get("meta") or {}).get("spec_version")
 
 
 def entity(ds, entity_id):
