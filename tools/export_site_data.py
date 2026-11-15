@@ -113,7 +113,11 @@ def main(argv=None):
     files = export(args.data, args.audience, args.version)
     os.makedirs(args.out, exist_ok=True)
     for name, content in files.items():
-        store.write_json(os.path.join(args.out, name), content)
+        if name == "views.json":
+            with open(os.path.join(args.out, name), "w", encoding="utf-8") as f:
+                f.write(site_views.dumps(content))
+        else:
+            store.write_json(os.path.join(args.out, name), content)
     c = files["meta.json"]["counts"]
     print(f"写出 {len(files)} 个文件到 {args.out}（给 {args.audience} 看）：来源 {c['sources']}、证据 {c['evidence']}、"
           f"实体 {c['entities']}、可比组 {c['comparisons']}；数据版本 {files['meta.json']['data_version']}")

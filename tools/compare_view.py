@@ -321,9 +321,11 @@ def series_models(level, rows, lk, names, rules, stamp):
             name, xname = names._name(ind, key), names.condition(xkey)
             title = f"{name}随{xname}的变化｜{sid}｜同一批测试 {series}"
             xunit = names.unit((names.conditions.get(xkey) or {}).get("unit_std"))
-            chart = charts.xy_chart([{"points": lines[k]["points"], "connect": True} for k in order],
-                                    axis_label(xname, xunit), axis_label(name, names.unit(ind.get("unit_std"))), title)
-            out.append({"title": title, "chart": chart,
+            x_label, y_label = axis_label(xname, xunit), axis_label(name, names.unit(ind.get("unit_std")))
+            chart = charts.xy_chart([{"points": lines[k]["points"], "connect": True} for k in order], x_label, y_label, title)
+            # 图的数也一起给出去：网页前端照这些自己画（颜色跟着深浅色走），报告里用上面画好的 chart
+            out.append({"title": title, "chart": chart, "x_label": x_label, "y_label": y_label,
+                        "lines": [{"label": lines[k]["label"], "points": lines[k]["points"]} for k in order],
                         "caption": f"对象数 {len(order)}｜图上 {len(items)} 个点｜同一个样品的点连成线，不同样品之间不连｜"
                                    f"筛选：{names.enum('level', level)}，{name}，{sid}｜{stamp}"})
     return out

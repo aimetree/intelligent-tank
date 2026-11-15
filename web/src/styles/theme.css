@@ -322,3 +322,5 @@ summary::before { content: "▸"; font-size: 10px; color: var(--mute); }
 details[open] > summary::before { content: "▾"; }
 summary::-webkit-details-marker { display: none; }
 ::placeholder { color: var(--mute); opacity: 1; }
+.chart .line { stroke: var(--accent); }
+.chart .line.base { stroke: var(--text); }

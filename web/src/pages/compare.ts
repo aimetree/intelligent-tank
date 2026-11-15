@@ -237,13 +237,57 @@ function derived(lv: Level): Kid {
         el('td', { class: 'num' }, `${d.tested} 个`)))))));
 }
 
+/** 同一批测试里随条件变化：同一个样品的点按横坐标连起来，不同样品之间不连。数由 Python 给（compare_view.series_models），
+    这里照 tools/charts.py 的 xy_chart 的画法画，颜色跟着深浅色走 */
+function xyChart(s: Level['series'][number]) {
+  const W = 760;
+  const H = 380;
+  const left = 70;
+  const right = 28;
+  const top = 34;
+  const bottom = 54;
+  const pts = s.lines.flatMap((l) => l.points);
+  const sx = scaleFor(pts.map((p) => p.x), left, W - right);
+  const sy = scaleFor([...pts.map((p) => p.y), ...pts.flatMap((p) => p.y_err || [])], H - bottom, top);
+  const placed: Array<[number, number]> = [];
+  const marks = [...pts].sort((a, b) => a.x - b.x || a.y - b.y || String(a.label || '').localeCompare(String(b.label || ''))).map((p) => {
+    const x = sx(p.x);
+    const y = sy(p.y);
+    let ly = y - 10;
+    if (p.label && placed.some(([lx, py]) => Math.abs(lx - x) < 90 && Math.abs(py - ly) < 13)) ly = y + 20;
+    if (p.label) placed.push([x, ly]);
+    const cls = p.role === 'baseline' ? 'pt base' : p.solid ? 'pt' : 'pt hollow';
+    return el('a', { href: p.href, 'aria-label': p.title, 'data-evidence': p.evidence },
+      el('title', null, p.title),
+      p.y_err ? el('line', { class: 'stem', x1: x.toFixed(1), x2: x.toFixed(1), y1: sy(p.y_err[0]).toFixed(1), y2: sy(p.y_err[1]).toFixed(1),
+        'stroke-width': 1.4, 'stroke-dasharray': p.dashed ? '3 2' : null }) : null,
+      el('circle', { cx: x.toFixed(1), cy: y.toFixed(1), r: 13, fill: 'transparent' }),
+      el('circle', { class: cls, cx: x.toFixed(1), cy: y.toFixed(1), r: 6 }),
+      p.label ? el('text', { class: 'val', x: (x + 10).toFixed(1), y: ly.toFixed(1) }, p.label) : null);
+  });
+  return el('svg', { class: 'chart', viewBox: `0 0 ${W} ${H}`, role: 'group', 'aria-label': s.title },
+    el('text', { class: 'sublab', x: 0, y: 14 }, s.y_label),
+    sx.ticks.map((t) => [el('line', { class: 'grid', x1: sx(t).toFixed(1), x2: sx(t).toFixed(1), y1: top, y2: H - bottom }),
+      el('text', { class: 'axis', x: sx(t).toFixed(1), y: H - bottom + 18, 'text-anchor': 'middle' }, sx.label(t))]),
+    sy.ticks.map((t) => [el('line', { class: 'grid', x1: left, x2: W - right, y1: sy(t).toFixed(1), y2: sy(t).toFixed(1) }),
+      el('text', { class: 'axis', x: left - 8, y: (sy(t) + 4).toFixed(1), 'text-anchor': 'end' }, sy.label(t))]),
+    el('text', { class: 'sublab', x: (left + W - right) / 2, y: H - 10, 'text-anchor': 'middle' }, s.x_label),
+    s.lines.map((l) => {
+      const ordered = [...l.points].sort((a, b) => a.x - b.x || a.y - b.y);
+      if (ordered.length < 2) return null;
+      return el('polyline', { class: ordered[0].role === 'baseline' ? 'line base' : 'line', fill: 'none', 'stroke-width': 2,
+        'stroke-linejoin': 'round', 'stroke-linecap': 'round', points: ordered.map((p) => `${sx(p.x).toFixed(1)},${sy(p.y).toFixed(1)}`).join(' ') });
+    }),
+    marks);
+}
+
 function series(lv: Level): Kid {
   if (!lv.series.length) return null;
-  // 这几张图由 tools/charts.py 画好，和报告里的同一份；颜色是浅底的，深色下也放在浅底上
-  return el('details', { class: 'panel' }, el('summary', { style: 'cursor: pointer; font-size: 13px; font-weight: 600; color: var(--sub)' },
-    `同一批测试里随条件变化（${lv.series.length} 张图）`),
-  lv.series.map((s) => el('figure', { style: 'margin: 12px 0 0; background: #FFFFFF; border-radius: 8px; padding: 8px' }, s.chart,
-    el('figcaption', { class: 'small', style: 'color: #374151' }, s.caption))));
+  return el('section', { class: 'panel', 'aria-label': '同一批测试里随条件变化' },
+    el('h2', null, '同一批测试里随条件变化 ', el('span', { class: 'aside' }, '· 同一个样品的点连成线，不同样品之间不连')),
+    lv.series.map((s) => el('figure', { style: 'margin: 0 0 12px' },
+      el('div', { style: 'font-size: 13px; font-weight: 500' }, s.title), xyChart(s),
+      el('figcaption', { class: 'small mute' }, s.caption))));
 }
 
 export const CompareView = defineComponent({

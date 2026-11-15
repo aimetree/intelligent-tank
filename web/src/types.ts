@@ -170,7 +170,6 @@ export interface Group {
   notes: Array<[string, string]>;
   columns: Column[];
   same: Array<[string, string, string]>;
-  chart: Html | null;
   skipped: Array<[string, string]>;
   caption: string;
   reviews: Review[];
@@ -180,12 +179,29 @@ export interface MatrixCell {
   label: string;
   groups: string[];
 }
+export interface SeriesPoint {
+  x: number;
+  y: number;
+  type: string;
+  solid: boolean;
+  role: string;
+  href: string;
+  dashed: boolean;
+  title: string;
+  evidence: string;
+  y_err: [number, number] | null;
+  label?: string;
+}
+export interface SeriesLine {
+  label: string;
+  points: SeriesPoint[];
+}
 export interface Level {
   code: string;
   label: string;
   groups: Group[];
   matrix: { objects: Obj[]; cells: Pairs<MatrixCell> };
-  series: Array<{ title: string; chart: Html; caption: string }>;
+  series: Array<{ title: string; caption: string; x_label: string; y_label: string; lines: SeriesLine[] }>;
   derived: Array<{
     indicator: string;
     source_id: string;

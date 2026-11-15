@@ -51,6 +51,8 @@ export function matches(row: Row, filters: Record<string, string>, query = '', s
 const MAIN_FACETS: Array<[string, string]> = [['status', '核验状态'], ['level', '层级'], ['type', '证据类型'], ['srctype', '来源类别']];
 const MORE_FACETS: Array<[string, string]> = [['tier', '可比档'], ['risk', '风险档'], ['measure', '指标或事实项'], ['subject', '对象'], ['source', '来源'], ['vis', '可见范围']];
 const SHOW_ITEMS = 6;
+// 表里一次先画这么多行，多的点“再显示”：证据上千条时，换页、筛选、选中都不用重画上千行
+export const PAGE_ROWS = 200;
 
 function facet(v: TopicView, key: string, name: string, open: Record<string, boolean>) {
   const options: FilterOption[] = v.filters[key] || [];
@@ -231,6 +233,7 @@ export const EvidenceView = defineComponent({
   setup(props) {
     const open = reactive<Record<string, boolean>>({});
     const more = ref(false);
+    const limit = ref(PAGE_ROWS);
     const copyNote = ref('');
     const copyText = ref('');
     const download = ref('');
@@ -271,6 +274,8 @@ export const EvidenceView = defineComponent({
       }
       const rows = shown.value;
       const sel = view.rows.find((r) => r.id === state.selected);
+      const selAt = sel ? rows.indexOf(sel) : -1;
+      const drawn = rows.slice(0, Math.max(limit.value, selAt + 1));
       const filtered = Object.keys(state.filters).length > 0 || !!state.query;
       return el('section', attrs,
         el('div', { class: 'ev-layout' },
@@ -296,7 +301,10 @@ export const EvidenceView = defineComponent({
                 el('thead', null, el('tr', null,
                   el('th', { style: 'padding-left: 16px' }, el('span', { class: 'vh' }, '核验状态')), el('th', null, '对象'), el('th', null, '指标'),
                   el('th', null, '数值'), el('th', null, '条件'), el('th', { style: 'padding-right: 16px' }, '可比'))),
-                el('tbody', null, rows.map((r) => h(EvRow, { key: r.id, row: r, span: spans.value.get(r.measure_key) || null }))))),
+                el('tbody', null, drawn.map((r) => h(EvRow, { key: r.id, row: r, span: spans.value.get(r.measure_key) || null }))))),
+            drawn.length < rows.length ? el('div', { style: 'padding: 12px 16px; display: flex; gap: 12px; align-items: center' },
+              h('button', { type: 'button', class: 'btn', id: 'ev-more', onClick: () => { limit.value += PAGE_ROWS; } }, `再显示 ${Math.min(PAGE_ROWS, rows.length - drawn.length)} 条`),
+              el('span', { class: 'small mute' }, `已显示 ${drawn.length} / ${rows.length} 条；复制和下载用的是全部`)) : null,
             rows.length ? null : el('p', { class: 'empty-note', id: 'ev-empty', style: 'padding: 16px' }, '没有符合筛选条件的证据。')),
           el('aside', { class: 'side', 'aria-label': sel ? `${sel.id} 的详情` : '详情', id: 'ev-side' }, detail(sel, props.ctx))));
     };

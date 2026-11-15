@@ -197,6 +197,77 @@ def test_compare_points_and_ratios_match_the_data():
         assert seen["errors"] == []
 
 
+def test_series_chart_points_match_the_data():
+    v = views_of()
+    levels = [lv for lv in v["compare"]["levels"] if lv["series"]]
+    assert levels, "示例数据里应该有“随条件变化”的图"
+    with opened_web() as (go, page, seen):
+        go("compare")
+        for lv in levels:
+            if lv["groups"]:
+                page.click(f"[data-level-tab='{lv['code']}']")
+            figs = page.eval_on_selector_all("section[aria-label='同一批测试里随条件变化'] figure", """fs => fs.map(f => ({
+                points: [...f.querySelectorAll('svg a[data-evidence]')].map(a => a.dataset.evidence).sort(),
+                lines: f.querySelectorAll('svg polyline.line').length }))""")
+            assert len(figs) == len(lv["series"]), figs
+            for f, s in zip(figs, lv["series"]):
+                want = sorted(p["evidence"] for line in s["lines"] for p in line["points"])
+                assert f["points"] == want, (f, want)
+                assert f["lines"] == sum(1 for line in s["lines"] if len(line["points"]) > 1), "一个样品两个点以上才连线"
+        stroke = lambda: page.eval_on_selector("section[aria-label='同一批测试里随条件变化'] polyline.line", "l => getComputedStyle(l).stroke")
+        light = stroke()
+        page.click("#theme-toggle")
+        assert page.get_attribute("html", "data-theme") == "dark" and stroke() != light, "深色下的线跟着主题色换"
+        assert seen["errors"] == []
+
+
+def bigger(tmp, k):
+    """把示例数据复制成大的一份：每个来源复制 k 份，编号换掉、样品名加后缀。用来测证据多了以后页面怎么分批画。"""
+    import re
+    out = os.path.join(tmp, "big")
+    shutil.copytree(EXAMPLE, out)
+    sdir = os.path.join(out, "public", "sources")
+    orig = sorted(f[:-5] for f in os.listdir(sdir))
+    texts = {s: open(os.path.join(sdir, s + ".json"), encoding="utf-8").read() for s in orig}
+    pat = re.compile("|".join(re.escape(s) for s in orig) + "|" + "|".join(re.escape("EV-" + s[4:] + "-") for s in orig))
+    for i in range(1, k + 1):
+        to = {s: f"SRC-{int(s[4:]) + 1000 * i:06d}" for s in orig}
+        for s, text in texts.items():
+            new = pat.sub(lambda m: to[m.group(0)] if m.group(0).startswith("SRC") else "EV-" + to["SRC-" + m.group(0)[3:9]][4:] + "-", text)
+            new = new.replace('"label": "X-1"', f'"label": "X-1·{i}"').replace('"sample_label": "X-1"', f'"sample_label": "X-1·{i}"')
+            with open(os.path.join(sdir, to[s] + ".json"), "w", encoding="utf-8") as fh:
+                fh.write(new)
+    return out
+
+
+def test_many_rows_are_drawn_in_batches():
+    with tempfile.TemporaryDirectory() as tmp:
+        data = bigger(tmp, 20)
+        v = views_of(data)
+        ids = [r["id"] for r in v["rows"]]
+        assert len(ids) > 200
+        with opened_web(data) as (go, page, seen):
+            go("evidence")
+            assert visible_rows(page) == ids[:200], "先画 200 行"
+            assert "再显示" in page.inner_text("#ev-more")
+            go(ids[-1])
+            T.wait_until(page, "id => !!document.getElementById(id)", ids[-1])
+            assert page.get_attribute(f"tr#{ids[-1]}", "aria-selected") == "true", "跳到排在后面的证据也找得到"
+            assert visible_rows(page) == ids, "为了显示选中的那条，前面的也都画出来"
+            go("evidence")
+            page.click("tr.ev-row .pick")
+            page.click("#ev-more")
+            assert visible_rows(page) == ids[:400], "再显示 200 条"
+            go("overview")
+            cov = v["overview"]["coverage"]["rows"]
+            assert len(cov) > 40
+            heads = lambda: page.eval_on_selector_all("#coverage .heat .rowhead", "r => r.length")
+            assert heads() == 40, "覆盖图先画 40 张膜"
+            page.click("#heat-all")
+            assert heads() == len(cov)
+            assert seen["errors"] == []
+
+
 def test_overview_steps_and_coverage_match_the_data():
     v = views_of()
     model = v["overview"]

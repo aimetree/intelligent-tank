@@ -4,6 +4,7 @@ import json
 import os
 import re
 import sys
+import subprocess
 import tempfile
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -180,6 +181,23 @@ def test_field_titles_follow_the_schema():
     assert f["evidence"]["snippet"] == names.field("evidence", "snippet")
     assert f["review"]["items.decision"] == names.field("review", "items", "decision")
     assert f["review"]["batch.decision"] == names.field("review", "batch", "decision")
+
+
+def test_views_are_written_compact_and_without_unused_parts():
+    import site_views
+    files = X.export(EXAMPLE, version="v")
+    text = site_views.dumps(files["views.json"])
+    assert "\n" not in text.rstrip("\n") and ": " not in text[:200], "views.json 不缩进"
+    assert json.loads(text) == files["views.json"] and text == site_views.dumps(X.export(EXAMPLE, version="v")["views.json"])
+    cmp = files["views.json"]["topics"][0]["compare"]
+    assert all("chart" not in g for lv in cmp["levels"] for g in lv["groups"])
+    assert all("chart" not in s and s["lines"] for lv in cmp["levels"] for s in lv["series"])
+    assert all("rows" not in b and "sources" not in b for b in files["views.json"]["topics"][0]["nonacademic"]["blocks"])
+    with tempfile.TemporaryDirectory() as tmp:
+        subprocess.run([sys.executable, os.path.join(os.path.dirname(HERE), "export_site_data.py"), "--data", EXAMPLE, "--out", tmp, "--version", "v"],
+                       check=True, capture_output=True)
+        with open(os.path.join(tmp, "views.json"), encoding="utf-8") as fh:
+            assert fh.read() == text
 
 
 def test_views_survive_broken_pages():

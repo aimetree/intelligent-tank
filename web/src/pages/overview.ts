@@ -1,7 +1,7 @@
 /* 总览（K1），A 2.0：上面一排是五个数；核验的四步（点一步，覆盖图只亮到这一步及以上）；
    覆盖热力图（膜 × 核心指标，格子的深浅是核得最深的那一条，指着看是哪条，点了去那条证据）；最近的变化。
    来源怎么读的、工时与成本收在“更多”里。数都由 Python 算好（views.json 的 overview）。只数、只摆，不评价。 */
-import { defineComponent, type PropType } from 'vue';
+import { defineComponent, h, reactive, type PropType } from 'vue';
 import { el, type Kid } from '../el';
 import { NOT_FILLED } from '../names';
 import { state } from '../state';
@@ -15,6 +15,9 @@ export function facetText(mem: Membrane): string {
 
 const STEPS: Array<[number, string]> = [[1, '录入'], [2, '机器已核'], [3, '人工已核'], [4, '专业已复核']];
 const CELL_DEPTH: Record<string, number> = { ...DEPTH, unknown: 1 };
+// 覆盖图一次先画这么多张膜，多的点“显示全部”
+export const HEAT_ROWS = 40;
+const heatState = reactive({ all: false });
 
 function steps(model: OverviewModel) {
   const counts = Object.fromEntries(model.status.map(([code, , n]) => [code, n]));
@@ -48,7 +51,8 @@ function heat(model: OverviewModel, ctx: Ctx) {
   }
   let hovered: { mem: Membrane; col: string; c: CovCell } | null = null;
   const grid: Kid[] = [el('span'), cov.cols.map((g) => el('span', { class: 'colhead', title: g.label }, g.label, ' ', el('span', { class: 'mute' }, `· ${names.enum('level', g.level) || NOT_FILLED}`)))];
-  for (const r of cov.rows) {
+  const drawnRows = heatState.all ? cov.rows : cov.rows.slice(0, HEAT_ROWS);
+  for (const r of drawnRows) {
     const mem = r.mem;
     grid.push(el('span', { class: 'rowhead', title: `${mem.label}｜${facetText(mem)}` }, mem.label, ' ',
       el('span', null, mem.kind === 'lab' ? mem.source_id : '商业产品')));
@@ -88,6 +92,8 @@ function heat(model: OverviewModel, ctx: Ctx) {
         el('span', null, el('i', { style: 'border: 1.5px dashed var(--mute)' }), '待核'),
         el('span', null, el('i', { style: 'background: repeating-linear-gradient(45deg, var(--track) 0 2px, var(--surface) 2px 4px); border: 1px solid var(--border)' }), '原文没写'))),
     el('div', { class: 'heat', style: `grid-template-columns: minmax(120px, 170px) repeat(${cov.cols.length}, minmax(64px, 1fr))` }, grid),
+    drawnRows.length < cov.rows.length ? h('button', { type: 'button', class: 'btn', id: 'heat-all', style: 'margin-top: 8px', onClick: () => { heatState.all = true; } },
+      `显示全部 ${cov.rows.length} 张膜`) : null,
     el('div', { class: 'hoverline', role: 'status' }, line),
     skipped ? el('div', { class: 'small mute', style: 'margin-top: 6px' }, `没有单列：${skipped}`) : null);
 }

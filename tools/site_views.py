@@ -12,6 +12,7 @@ Yu 2026-11-15 定（选“甲”）：五页要显示的内容照旧由看板的
 - 元组写成数组，集合写成排好序的数组。别的类型一律报错，免得悄悄丢了东西。
 同一份数据写出来逐字节相同。
 """
+import json
 import os
 import sys
 from html.parser import HTMLParser
@@ -170,6 +171,26 @@ def row_extras(row, names):
     return {"num": num, "unit": unit, "mark": snippet_mark(row.get("snippet"), e.get("value_reported"))}
 
 
+# 页面模型里有几样网页前端用不着、又很占地方，导出时去掉（证据多了以后 views.json 会大好几倍）：
+# 对标视图里 Python 画好的图（前端照成员和点的数自己画，颜色跟着深浅色走；报告里的图照旧由 tools/charts.py 出）；
+# 非学术来源页每一块的整份来源登记和证据行（前端只用卡片、条数和编号）。
+def prune(view):
+    cmp = view.get("compare") or {}
+    for lv in cmp.get("levels") or []:
+        for g in lv.get("groups") or []:
+            g.pop("chart", None)
+        for s in lv.get("series") or []:
+            s.pop("chart", None)
+    for b in (view.get("nonacademic") or {}).get("blocks") or []:
+        b.pop("rows", None)
+        b.pop("sources", None)
+
+
+def dumps(views):
+    """views.json 不缩进：证据几百条时，缩进的写法要大两三倍。同一份数据写出来逐字节相同。"""
+    return json.dumps(views, ensure_ascii=False, separators=(",", ":")) + "\n"
+
+
 def topic_view(ds, schema, labels, topic_id, version):
     """一个题目五页要显示的内容。"""
     m = B.build_model(ds, schema, labels, topic_id, version)
@@ -183,6 +204,7 @@ def topic_view(ds, schema, labels, topic_id, version):
     }
     for key in ("compare", "overview", "gaps", "nonacademic"):
         out[key] = to_json(m[key], rows)
+    prune(out)
     out["errors"] = to_json(m["errors"], rows)   # 页面模型都算完才定：哪一页生成不了也记在这里
     out["csv"] = B.evidence_csv(m)
     return out
