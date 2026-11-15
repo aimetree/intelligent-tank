@@ -1,1 +1,54 @@
-[]
+[
+  {
+    "id": "ENT-000001",
+    "entity_type": "material_class",
+    "name": "聚苯并咪唑（PBI）",
+    "name_en": "Polybenzimidazole (PBI)",
+    "aliases": [
+      "PBI",
+      "polybenzimidazole",
+      "meta-PBI",
+      "mPBI"
+    ],
+    "facets": {
+      "material_family": "pbi"
+    },
+    "identity_status": "candidate",
+    "visibility": "external",
+    "notes": "材料族。Claude 2026-11-15 登记试做第一篇时建的，待 Kai 定稿材料族时确认（D-81）"
+  },
+  {
+    "id": "ENT-000002",
+    "entity_type": "material_class",
+    "name": "全氟磺酸（PFSA）",
+    "name_en": "Perfluorosulfonic acid (PFSA)",
+    "aliases": [
+      "PFSA",
+      "perfluorosulfonic acid"
+    ],
+    "facets": {
+      "material_family": "pfsa"
+    },
+    "identity_status": "candidate",
+    "visibility": "external",
+    "notes": "材料族，商业基准膜所属的类别。Claude 2026-11-15 建，待确认（D-81）"
+  },
+  {
+    "id": "ENT-000003",
+    "entity_type": "product",
+    "name": "Nafion 212",
+    "aliases": [],
+    "class_id": "ENT-000002",
+    "identifiers": {
+      "model": "Nafion 212"
+    },
+    "facets": {
+      "fluorine_class": "perfluorinated",
+      "fluorine_basis": "structure",
+      "conduction_type": "cation_exchange"
+    },
+    "identity_status": "candidate",
+    "visibility": "external",
+    "notes": "商业膜的型号，名称照 SRC-000001 的写法。含氟类别和传导类型照 SRC-000001 引言的说法（Nafion 是全氟磺酸聚合物，是阳离子交换膜）。生产厂家、别的写法（N212、NR212）等读到写明的来源再补，关系带出处（D-49）"
+  }
+]

@@ -54,8 +54,13 @@ def find_snippet(snippet, text):
 
 
 def _prep(text):
-    """数值比对之前：规范化，再把乘号两边的空格去掉（1.2 × 10-7 和 1.2×10-7 是一回事；x 当乘号用的也算）。"""
-    return re.sub(r"\s*[x×]\s*(?=10)", "×", norm(text))
+    """数值比对之前：规范化，再把乘号两边的空格去掉（1.2 × 10-7 和 1.2×10-7 是一回事；x 当乘号用的也算）。
+
+    PDF 抽出来的文本里上标成了普通的字：记录里写的 10^4 在片段里是 104，指数的负号后面还常多一个空格（10− 7）。
+    所以两边都把指数前的 ^ 去掉，把 10- 7 接成 10-7。"""
+    t = re.sub(r"\s*[x×]\s*(?=10)", "×", norm(text))
+    t = re.sub(r"(?<=×10)\^", "", t)
+    return re.sub(r"(?<=×10)-\s+(?=\d)", "-", t)
 
 
 def find_value(value, snippet):
@@ -113,7 +118,9 @@ def unit_key(expr):
 
 def unit_after(prepared, end, accepted):
     """prepared[end:] 开头是不是一个认得的单位。accepted 是 {规范键: 单位代码}。认得就返回单位代码。"""
-    words = prepared[end:end + 48].lstrip().lstrip("([").split(" ")[:4]
+    # PDF 里上标的负号后面常多出一个空格：mS cm- 1 接成 mS cm-1（只接字母后面的负号，数的范围 10 - 12 不动）
+    tail = re.sub(r"(?<=[A-Za-z])-\s+(?=\d)", "-", prepared[end:end + 48])
+    words = tail.lstrip().lstrip("([").split(" ")[:4]
     for n in range(len(words), 0, -1):
         key = unit_key(" ".join(words[:n]).rstrip(".,;:)]"))
         if key and key in accepted:
