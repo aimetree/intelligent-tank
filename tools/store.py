@@ -77,6 +77,27 @@ def append_jsonl(path, record):
         f.write(lead + json.dumps(record, ensure_ascii=False) + "\n")
 
 
+def stage(ds, coll, record):
+    """把一条新记录先放进内存里的数据，还没有写进文件：后面的校验和编号分配看得到它。
+    写进文件用 save_topic（给 new_ids）或 save_sources。"""
+    ds[coll][record["id"]] = record
+
+
+def stage_log(ds, log):
+    """工作记录先在内存里加一条，还没有写进文件。写进文件用 append_worklog。"""
+    ds["worklog"].append(log)
+
+
+def append_worklog(ds, log):
+    """在工作记录的文件末尾加这一条。"""
+    append_jsonl(os.path.join(ds["dir"], "worklog.jsonl"), log)
+
+
+def has_file(ds, source_id):
+    """这个来源是不是从它自己的文件里读进来的（是的话 save_sources 才写得回去）。"""
+    return source_id in ds["files"]
+
+
 def save_sources(ds, source_ids):
     """把这些来源的文件写回去（来源登记、样品登记和证据在同一个文件里）。
 

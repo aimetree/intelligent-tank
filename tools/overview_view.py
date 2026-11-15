@@ -7,6 +7,7 @@
 - 最近的变化、来源是怎么读的、工时与成本：首版只显示累计数，明细页（变化记录、质量与成本、来源与许可）后做（D-31）。
 只数、只摆，不评价（D-60）。
 """
+import access as A
 import topicdata as T
 from display import NOT_FILLED, as_text, cls, fmt_num, s
 from htmlgen import el
@@ -29,7 +30,7 @@ def tiles(m, ds, topic_id, sources, membranes):
     by_type = T.counted([s(src.get("source_type")) for _, src, _ in inc], names.enum_order("source_type"))
     labs = sum(1 for x in membranes if x["kind"] == "lab")
     ev_types = T.counted([r["type"] for r in live], names.enum_order("evidence_type"))
-    groups = [c for c in ds["comparisons"].values() if isinstance(c, dict) and c.get("topic_id") == topic_id]
+    groups = [A.comparison(ds, cid) for cid in A.comparison_ids(ds, topic_id)]
     tiers = T.counted([s(c.get("tier")) for c in groups], names.enum_order("tier"))
     disputed = [r for r in live if r["status"] == "disputed"]
     void = len(rows) - len(live)
@@ -95,7 +96,7 @@ def recent(m, ds, topic_id, sources):
     for key, order, label in (("verified_at", 1, "人工核对"), ("expert_reviewed_at", 2, "专业复核")):
         for d, n in sorted(tally(r["e"].get(key) for r in m["rows"]).items()):
             events.append((d, order, [f"{label}过了 {n} 条。"]))
-    for i, c in enumerate(ds["changes"]):
+    for i, c in enumerate(A.changes(ds)):
         if not isinstance(c, dict) or not isinstance(c.get("date"), str):
             continue
         target = s(c.get("target_id"))
@@ -136,7 +137,7 @@ def reading(m, sources):
 def effort(m, ds, topic_id):
     """工时与成本的累计数：人做的按步骤加分钟数；AI 的加费用。没记的照实说没记，不估。"""
     names = m["names"]
-    logs = [w for w in ds["worklog"] if isinstance(w, dict) and w.get("topic_id") == topic_id]
+    logs = [w for w in A.worklog(ds) if isinstance(w, dict) and w.get("topic_id") == topic_id]
     minutes, unrecorded, cost, ai_runs, ai_unpriced = {}, 0, {}, 0, 0
     for w in logs:
         if w.get("actor_kind") == "human":

@@ -31,6 +31,7 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
+import access as A  # noqa: E402
 import compare_view  # noqa: E402
 import gaps_view  # noqa: E402
 import nonacademic_view  # noqa: E402
@@ -69,19 +70,15 @@ class Refs:
     def __init__(self, ds, topic_id):
         self.groups, self.asm_direct, self.asm_via, self.changes, self.corrected_by = {}, {}, {}, {}, {}
         members_of = {}
-        for cid in sorted(ds["comparisons"]):
-            c = ds["comparisons"][cid]
-            if not isinstance(c, dict) or c.get("topic_id") != topic_id:
-                continue
+        for cid in A.comparison_ids(ds, topic_id):
+            c = A.comparison(ds, cid)
             members_of[cid] = []
             for m in c.get("members") or []:
                 if isinstance(m, dict) and isinstance(m.get("evidence_id"), str):
                     self.groups.setdefault(m["evidence_id"], []).append((c, m))
                     members_of[cid].append(m["evidence_id"])
-        for aid in sorted(ds["assessments"]):
-            a = ds["assessments"][aid]
-            if not isinstance(a, dict) or a.get("topic_id") != topic_id:
-                continue
+        for aid in A.assessment_ids(ds, topic_id):
+            a = A.assessment(ds, aid)
             basis = [b for b in a.get("basis") or [] if isinstance(b, str)]
             for b in basis:
                 if b in members_of:
@@ -90,11 +87,11 @@ class Refs:
                             self.asm_via.setdefault(eid, []).append((aid, b))
                 elif aid not in self.asm_direct.get(b, []):
                     self.asm_direct.setdefault(b, []).append(aid)
-        for c in ds["changes"]:
+        for c in A.changes(ds):
             if isinstance(c, dict) and isinstance(c.get("target_id"), str):
                 self.changes.setdefault(c["target_id"], []).append(c)
-        for sid in sorted(ds["sources"]):
-            src = ds["sources"][sid]
+        for sid in A.source_ids(ds):
+            src = A.source(ds, sid)
             if isinstance(src, dict) and isinstance(src.get("corrects"), str):
                 self.corrected_by.setdefault(src["corrects"], []).append(sid)
 
@@ -303,7 +300,7 @@ def evidence_row(e, ds, names, refs):
     row = blank_row(eid)
     row["e"] = e
 
-    ent = ds["entities"].get(e["subject_id"]) if isinstance(e.get("subject_id"), str) else None
+    ent = A.entity(ds, e["subject_id"]) if isinstance(e.get("subject_id"), str) else None
     row["subject_id"] = s(e.get("subject_id"))
     if isinstance(ent, dict) and ent.get("name"):
         row["subject"] = s(ent["name"])
@@ -328,7 +325,7 @@ def evidence_row(e, ds, names, refs):
         row["value"], row["value_flag"] = NOT_FILLED, True
     row["conditions"] = condition_items(e, measure, names)
 
-    src = ds["sources"].get(e["source_id"]) if isinstance(e.get("source_id"), str) else None
+    src = A.source(ds, e["source_id"]) if isinstance(e.get("source_id"), str) else None
     row["source_id"] = s(e.get("source_id"))
     if isinstance(src, dict):
         row["source_type"] = s(src.get("source_type"))
@@ -419,11 +416,12 @@ def filter_options(rows, key, order, label_of):
 
 
 def build_model(ds, schema, labels, topic_id, version, lang="zh"):
-    topic = ds["topics"][topic_id]
-    names = Names(labels, ds["dictionaries"].get(topic_id), schema, lang)
+    topic = A.topic(ds, topic_id)
+    if topic is None:
+        raise KeyError(topic_id)
+    names = Names(labels, A.dictionary(ds, topic_id), schema, lang)
     refs = Refs(ds, topic_id)
-    evs = sorted((e for e in ds["evidence"].values() if isinstance(e, dict) and e.get("topic_id") == topic_id),
-                 key=lambda e: ev_sort_key(e.get("id")))
+    evs = sorted((A.evidence(ds, eid) for eid in A.evidence_ids(ds, topic_id)), key=lambda e: ev_sort_key(e.get("id")))
     ids = {s(e.get("id")) for e in evs}
     rows, errors = [], []
     for e in evs:
@@ -444,7 +442,7 @@ def build_model(ds, schema, labels, topic_id, version, lang="zh"):
         return lambda c: none if c == NONE else names.enum(group, c)
 
     def subject_label(c):
-        ent = ds["entities"].get(c)
+        ent = A.entity(ds, c)
         return s(ent.get("name")) if isinstance(ent, dict) and ent.get("name") else (NOT_FILLED if c == NONE else c)
 
     def measure_label(c):
@@ -453,7 +451,7 @@ def build_model(ds, schema, labels, topic_id, version, lang="zh"):
         return NOT_FILLED if c == NONE else names._name(table.get(key), key)
 
     def source_label(c):
-        src = ds["sources"].get(c)
+        src = A.source(ds, c)
         title = s(src.get("title")) if isinstance(src, dict) else ""
         return NOT_FILLED if c == NONE else (f"{c}　{title}" if title else c)
 
@@ -473,7 +471,7 @@ def build_model(ds, schema, labels, topic_id, version, lang="zh"):
     }
     m = {
         "topic_id": topic_id, "title": s(topic.get("title")) or topic_id, "cutoff": s(topic.get("cutoff_date")),
-        "version": version, "notice": s((ds.get("meta") or {}).get("note")),
+        "version": version, "notice": s(A.note(ds)),
         "names": names, "rows": rows, "ids": ids, "filters": filters, "issues": issues, "errors": errors,
         "source_count": len({r["source_id"] for r in rows if r["source_id"]}),
     }
@@ -980,14 +978,14 @@ def build(data_dir, out_dir, topic_id=None, version=None, labels_path=None, stri
     if not os.path.isdir(data_dir):
         log(f"找不到数据目录：{data_dir}")
         return 2
-    ds = V.load_dataset(data_dir)
-    topics = sorted(ds["topics"])
+    ds = A.load(data_dir)
+    topics = A.topic_ids(ds)
     if topic_id is None and len(topics) == 1:
         topic_id = topics[0]
-    if topic_id not in ds["topics"]:
+    if topic_id not in topics:
         which = "、".join(topics) or "一个题目也没有读到"
         log(f"要用 --topic 指定题目。数据里有：{which}" if topic_id is None else f"数据里没有题目 {topic_id}。有：{which}")
-        for it in ds["problems"]:
+        for it in A.problems(ds):
             log(f"{it.rule}  {it.record}: {it.message}")
         return 2
     if version is None:

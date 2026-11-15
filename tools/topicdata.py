@@ -3,7 +3,7 @@
 
 只数、只摆，不评价（D-60）。指标、条件、分类都从题目卡和指标字典里读，这里不写死任何一个键（D-03）。
 """
-import validate as V
+import access as A
 from display import NOT_FILLED, s
 
 # 核验这条路上的四步，核得越深数越大。存疑、作废不在这条路上，单独算
@@ -32,8 +32,8 @@ def topic_entry(src, topic_id):
 def topic_sources(ds, topic_id):
     """登记在这个题目下的来源：[(编号, 来源, 这个题目下的那一项)]，照编号排。"""
     out = []
-    for sid in sorted(ds["sources"]):
-        src = ds["sources"][sid]
+    for sid in A.source_ids(ds):
+        src = A.source(ds, sid)
         entry = topic_entry(src, topic_id)
         if entry is not None:
             out.append((sid, src, entry))
@@ -58,7 +58,7 @@ def is_product(ent):
 
 
 def entity_name(ds, eid):
-    ent = ds["entities"].get(eid) if isinstance(eid, str) else None
+    ent = A.entity(ds, eid) if isinstance(eid, str) else None
     return s(ent.get("name")) if isinstance(ent, dict) and ent.get("name") else s(eid)
 
 
@@ -66,7 +66,7 @@ def facet_values(ds, topic, names, sample, entity):
     """这张膜的分类，照题目卡里分类维度的次序：[(维度名, 取值的显示名)]。
     记在膜上的维度取样品登记（商业膜取产品实体），记在材料族上的取它所属的材料族。"""
     entity = entity if isinstance(entity, dict) else {}
-    family = entity if entity.get("entity_type") == "material_class" else ds["entities"].get(entity.get("class_id"))
+    family = entity if entity.get("entity_type") == "material_class" else A.entity(ds, entity.get("class_id"))
     own = (entity.get("facets") if is_product(entity) else (sample or {}).get("facets")) or {}
     out = []
     for f in topic.get("facets") or []:
@@ -85,8 +85,8 @@ def membranes(ds, topic_id, names, rows):
     商业膜按产品实体算：几篇论文都拿它作基准、规格书里也有它，是同一张。
     没有样品名、对象又不是产品的证据（专利权利要求、政策条款、报告里的数）不是哪一张膜的，不在这里。
     次序：先实验室样品，照来源编号和登记的次序；再商业膜，照实体编号。行的次序就是录入的次序，不排名。"""
-    topic = ds["topics"].get(topic_id) or {}
-    lk = V.Lookups(ds)
+    topic = A.topic(ds, topic_id) or {}
+    lk = A.lookups(ds)
     labs, products = [], {}
 
     def product(ent):
@@ -101,10 +101,10 @@ def membranes(ds, topic_id, names, rows):
     for sid, src, entry in topic_sources(ds, topic_id):
         if entry.get("decision") == "excluded":
             continue
-        for sm in ds["samples"].get(sid) or []:
+        for sm in A.samples(ds, sid) or []:
             if not isinstance(sm, dict) or not isinstance(sm.get("label"), str):
                 continue
-            ent = ds["entities"].get(sm.get("subject_id")) if isinstance(sm.get("subject_id"), str) else None
+            ent = A.entity(ds, sm.get("subject_id")) if isinstance(sm.get("subject_id"), str) else None
             if is_product(ent):
                 p = product(ent)
                 if sm.get("role") and sm["role"] not in p["roles"]:
@@ -124,8 +124,8 @@ def membranes(ds, topic_id, names, rows):
         if r["error"]:
             continue
         sid, label = r["source_id"], r["sample"]
-        owner = sid if ds["samples"].get(sid) is not None else (s((ds["sources"].get(sid) or {}).get("parent_id")) or sid)
-        ent = ds["entities"].get(r["subject_id"])
+        owner = sid if A.samples(ds, sid) is not None else (s((A.source(ds, sid) or {}).get("parent_id")) or sid)
+        ent = A.entity(ds, r["subject_id"])
         mem = by_key.get((owner, label)) if label else None
         if mem is None and label and lk.register_of(sid).get(label) is None and not is_product(ent):
             # 证据写了样品名，样品登记里却没有：照实列一张，校验（V-19）会另外报出来

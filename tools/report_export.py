@@ -33,6 +33,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
 import build_dashboard as B  # noqa: E402
+import access as A  # noqa: E402
 import compare_view  # noqa: E402
 import derive  # noqa: E402
 import store  # noqa: E402
@@ -66,10 +67,10 @@ class ExportError(Exception):
 # ---------------------------------------------------------------- 这份报告用到了什么
 
 def report_of(ds, rid):
-    r = ds["reports"].get(rid)
+    r = A.report(ds, rid)
     if not isinstance(r, dict):
         raise ExportError(f"报告登记里没有 {rid}")
-    if r.get("topic_id") not in ds["topics"]:
+    if not A.exists(ds, "topics", r.get("topic_id")):
         raise ExportError(f"{rid} 的题目 {r.get('topic_id')} 不在数据里")
     return r
 
@@ -81,22 +82,22 @@ def _ids(r, field):
 def cited(ds, r):
     """这份报告引用到的证据。evidence：全部，照编号排；compared：其中进了对比图表、或者作了描述依据的（要专业已复核）；
     notes：登记里要补的地方。"""
-    ev, notes = ds["evidence"], []
+    notes = []
     cmp_ids, compared = _ids(r, "cmp_ids"), set()
 
     def members(cid):
-        c = ds["comparisons"].get(cid)
+        c = A.comparison(ds, cid)
         return [m["evidence_id"] for m in (c.get("members") or [] if isinstance(c, dict) else [])
                 if isinstance(m, dict) and m.get("role") != "excluded" and isinstance(m.get("evidence_id"), str)]
 
     for cid in cmp_ids:
         compared |= set(members(cid))
     for aid in _ids(r, "asm_ids"):
-        a = ds["assessments"].get(aid)
+        a = A.assessment(ds, aid)
         for x in (a.get("basis") or [] if isinstance(a, dict) else []):
-            if x in ev:
+            if A.exists(ds, "evidence", x):
                 compared.add(x)
-            elif x in ds["comparisons"] and x not in cmp_ids:
+            elif A.exists(ds, "comparisons", x) and x not in cmp_ids:
                 notes.append(f"描述 {aid} 的依据里有可比组 {x}，报告登记的 cmp_ids 里没有列它；它的成员这里照样算作引用到的")
                 compared |= set(members(x))
     every = sorted(set(_ids(r, "evidence_ids")) | compared, key=ev_sort_key)
@@ -125,7 +126,7 @@ def meets_threshold(e):
 def external_row(r, ds, names):
     """一条证据给对方的那一行。只从去掉内部字段之后的记录里取（V-64）。"""
     e = V.strip_internal(r["e"])
-    src = ds["sources"].get(r["source_id"])
+    src = A.source(ds, r["source_id"])
     src = src if isinstance(src, dict) else {}
     _, key, measure, _ = names.measure(e)
     kind = e.get("content_kind")
@@ -158,8 +159,8 @@ def external_row(r, ds, names):
                                   s(src.get("version_label")), link) if x)
     # 档别是人定的：只列专业复核过、可以对外的组，AI 预归的不出去（V-43、V-61）
     groups = ["{}（{}）".format(g["id"], "，".join(x for x in (g["tier_label"], g["role_label"]) if x)) for g in r["groups"]
-              if (ds["comparisons"].get(g["id"]) or {}).get("status") == "expert_reviewed"
-              and (ds["comparisons"].get(g["id"]) or {}).get("visibility") == "external"]
+              if (A.comparison(ds, g["id"]) or {}).get("status") == "expert_reviewed"
+              and (A.comparison(ds, g["id"]) or {}).get("visibility") == "external"]
     row = {
         "id": r["id"], "subject": r["subject"], "sample_label": r["sample"], "level": r["level_label"], "measure": r["measure"],
         "value": value, "value_std": std, "range": "；".join(spread), "summary": s(e.get("summary")),
@@ -209,7 +210,7 @@ def expand_ranges(text, ds):
             return m.group(0)
         a, b = int(m.group(2)), int(m.group(4))
         ids = [f"EV-{m.group(1)}-{n:03d}" for n in range(min(a, b), max(a, b) + 1)]
-        return "、".join(x for x in ids if x in ds["evidence"] or x in (ids[0], ids[-1]))
+        return "、".join(x for x in ids if A.exists(ds, "evidence", x) or x in (ids[0], ids[-1]))
     return EV_RANGE.sub(fill, text)
 
 
@@ -232,7 +233,7 @@ def compare_ids(ds, r, found):
     listed = {"EV": set(use["evidence"]), "CMP": set(_ids(r, "cmp_ids")), "ASM": set(_ids(r, "asm_ids")), "REL": set(_ids(r, "rel_ids"))}
     for kind, ids in found.items():
         for x in ids:
-            if x not in ds[COLL[kind]]:
+            if not A.exists(ds, COLL[kind], x):
                 problems.append(f"正文里的 {x} 数据里没有")
             elif x not in listed[kind]:
                 problems.append(f"正文引用了 {x}，报告登记里没有列（用 cite --write 照正文改登记）")
@@ -251,7 +252,7 @@ def allowed_numbers(ds, lk, ids):
     """这句话引的证据里有哪些数：数值、标准单位下的值、范围、误差、条件；与同文基准之比；同一指标的两两之差。"""
     out, by_indicator = [], {}
     for eid in ids:
-        e = ds["evidence"].get(eid)
+        e = A.evidence(ds, eid)
         if not isinstance(e, dict):
             continue
         measure = lk.measure_of(e)[1] or {}
@@ -276,7 +277,7 @@ def allowed_numbers(ds, lk, ids):
 
 def number_hints(text, ds):
     """把对不上的数列出来。返回 (提示, 查了几个数, 没查的小整数几个, 没带编号的句子里的数几个)。"""
-    lk = V.Lookups(ds)
+    lk = A.lookups(ds)
     hints, checked, small, loose = [], 0, 0, 0
     units = []
     for line in text.splitlines():
@@ -285,12 +286,12 @@ def number_hints(text, ds):
         found = ids_in(unit)
         ids = list(found["EV"])
         for cid in found["CMP"]:
-            c = ds["comparisons"].get(cid)
+            c = A.comparison(ds, cid)
             ids += [m.get("evidence_id") for m in (c.get("members") or [] if isinstance(c, dict) else []) if isinstance(m, dict)]
         for aid in found["ASM"]:
-            a = ds["assessments"].get(aid)
+            a = A.assessment(ds, aid)
             for x in (a.get("basis") or [] if isinstance(a, dict) else []):
-                c = ds["comparisons"].get(x)
+                c = A.comparison(ds, x)
                 ids += [m.get("evidence_id") for m in c.get("members") or [] if isinstance(m, dict)] if isinstance(c, dict) else [x]
         bare = DATE.sub(" ", ANY_ID.sub(" ", unit))
         tokens = [t.strip() for t in NUMBER.findall(bare)]
@@ -369,14 +370,14 @@ def check_text(rid, result):
 def chart_files(ds, m, r):
     """报告用的对标图：只出专业复核过的组，图里只放专业复核过的成员（D-103）。返回 ({文件名: 内容}, 说明)。"""
     names, topic_id = m["names"], m["topic_id"]
-    topic = ds["topics"].get(topic_id) or {}
-    lk, by_id = V.Lookups(ds), {row["id"]: row for row in m["rows"]}
-    d = ds["dictionaries"].get(topic_id) or {}
+    topic = A.topic(ds, topic_id) or {}
+    lk, by_id = A.lookups(ds), {row["id"]: row for row in m["rows"]}
+    d = A.dictionary(ds, topic_id) or {}
     rules = {x.get("key"): x for x in d.get("rules") or [] if isinstance(x, dict)}
     questions = {q.get("key"): q.get("text") for q in topic.get("questions") or [] if isinstance(q, dict)}
     files, notes = {}, []
     for cid in _ids(r, "cmp_ids"):
-        c = ds["comparisons"].get(cid)
+        c = A.comparison(ds, cid)
         if not isinstance(c, dict):
             continue
         if c.get("status") != "expert_reviewed":
@@ -384,10 +385,10 @@ def chart_files(ds, m, r):
             continue
         keep, left = [], []
         for mem in c.get("members") or []:
-            e = ds["evidence"].get(mem.get("evidence_id")) if isinstance(mem, dict) else None
+            e = A.evidence(ds, mem.get("evidence_id")) if isinstance(mem, dict) else None
             if not isinstance(e, dict) or mem.get("role") == "excluded":
                 continue
-            ok = e.get("verification_status") == "expert_reviewed" and not exportable(e, ds["sources"].get(e.get("source_id")))
+            ok = e.get("verification_status") == "expert_reviewed" and not exportable(e, A.source(ds, e.get("source_id")))
             (keep if ok else left).append(mem)
         g = compare_view.group_model(dict(c, members=keep), by_id, ds, lk, names, rules, questions, B.stamp(m))
         if not g["chart"]:
@@ -414,7 +415,7 @@ def build_export(ds, schema, labels, rid, version, text=None, with_csv=False):
         if not row or row["error"]:
             held.append((eid, "数据里没有这一条，或者这一条显示不出来"))
             continue
-        why = exportable(row["e"], ds["sources"].get(row["source_id"])) or ("" if meets_threshold(row["e"]) else "没到对外门槛（至少人工已核）")
+        why = exportable(row["e"], A.source(ds, row["source_id"])) or ("" if meets_threshold(row["e"]) else "没到对外门槛（至少人工已核）")
         if not why and eid in use["compared"] and row["status"] != "expert_reviewed":
             why = "进了对比或作了描述的依据，还没有专业复核"
         if why:
@@ -423,7 +424,7 @@ def build_export(ds, schema, labels, rid, version, text=None, with_csv=False):
             appendix.append(external_row(row, ds, names))
     everything, left = [], {}
     for row in m["rows"]:
-        why = "显示不出来" if row["error"] else exportable(row["e"], ds["sources"].get(row["source_id"]))
+        why = "显示不出来" if row["error"] else exportable(row["e"], A.source(ds, row["source_id"]))
         if why:
             left[why] = left.get(why, 0) + 1
         else:
@@ -471,7 +472,7 @@ def cmd_cite(args, ds, schema):
              "ASM": ("cmp_ids", "rel_ids", "evidence_ids") + base}     # 四个清单在登记里的次序照模板：证据、关系、可比组、描述
     for kind in ("EV", "REL", "CMP", "ASM"):
         have, want = _ids(r, FIELD[kind]), found[kind]
-        missing = [x for x in want if x not in ds[COLL[kind]]]
+        missing = [x for x in want if not A.exists(ds, COLL[kind], x)]
         want = sorted((x for x in want if x not in missing), key=ev_sort_key if kind == "EV" else None)
         add, drop = [x for x in want if x not in have], [x for x in have if x not in want]
         print(f"{FIELD[kind]}：正文里 {len(want)} 个" + (f"，要加 {'、'.join(add)}" if add else "") + (f"，要去掉 {'、'.join(drop)}" if drop else "")
@@ -491,7 +492,7 @@ def cmd_cite(args, ds, schema):
         return 0
     if r.get("status") != "draft":
         raise ExportError(f"{args.report} 不是草稿，登记不由脚本改")
-    if ds["problems"]:
+    if A.problems(ds):
         raise ExportError("数据里有读不了的文件或重复的编号，先修好再写")
     issues = V.validate(ds, schema)
     if issues:
@@ -544,7 +545,7 @@ def main(argv=None):
     if not os.path.isdir(args.data):
         print(f"找不到数据目录：{args.data}", file=sys.stderr)
         return 2
-    ds, schema = V.load_dataset(args.data), V.load_schema()
+    ds, schema = A.load(args.data), V.load_schema()
     try:
         return {"cite": cmd_cite, "check": cmd_check, "export": cmd_export}[args.cmd](args, ds, schema)
     except ExportError as exc:

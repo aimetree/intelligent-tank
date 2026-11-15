@@ -10,6 +10,7 @@
 - 不属于任何可比组的复核单（规格 3.13）。
 只整理和描述（D-60）。对外报告的“数据概览”“覆盖与缺口”两节用的是同一份数据。
 """
+import access as A
 import compare_view
 import derive
 import topicdata as T
@@ -24,7 +25,7 @@ COMPARABLE = V.COMPARABLE_LEVELS
 def key_conditions(ds, topic_id):
     """每个指标并排时要看的关键条件：取自指标字典里各条可比规则的 key_conditions，照规则的次序。"""
     out = {}
-    for rule in (ds["dictionaries"].get(topic_id) or {}).get("rules") or []:
+    for rule in (A.dictionary(ds, topic_id) or {}).get("rules") or []:
         if not isinstance(rule, dict):
             continue
         for ind in rule.get("applies_to") or []:
@@ -45,7 +46,7 @@ def entry(r, group, keyconds, ds, lk, names):
     missing = [c["name"] for c in r["conditions"] if c["state"] in ("not_reported", "absent")]
     if missing:
         notes.append("缺" + "、".join(missing))
-    src = ds["sources"].get(r["source_id"])
+    src = A.source(ds, r["source_id"])
     flags = [names.flag(k) for k in V.display_flags(e, src if isinstance(src, dict) else {})]
     if r["type"] not in ("experimental", "company_claim") and r["type_label"]:
         flags.insert(0, r["type_label"])
@@ -59,7 +60,7 @@ def entry(r, group, keyconds, ds, lk, names):
 
 def summary_table(m, ds, topic_id, mems):
     names = m["names"]
-    lk = V.Lookups(ds)
+    lk = A.lookups(ds)
     keyconds = key_conditions(ds, topic_id)
     groups = T.indicator_groups(names)
     cols = [g for g in groups if any(T.cell(mem, g)["rows"] for mem in mems)]
@@ -78,14 +79,12 @@ def statements(m, ds, topic_id):
     """数据概览里的陈述，照编号排。每句的依据：可比组带档别，证据带核验状态；还没到“专业已复核”的依据单独点出来。"""
     names, by_id = m["names"], {r["id"]: r for r in m["rows"]}
     out = []
-    for aid in sorted(ds["assessments"]):
-        a = ds["assessments"][aid]
-        if not isinstance(a, dict) or a.get("topic_id") != topic_id:
-            continue
+    for aid in A.assessment_ids(ds, topic_id):
+        a = A.assessment(ds, aid)
         basis, not_ready = [], []
         for x in a.get("basis") or [] if isinstance(a.get("basis"), list) else []:
             x = s(x)
-            c, r, rel = ds["comparisons"].get(x), by_id.get(x), ds["relations"].get(x)
+            c, r, rel = A.comparison(ds, x), by_id.get(x), A.relation(ds, x)
             if isinstance(c, dict):
                 basis.append({"id": x, "href": f"#{x}", "note": names.enum("tier", c.get("tier")) or NOT_FILLED})
                 if c.get("status") != "expert_reviewed":
@@ -111,7 +110,7 @@ def statements(m, ds, topic_id):
 
 def searches(ds, topic_id):
     out = []
-    for w in ds["worklog"]:
+    for w in A.worklog(ds):
         if isinstance(w, dict) and w.get("topic_id") == topic_id and isinstance(w.get("search"), dict):
             q = w["search"]
             out.append({"id": s(w.get("id")), "date": s(w.get("date")), "where": s(q.get("where")), "query": s(q.get("query")),
@@ -137,7 +136,7 @@ def funnel(m, sources):
 def missing_conditions(m, ds, topic_id):
     """某一层统一必填的条件，各有几个来源没有报告：只数在这一层有证据的来源。"""
     names = m["names"]
-    level_conditions = (ds["dictionaries"].get(topic_id) or {}).get("level_conditions")
+    level_conditions = (A.dictionary(ds, topic_id) or {}).get("level_conditions")
     out = []
     for level, keys in (level_conditions.items() if isinstance(level_conditions, dict) else []):
         rows = [r for r in m["rows"] if r["level"] == level and r["measure_kind"] == "indicator" and r["status"] != "void" and not r["error"]]
@@ -160,9 +159,9 @@ def other_gaps(m, ds, topic_id, sources, mems):
     def add(key, text, ids=()):
         out.append({"key": key, "text": text, "ids": list(ids)})
 
-    with_samples = [sid for sid, _, _ in inc if ds["samples"].get(sid)]
+    with_samples = [sid for sid, _, _ in inc if A.samples(ds, sid)]
     no_base = [sid for sid in with_samples
-               if not any(isinstance(x, dict) and x.get("role") == "baseline" for x in ds["samples"][sid])]
+               if not any(isinstance(x, dict) and x.get("role") == "baseline" for x in A.samples(ds, sid))]
     if no_base:
         add("no_baseline", f"登记了样品的 {len(with_samples)} 个来源里，{len(no_base)} 个没有同文基准膜，它的数据算不了与基准之比：", no_base)
     for code in ("abstract_only", "metadata_only"):
@@ -183,9 +182,9 @@ def other_gaps(m, ds, topic_id, sources, mems):
     waiting = [(names.enum("verification_status", code), by_status[code]) for code in ("disputed", "pending", "machine_checked") if by_status.get(code)]
     if waiting:
         add("not_verified", "、".join(f"{label} {n} 条" for label, n in waiting) + "，还不能用在报告里。")
-    for cid in sorted(ds["comparisons"]):
-        c = ds["comparisons"][cid]
-        if isinstance(c, dict) and c.get("topic_id") == topic_id and c.get("tier") == "insufficient":
+    for cid in A.comparison_ids(ds, topic_id):
+        c = A.comparison(ds, cid)
+        if c.get("tier") == "insufficient":
             add("insufficient", f"{names.enum('tier', 'insufficient')}的可比组：缺 {s(c.get('missing')) or NOT_FILLED}：", [cid])
     loose = [r["id"] for r in rows if r["measure_kind"] == "indicator" and r["level"] in COMPARABLE
              and r["e"].get("content_kind") != "statement" and not r["groups"]]
@@ -202,7 +201,7 @@ def loose_reviews(m, ds, topic_id, wanted=None):
     by_id = {r["id"]: r for r in m["rows"]}
     out = []
     for r in compare_view.review_models({"id": None, "members": []}, ds, by_id, m["names"]):
-        raw = ds["reviews"][r["id"]]
+        raw = A.review(ds, r["id"])
         if raw.get("topic_id") != topic_id:
             continue
         targets = [it["target"]["id"] for it in r["items"]] + [t["id"] for t in (r["batch"] or {}).get("ids", [])]

@@ -6,6 +6,7 @@
 - 关系每条都带出处；推断的标明是推断（D-49）。
 只整理和描述，不作评价（D-60）。对外报告第 4.2 至 4.5 节、第 5 节里的关系和第 7 节里这四块的缺口，用的是同一份数据。
 """
+import access as A
 import gaps_view
 import topicdata as T
 import validate as V
@@ -26,7 +27,7 @@ def status_of(src):
 
 def end_name(ds, x):
     """关系的一头叫什么：来源写题名和编号，实体写名字。"""
-    src = ds["sources"].get(x) if isinstance(x, str) else None
+    src = A.source(ds, x) if isinstance(x, str) else None
     if isinstance(src, dict):
         return f"{s(src.get('title')) or NOT_FILLED}（{x}）"
     return T.entity_name(ds, x) or NOT_FILLED
@@ -139,7 +140,7 @@ def market_groups(rows, ds, names):
         if key not in groups:
             groups[key] = {"key": f"{key[0]}:{key[1]}", "name": r["measure"], "items": []}
             order.append(key)
-        src = ds["sources"].get(r["source_id"]) or {}
+        src = A.source(ds, r["source_id"]) or {}
         e = r["e"]
         number = V.parse_number(e.get("value_reported")) if e.get("content_kind") == "numeric" else None
         groups[key]["items"].append({
@@ -169,12 +170,12 @@ def build(m, ds, topic_id):
         if r["status"] != "void" and not r["error"]:
             by_source.setdefault(r["source_id"], []).append(r)
     rels = []
-    for rid in sorted(ds["relations"]):
-        rel = ds["relations"][rid]
+    for rid in A.relation_ids(ds):
+        rel = A.relation(ds, rid)
         if not isinstance(rel, dict):
             continue
         ends = [rel.get("subject"), rel.get("object")]
-        family = any(isinstance(ds["entities"].get(x), dict) and ds["entities"][x].get("entity_type") == "patent_family" for x in ends if isinstance(x, str))
+        family = any(isinstance(A.entity(ds, x), dict) and A.entity(ds, x).get("entity_type") == "patent_family" for x in ends if isinstance(x, str))
         if family or any(x in mine_ids for x in ends):
             rels.append((rel, relation_model(ds, names, rel)))
 

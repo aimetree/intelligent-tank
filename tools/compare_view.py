@@ -9,6 +9,7 @@
   单子由 tools/review_sheet.py 起草和写回，这里只照数据显示。
 这里只整理和并排：成员照数据文件里的次序排，不按数值排名，不求平均，不下结论（D-60，设计方案 6.1 第 5 条）。
 """
+import access as A
 import charts
 import derive
 import validate as V
@@ -199,7 +200,7 @@ def group_model(c, by_id, ds, lk, names, rules, questions, stamp):
         note("condition_envelope", "；".join(f"{names.condition(k)} {s(v.get('reported')) if isinstance(v, dict) else names.enum('condition_missing', v)}"
                                             for k, v in c["condition_envelope"].items()))
     if c.get("baseline_subject_id"):
-        ent = ds["entities"].get(c["baseline_subject_id"]) if isinstance(c["baseline_subject_id"], str) else None
+        ent = A.entity(ds, c["baseline_subject_id"]) if isinstance(c["baseline_subject_id"], str) else None
         name = s(ent.get("name")) if isinstance(ent, dict) and ent.get("name") else s(c["baseline_subject_id"])
         note("baseline_subject_id", "｜".join(x for x in (name, names.enum("baseline_class", c.get("baseline_class"))) if x))
     note("normalization_note", c.get("normalization_note"))
@@ -228,10 +229,8 @@ def review_models(g, ds, by_id, names):
         return {"id": tid, "href": f"#{tid}" if row else "", "what": what or "证据库里没有这一条"}
 
     out = []
-    for rid in sorted(ds["reviews"]):
-        r = ds["reviews"][rid]
-        if not isinstance(r, dict) or r.get("comparison_id") != g["id"]:
-            continue
+    for rid in A.review_ids(ds, g["id"]):
+        r = A.review(ds, rid)
         items = []
         for it in r.get("items") or []:
             if not isinstance(it, dict):
@@ -337,7 +336,7 @@ def derived_models(level, ds, topic_id, by_id, names):
         ind = names.indicators.get(r["indicator"]) or {}
         if ind.get("level") != level:
             continue
-        ent = ds["entities"].get(r["subject_id"]) if isinstance(r["subject_id"], str) else None
+        ent = A.entity(ds, r["subject_id"]) if isinstance(r["subject_id"], str) else None
         out.append({
             "indicator": names._name(ind, r["indicator"]), "source_id": s(r["source_id"]),
             "object": s(r["sample_label"]) or (s(ent.get("name")) if isinstance(ent, dict) else s(r["subject_id"])),
@@ -351,15 +350,14 @@ def derived_models(level, ds, topic_id, by_id, names):
 
 def build(ds, topic_id, names, rows, stamp):
     """对标视图要显示的全部内容。rows 是证据表页算好的各行。"""
-    topic = ds["topics"].get(topic_id) or {}
-    lk = V.Lookups(ds)
+    topic = A.topic(ds, topic_id) or {}
+    lk = A.lookups(ds)
     by_id = {r["id"]: r for r in rows}
-    d = ds["dictionaries"].get(topic_id) or {}
+    d = A.dictionary(ds, topic_id) or {}
     rules = {r.get("key"): r for r in d.get("rules") or [] if isinstance(r, dict)}
     questions = {q.get("key"): q.get("text") for q in topic.get("questions") or [] if isinstance(q, dict)}
-    groups = [group_model(ds["comparisons"][cid], by_id, ds, lk, names, rules, questions, stamp)
-              for cid in sorted(ds["comparisons"])
-              if isinstance(ds["comparisons"][cid], dict) and ds["comparisons"][cid].get("topic_id") == topic_id]
+    groups = [group_model(A.comparison(ds, cid), by_id, ds, lk, names, rules, questions, stamp)
+              for cid in A.comparison_ids(ds, topic_id)]
     wanted = [lv for lv in names.enum_order("level") if lv in V.COMPARABLE_LEVELS and lv in (topic.get("levels") or [])]
     wanted += sorted({g["level"] for g in groups} - set(wanted))   # 数据里写了别的层级的组也照样显示，校验会报
     levels = []

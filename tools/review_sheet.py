@@ -49,6 +49,7 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
+import access as A  # noqa: E402
 import build_dashboard as B  # noqa: E402
 import ids as I  # noqa: E402
 import store  # noqa: E402
@@ -84,18 +85,18 @@ class Ctx:
     """显示名和每条证据的写法。和看板用同一套（build_dashboard.evidence_row），单子上写的和看板上看到的对得上。"""
 
     def __init__(self, ds, schema, labels):
-        self.ds, self.schema, self.labels, self.lk = ds, schema, labels, V.Lookups(ds)
+        self.ds, self.schema, self.labels, self.lk = ds, schema, labels, A.lookups(ds)
         self._names, self._refs, self._rows = {}, {}, {}
 
     def names(self, topic_id):
         if topic_id not in self._names:
-            self._names[topic_id] = Names(self.labels, self.ds["dictionaries"].get(topic_id), self.schema, "zh")
+            self._names[topic_id] = Names(self.labels, A.dictionary(self.ds, topic_id), self.schema, "zh")
         return self._names[topic_id]
 
     def row(self, eid):
         """一条证据在看板上怎么写。证据库里没有、或者坏到写不出来的，给 None。"""
         if eid not in self._rows:
-            e, row = self.ds["evidence"].get(eid), None
+            e, row = A.evidence(self.ds, eid), None
             if isinstance(e, dict):
                 tid = e.get("topic_id")
                 if tid not in self._refs:
@@ -114,7 +115,7 @@ def describe(ctx, eid):
     if not row:
         return {"what": f"{eid}（证据库里没有这一条，或者显示不出来）", "conditions": "", "where": ""}
     obj = object_of(row)
-    src = ctx.ds["sources"].get(row["source_id"])
+    src = A.source(ctx.ds, row["source_id"])
     src = src if isinstance(src, dict) else {}
     about = "，".join(s(src.get(k)) for k in ("creators", "container", "published") if src.get(k))
     title = f"《{row['source_title']}》" if row["source_title"] else row["source_id"]
@@ -249,7 +250,7 @@ def _sheet(rid, topic_id, cid, title, by, date, items, batch):
 def _in_sheets(ds, keep=lambda r: True):
     """已经在某张单子里的条目。"""
     seen = set()
-    for r in ds["reviews"].values():
+    for r in (A.review(ds, rid) for rid in A.review_ids(ds)):
         if isinstance(r, dict) and keep(r):
             seen |= set(targets_of(r))
     return seen
@@ -261,7 +262,7 @@ def draft_group(ctx, c, rid, by, date):
     这一组已经有复核完的单子时，只把还没看过的列进新的一张（后来加的成员、后来写的数据概览陈述）。
     """
     ds, cid = ctx.ds, c["id"]
-    sheets = [r for r in ds["reviews"].values() if isinstance(r, dict) and r.get("comparison_id") == cid]
+    sheets = [A.review(ds, rid) for rid in A.review_ids(ds, cid)]
     unfinished = [r["id"] for r in sheets if r.get("status") in OPEN]
     if unfinished:
         return None, f"已经有一张还没复核完的复核单 {'、'.join(unfinished)}"
@@ -270,17 +271,17 @@ def draft_group(ctx, c, rid, by, date):
         seen |= set(targets_of(r))
     members = [m for m in c.get("members") or []
                if isinstance(m, dict) and isinstance(m.get("evidence_id"), str) and m.get("role") != "excluded"]
-    todo = [m for m in members if m["evidence_id"] not in seen and isinstance(ds["evidence"].get(m["evidence_id"]), dict)]
+    todo = [m for m in members if m["evidence_id"] not in seen and isinstance(A.evidence(ds, m["evidence_id"]), dict)]
     taken = _in_sheets(ds)
-    statements = [a for aid, a in sorted(ds["assessments"].items())
-                  if isinstance(a, dict) and a.get("topic_id") == c.get("topic_id") and a.get("status") == "draft"
+    statements = [a for aid, a in ((x, A.assessment(ds, x)) for x in A.assessment_ids(ds, c.get("topic_id")))
+                  if a.get("status") == "draft"
                   and cid in (a.get("basis") or []) and aid not in taken]
     need_group = c.get("status") != "expert_reviewed" and cid not in seen
     if not (todo or statements or need_group):
         return None, "成员都在复核完的复核单里了"
     items, batch = ([group_item(ctx, c)] if need_group else []), []
     for m in todo:
-        item = evidence_item(ctx, ds["evidence"][m["evidence_id"]], s(m.get("role")), s(m.get("note")))
+        item = evidence_item(ctx, A.evidence(ds, m["evidence_id"]), s(m.get("role")), s(m.get("note")))
         if item:
             items.append(item)
         else:
@@ -299,7 +300,7 @@ def draft_loose(ctx, targets, rid, by, date):
         raise ReviewError("条目有重复")
     topics, items, batch = set(), [], []
     for t in targets:
-        rec = ds["evidence"].get(t) if t.startswith("EV-") else ds["assessments"].get(t) if t.startswith("ASM-") else None
+        rec = A.evidence(ds, t) if t.startswith("EV-") else A.assessment(ds, t) if t.startswith("ASM-") else None
         if not isinstance(rec, dict):
             raise ReviewError(f"{t}：不是证据库里的证据，也不是数据概览里的陈述")
         topics.add(rec.get("topic_id"))
@@ -331,14 +332,14 @@ def add_item(ctx, sheet, target, reason, why, suggestion):
     if any(isinstance(it, dict) and it.get("target_id") == target for it in sheet.get("items") or []):
         raise ReviewError(f"{target} 已经是这张单子里要逐条看的一项")
     cid = sheet.get("comparison_id")
-    c = ds["comparisons"].get(cid) if cid else None
+    c = A.comparison(ds, cid) if cid else None
     if target.startswith("EV-"):
-        if not isinstance(ds["evidence"].get(target), dict):
+        if not isinstance(A.evidence(ds, target), dict):
             raise ReviewError(f"证据库里没有 {target}")
         if c and target not in [m.get("evidence_id") for m in c.get("members") or [] if isinstance(m, dict)]:
             raise ReviewError(f"{target} 不是 {cid} 的成员")
     elif target.startswith("ASM-"):
-        if not isinstance(ds["assessments"].get(target), dict):
+        if not isinstance(A.assessment(ds, target), dict):
             raise ReviewError(f"数据概览里没有 {target}")
     elif not (cid and target == cid):
         raise ReviewError(f"{target}：只能加这张单子的可比组、组里的证据，或者数据概览的陈述")
@@ -358,7 +359,7 @@ def not_ready(ds, sheet):
     返回还不行的 [(证据编号, 现在的状态)]。存疑的只要曾经人工核对过就行。"""
     out = []
     for eid in evidence_targets(sheet):
-        e = ds["evidence"].get(eid)
+        e = A.evidence(ds, eid)
         st = e.get("verification_status") if isinstance(e, dict) else None
         ok = st in V.VERIFIED or (st == "disputed" and V.is_human(e.get("verified_by")))
         if not ok:
@@ -371,7 +372,7 @@ def not_ready(ds, sheet):
 def _head(ctx, sheet):
     """这一组是什么（方案 5.6 复核单的第一部分）。"""
     ds, cid = ctx.ds, sheet.get("comparison_id")
-    c = ds["comparisons"].get(cid) if cid else None
+    c = A.comparison(ds, cid) if cid else None
     names = ctx.names(sheet.get("topic_id"))
     if not isinstance(c, dict):
         return [f"不在可比组里的条目，共 {len(targets_of(sheet))} 条"] if not cid else [f"{cid}（可比组里没有这个编号）"]
@@ -399,19 +400,19 @@ def _head(ctx, sheet):
 def baseline_context(ctx, sheet):
     """同一个基准膜、同一个指标在各来源里的数。基准膜的数值是不是异常要靠判断，脚本只把数摆出来，不下结论。"""
     ds = ctx.ds
-    c = ds["comparisons"].get(sheet.get("comparison_id")) if sheet.get("comparison_id") else None
+    c = A.comparison(ds, sheet.get("comparison_id")) if sheet.get("comparison_id") else None
     if not isinstance(c, dict):
         return []
     wanted, mine = [], set(evidence_targets(sheet))
     for m in c.get("members") or []:
-        e = ds["evidence"].get(m.get("evidence_id")) \
+        e = A.evidence(ds, m.get("evidence_id")) \
             if isinstance(m, dict) and m.get("role") == "baseline" and m.get("evidence_id") in mine else None
         if isinstance(e, dict) and (e.get("subject_id"), e.get("indicator")) not in wanted:
             wanted.append((e.get("subject_id"), e.get("indicator")))
     lines = []
     for subject, indicator in wanted:
-        same = [e for eid, e in sorted(ds["evidence"].items(), key=lambda x: ev_sort_key(x[0]))
-                if isinstance(e, dict) and e.get("topic_id") == c.get("topic_id") and e.get("subject_id") == subject
+        same = [e for e in (A.evidence(ds, x) for x in sorted(A.evidence_ids(ds, c.get("topic_id")), key=ev_sort_key))
+                if e.get("subject_id") == subject
                 and e.get("indicator") == indicator and e.get("verification_status") != "void"]
         if len({e.get("source_id") for e in same}) < 2:
             continue
@@ -502,7 +503,7 @@ def question_pack(ctx, sheet):
     items = [it for it in sheet.get("items") or [] if isinstance(it, dict)]
     batch = sheet.get("batch") if isinstance(sheet.get("batch"), dict) else None
     total = len(items) + (1 if batch else 0)
-    place = f"{sheet['comparison_id']}“{s((ds['comparisons'].get(sheet['comparison_id']) or {}).get('title'))}”" \
+    place = f"{sheet['comparison_id']}“{s((A.comparison(ds, sheet['comparison_id']) or {}).get('title'))}”" \
         if sheet.get("comparison_id") else "不在可比组里的条目"
     questions = []
     for n, it in enumerate(items, 1):
@@ -516,7 +517,7 @@ def question_pack(ctx, sheet):
         elif target.startswith("ASM-"):
             text, label = f"{place}的数据概览里的一句陈述（{target}）。", "同意这句陈述"
         else:
-            c = ds["comparisons"].get(target) or {}
+            c = A.comparison(ds, target) or {}
             text = f"可比组 {place}的档别。" + sentence("；".join(_head(ctx, sheet)[1:5]))
             label = f"同意，{names.enum('tier', c.get('tier')) or '照预归的档'}"
         text += f"为什么要你看：{why_text(names, it)}参考判断：{sentence(it.get('suggestion'))}"
@@ -575,7 +576,7 @@ def _check_answers(ds, sheet, answers):
     given = answers.get("items") or {}
     if not isinstance(given, dict):
         raise ReviewError("items 应是 条目编号 → {decision, note, change_ids}")
-    changes = {c.get("id") for c in ds["changes"] if isinstance(c, dict)}
+    changes = {c.get("id") for c in A.changes(ds) if isinstance(c, dict)}
     for target, a in given.items():
         if target not in known:
             raise ReviewError(f"{target} 不是 {sheet['id']} 里要逐条看的条目")
@@ -613,9 +614,9 @@ def apply_answers(ds, schema, sheet_id, answers):
 
     要写回的文件：{"reviews": 题目, "comparisons": 题目或 None, "assessments": 题目或 None, "sources": [来源编号]}。
     """
-    if ds["problems"]:
-        raise ReviewError("数据里有读不了的文件或重复的编号，先修好再写回：" + "；".join(f"{p.record} {p.message}" for p in ds["problems"]))
-    sheet = ds["reviews"].get(sheet_id)
+    if A.problems(ds):
+        raise ReviewError("数据里有读不了的文件或重复的编号，先修好再写回：" + "；".join(f"{p.record} {p.message}" for p in A.problems(ds)))
+    sheet = A.review(ds, sheet_id)
     if not isinstance(sheet, dict):
         raise ReviewError(f"没有这张复核单：{sheet_id}")
     if sheet.get("status") == "closed":
@@ -661,12 +662,12 @@ def apply_answers(ds, schema, sheet_id, answers):
         store.put_after(sheet, "reviewed_at", date, ["reviewer"])
         said.append(f"{sheet_id} 复核完了：同意 {agreed} 条，改 {changed} 条"
                     + (f"，成批确认 {len(batch.get('evidence_ids') or [])} 条" if batch else ""))
-        c = ds["comparisons"].get(sheet.get("comparison_id")) if sheet.get("comparison_id") else None
+        c = A.comparison(ds, sheet.get("comparison_id")) if sheet.get("comparison_id") else None
         if isinstance(c, dict):
             # 这张单子加上以前复核完的单子，把成员都看到了，这一组才算专业已复核（V-48）
             seen = set(targets_of(sheet))
-            for r in ds["reviews"].values():
-                if isinstance(r, dict) and r.get("comparison_id") == c["id"] and r.get("status") == "closed":
+            for r in (A.review(ds, rid) for rid in A.review_ids(ds, c["id"])):
+                if r.get("status") == "closed":
                     seen |= set(targets_of(r))
             left = [m.get("evidence_id") for m in c.get("members") or []
                     if isinstance(m, dict) and m.get("role") != "excluded" and m.get("evidence_id") not in seen]
@@ -685,7 +686,7 @@ def apply_answers(ds, schema, sheet_id, answers):
                 said.append(f"{c['id']} 标成专业已复核")
             touched["comparisons"] = c.get("topic_id")
         for eid in evidence_targets(sheet):
-            e = ds["evidence"][eid]
+            e = A.evidence(ds, eid)
             if e.get("verification_status") == "human_verified":
                 e["verification_status"] = "expert_reviewed"
                 store.put_after(e, "expert_reviewed_by", reviewer, ["verified_at", "verified_by", "verification_status"])
@@ -696,7 +697,7 @@ def apply_answers(ds, schema, sheet_id, answers):
         if counts["evidence_reviewed"]:
             said.append(f"{counts['evidence_reviewed']} 条证据标成专业已复核")
         for it in items:
-            a = ds["assessments"].get(it.get("target_id")) if s(it.get("target_id")).startswith("ASM-") else None
+            a = A.assessment(ds, it.get("target_id")) if s(it.get("target_id")).startswith("ASM-") else None
             if isinstance(a, dict) and a.get("status") == "draft":
                 a["status"] = "reviewed"
                 store.put_after(a, "reviewed_by", reviewer, ["drafted_by", "status"])
@@ -717,7 +718,7 @@ def apply_answers(ds, schema, sheet_id, answers):
     else:
         log["minutes_note"] = minutes_note
     log.update(refs=[sheet_id], counts=counts)
-    ds["worklog"].append(log)
+    store.stage_log(ds, log)
     said.append(f"工作记录加了一条 {log['id']}")
 
     worse = sorted(set(V.validate(ds, schema)) - before, key=lambda x: (x.rule, s(x.record), x.message))
@@ -731,8 +732,8 @@ def save_applied(ds, touched, log):
     for coll in ("reviews", "comparisons", "assessments"):
         if touched.get(coll):
             store.save_topic(ds, touched[coll], coll)
-    store.save_sources(ds, [x for x in touched["sources"] if x in ds["files"]])
-    store.append_jsonl(os.path.join(ds["dir"], "worklog.jsonl"), log)
+    store.save_sources(ds, [x for x in touched["sources"] if store.has_file(ds, x)])
+    store.append_worklog(ds, log)
 
 
 # ---------------------------------------------------------------- 命令行
@@ -741,20 +742,20 @@ def _load(args):
     if not os.path.isdir(args.data):
         print(f"找不到数据目录：{args.data}", file=sys.stderr)
         return None
-    ds, schema = V.load_dataset(args.data), V.load_schema()
+    ds, schema = A.load(args.data), V.load_schema()
     return ds, schema, Ctx(ds, schema, B.load_labels(args.data))
 
 
 def _sheet_of(ds, rid):
-    sheet = ds["reviews"].get(rid)
+    sheet = A.review(ds, rid)
     if not isinstance(sheet, dict):
         raise ReviewError(f"没有这张复核单：{rid}")
     return sheet
 
 
 def _guard_write(ds):
-    if ds["problems"]:
-        raise ReviewError("数据里有读不了的文件或重复的编号，先修好再写：" + "；".join(f"{p.record} {p.message}" for p in ds["problems"]))
+    if A.problems(ds):
+        raise ReviewError("数据里有读不了的文件或重复的编号，先修好再写：" + "；".join(f"{p.record} {p.message}" for p in A.problems(ds)))
 
 
 def cmd_draft(args, ds, schema, ctx):
@@ -765,14 +766,14 @@ def cmd_draft(args, ds, schema, ctx):
 
     def keep(sheet):
         # 起草好的先放进内存里的数据：下一张起草时看得到它，编号也接着往下排
-        ds["reviews"][sheet["id"]] = sheet
+        store.stage(ds, "reviews", sheet)
         made.append(sheet)
 
     if args.targets:
         keep(draft_loose(ctx, args.targets, I.next_ids(ds, "RVW")[0], args.by, date))
     else:
-        for cid in args.comparison or sorted(ds["comparisons"]):
-            c = ds["comparisons"].get(cid)
+        for cid in args.comparison or A.comparison_ids(ds):
+            c = A.comparison(ds, cid)
             if not isinstance(c, dict):
                 raise ReviewError(f"没有这个可比组：{cid}")
             sheet, why = draft_group(ctx, c, I.next_ids(ds, "RVW")[0], args.by, date)
@@ -826,10 +827,10 @@ def summary_line(ctx, sheet):
 
 
 def cmd_list(args, ds, schema, ctx):
-    sheets = [ds["reviews"][rid] for rid in sorted(ds["reviews"]) if isinstance(ds["reviews"][rid], dict)]
+    sheets = [r for r in (A.review(ds, rid) for rid in A.review_ids(ds)) if isinstance(r, dict)]
     for sheet in sheets:
         print(summary_line(ctx, sheet))
-    without = [cid for cid in sorted(ds["comparisons"]) if isinstance(ds["comparisons"][cid], dict)
+    without = [cid for cid in A.comparison_ids(ds) if isinstance(A.comparison(ds, cid), dict)
                and not any(r.get("comparison_id") == cid for r in sheets)]
     if without:
         print("还没有复核单的可比组：" + "、".join(without))

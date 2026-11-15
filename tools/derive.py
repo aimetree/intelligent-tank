@@ -25,6 +25,7 @@ from collections import namedtuple
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
+import access as A  # noqa: E402
 import store  # noqa: E402
 import validate as V  # noqa: E402
 
@@ -76,10 +77,10 @@ def _put_after(e, key, value):
 
 def fill_std(ds, sources=None):
     """算每条数值型证据的 value_std，直接改在 ds 里。返回 (各条的结果, 改动了的来源编号)。"""
-    lk = V.Lookups(ds)
+    lk = A.lookups(ds)
     rows, touched = [], set()
-    for eid in sorted(ds["evidence"]):
-        e = ds["evidence"][eid]
+    for eid in A.evidence_ids(ds):
+        e = A.evidence(ds, eid)
         if not isinstance(e, dict) or e.get("content_kind") != "numeric":
             continue
         if sources and e.get("source_id") not in sources:
@@ -113,7 +114,7 @@ def baseline_ratio(e, ds, lk):
     ref = e.get("baseline_ref")
     if not ref:
         return no("没有写同文基准")
-    base = ds["evidence"].get(ref) if isinstance(ref, str) else None
+    base = A.evidence(ds, ref) if isinstance(ref, str) else None
     if not isinstance(base, dict):
         return no(f"同文基准 {ref} 不在证据库里")
     if "void" in (e.get("verification_status"), base.get("verification_status")):
@@ -134,7 +135,7 @@ def derived_records(ds, topic_id):
     一条里有：indicator 派生指标的键；source_id、subject_id、sample_label、series_label 是哪一批；
     condition 按哪个条件挑的；value、unit 那个条件最大是多少；tested 这一批里这个条件一共有几个不同的值；
     picked 各个指标在那一处的证据编号。"""
-    d = ds["dictionaries"].get(topic_id) or {}
+    d = A.dictionary(ds, topic_id) or {}
     cond_unit = {c.get("key"): c.get("unit_std") for c in d.get("conditions") or [] if isinstance(c, dict)}
     records, unused = [], []
     for ind in d.get("indicators") or []:
@@ -143,9 +144,9 @@ def derived_records(ds, topic_id):
             continue
         keys, ck = src.get("indicators") or [], src.get("condition")
         batches = {}
-        for eid in sorted(ds["evidence"]):
-            e = ds["evidence"][eid]
-            if not isinstance(e, dict) or e.get("topic_id") != topic_id or e.get("indicator") not in keys:
+        for eid in A.evidence_ids(ds, topic_id):
+            e = A.evidence(ds, eid)
+            if e.get("indicator") not in keys:
                 continue
             if e.get("verification_status") == "void":
                 continue
@@ -188,7 +189,7 @@ def main(argv=None):
     if not os.path.isdir(args.data):
         print(f"找不到数据目录：{args.data}", file=sys.stderr)
         return 2
-    ds = V.load_dataset(args.data)
+    ds = A.load(args.data)
     rows, touched = fill_std(ds, set(args.source) or None)
     counts = {}
     for r in rows:
@@ -204,7 +205,7 @@ def main(argv=None):
             print("写回了：" + "、".join(touched))
         else:
             print("没有写回（加 --write 才写）：" + "、".join(touched))
-    for tid in sorted(ds["topics"]):
+    for tid in A.topic_ids(ds):
         records, unused = derived_records(ds, tid)
         for r in records:
             where = "｜".join(str(x) for x in (r["source_id"], r["sample_label"] or r["subject_id"], r["series_label"]))
