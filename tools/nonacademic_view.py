@@ -40,7 +40,8 @@ def relation_model(ds, names, rel):
     how = names.enum("basis", basis) or NOT_FILLED
     if inferred:
         how += f"，{s(rel['confirmed_by'])} 已确认" if V.is_human(rel.get("confirmed_by")) else "，还没有人确认"
-    return {"id": s(rel.get("id")), "what": f"{end_name(ds, rel.get('subject'))} — {names.enum('relation_type', rel.get('relation_type')) or NOT_FILLED} — {end_name(ds, rel.get('object'))}",
+    a, kind, b = end_name(ds, rel.get("subject")), names.enum("relation_type", rel.get("relation_type")) or NOT_FILLED, end_name(ds, rel.get("object"))
+    return {"id": s(rel.get("id")), "what": f"{a} — {kind} — {b}", "ends": [a, kind, b],
             "from": "｜".join(x for x in (s(rel.get("summary")) or s(rel.get("inference_note")), where) if x) or NOT_FILLED,
             "how": how, "inferred": inferred,
             "status_label": names.enum("verification_status", rel.get("verification_status")) or NOT_FILLED,

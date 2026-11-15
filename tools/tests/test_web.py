@@ -296,10 +296,136 @@ def test_overview_steps_and_coverage_match_the_data():
         assert seen["errors"] == []
 
 
-# ---------------------------------------------------------------- 2. 还用旧写法的两页和旧看板逐项对得上
+# ---------------------------------------------------------------- 2. 数据概览与缺口、非学术来源（A 2.0，Yu 2026-11-15 看过样图）
 
-# 页面上要比的几块：A 2.0 之后，只有这两页还是旧看板的写法
-PARTS = ["#gaps", "#non-academic"]
+def check_gaps(page, g):
+    """数据概览与缺口这一页上的数和 views.json 对：页头、查了什么、必填条件、缺口、一览表每一格、陈述的次序。"""
+    page.click("nav.rail a[data-view=gaps]")
+    T.wait_view(page, "gaps")
+    assert page.inner_text("#gaps-count") == g["count"]
+    assert page.eval_on_selector_all("#funnel .hbar-n", "ns => ns.map(n => n.textContent)") == [B.fmt_num(n) for _, n, _ in g["funnel"]]
+    assert page.eval_on_selector_all("[data-search]", "s => s.map(x => x.dataset.search)") == [q["id"] for q in g["searches"]]
+    want = [f"{it['n']}/{lv['sources']}" for lv in g["missing"] for it in lv["items"]]
+    assert page.eval_on_selector_all("[data-condition] .num", "s => s.map(x => x.textContent)") == want
+    assert page.eval_on_selector_all("#gaps [data-gap]", "s => s.map(x => [x.dataset.gap, x.querySelector('.badge').textContent])") == \
+        [[x["key"], str(len(x["ids"]) or len(x["ev"]))] for x in g["gaps"]]
+    t = g["table"]
+    if t["rows"] and t["cols"]:
+        assert page.eval_on_selector_all("#summary-table .rowhead", "s => s.map(x => x.dataset.membrane)") == [r["mem"]["key"] for r in t["rows"]]
+        cells = page.eval_on_selector_all("#summary-table .tcell", "s => s.map(x => [x.dataset.state, [...x.querySelectorAll('[data-ev]')].map(a => a.dataset.ev)])")
+        assert cells == [[c["state"], [x["id"] for x in c["entries"][:6]]] for r in t["rows"] for c in r["cells"]]
+    assert page.eval_on_selector_all("#statements .stmt", "s => s.map(x => x.id)") == [a["id"] for a in g["statements"]]
+    assert [a["status"] for a in g["statements"]] == sorted((a["status"] for a in g["statements"]), key=lambda x: x != "reviewed"), "已复核的排前面"
+
+
+def check_gap_highlight(page, g):
+    """点一条缺口：一览表里亮的格子正好是相关的；去证据表只看这几条。"""
+    t = g["table"]
+    for gap in g["gaps"]:
+        page.click("nav.rail a[data-view=gaps]")
+        page.click(f"#gaps [data-gap='{gap['key']}']")
+        ev, src = set(gap["ev"]), set(gap["src"])
+        if t["rows"] and t["cols"]:
+            want = [(r["mem"]["kind"] == "lab" and r["mem"]["source_id"] in src) or any(x["id"] in ev for x in c["entries"])
+                    for r in t["rows"] for c in r["cells"]]
+            assert page.eval_on_selector_all("#summary-table .tcell", "s => s.map(x => x.classList.contains('lit'))") == want, gap["key"]
+        if gap["ev"]:
+            page.click("#gap-to-evidence")
+            T.wait_view(page, "evidence")
+            assert sorted(visible_rows(page)) == sorted(gap["ev"]), gap["key"]
+            assert str(len(gap["ev"])) in page.inner_text("#ev-only")
+            page.click("#ev-only button")
+        page.click("nav.rail a[data-view=gaps]")
+        page.click(f"#gaps [data-gap='{gap['key']}']")   # 再点一次取消
+        assert page.query_selector("#summary-table .tcell.dim") is None
+
+
+def check_nonacademic(page, n):
+    """非学术来源这一页：四块、每块每个来源的证据和事项、法域表、关系、缺口。"""
+    page.click("nav.rail a[data-view=non-academic]")
+    T.wait_view(page, "non-academic")
+    assert page.eval_on_selector_all("[data-block]", "s => s.map(x => [x.dataset.block, x.querySelector('.num').textContent])") == \
+        [[b["key"], str(b["n"])] for b in n["blocks"]]
+    for b in n["blocks"]:
+        page.click(f"[data-block='{b['key']}']")
+        assert page.get_attribute(f"[data-block='{b['key']}']", "aria-selected") == "true"
+        if not b["cards"]:
+            assert "还没有来源" in page.inner_text(f"#block-{b['key']}")
+        for c in b["cards"]:
+            if len(b["cards"]) > 1:
+                page.click(f"[data-source='{c['id']}']")
+            d = page.query_selector(f"#block-{b['key']} .na-detail")
+            assert d.get_attribute("id") == c["id"]
+            assert d.eval_on_selector_all(".na-ev", "s => s.map(x => x.dataset.ev)") == [x["id"] for x in c["evidence"]]
+            assert d.eval_on_selector_all(".facts .fv", "s => s.map(x => x.textContent)") == [v for _, v in c["facts"]]
+            assert d.eval_on_selector_all(".tl li", "s => s.map(x => x.dataset.expected)") == \
+                ["no"] * sum(1 for e in c["events"] if not e["expected"]) + ["yes"] * sum(1 for e in c["events"] if e["expected"])
+            assert len(d.query_selector_all(".kvs dt")) == len(c["pairs"])
+        lit = page.eval_on_selector_all(".jrow", "s => s.map(x => x.classList.contains('on'))")
+        assert lit == [r["block"] == b["key"] for r in n["matrix"]]
+    cells = page.eval_on_selector_all(".jcell", "s => s.map(x => x.textContent)")
+    assert cells == [str(x) if x else "" for r in n["matrix"] for x in r["cells"]]
+    assert page.eval_on_selector_all(".jcol", "s => s.map(x => x.classList.contains('warnword'))") == \
+        ([a and b for a, b in zip(n["cols_need"], n["cols_empty"])] if n["matrix"] else []), "必查的法域没有来源时标出来；一个来源都没有时只写一句"
+    assert page.eval_on_selector_all("#na-relations .rel2", "s => s.map(x => [x.id, x.dataset.inferred])") == \
+        [[r["id"], "yes" if r["inferred"] else "no"] for r in n["relations"]]
+    assert page.eval_on_selector_all("#na-gaps [data-gap]", "s => s.map(x => x.dataset.gap)") == [x["key"] for x in n["gaps"]]
+
+
+def test_gaps_and_nonacademic_match_the_data():
+    v = views_of()
+    with opened_web() as (go, page, seen):
+        go()
+        check_gaps(page, v["gaps"])
+        check_gap_highlight(page, v["gaps"])
+        check_nonacademic(page, v["nonacademic"])
+        assert seen["errors"] == []
+
+
+def test_gaps_and_nonacademic_hold_up_on_many_kinds_of_data():
+    """二十几种样子的数据（改坏的、塞了网页代码的、条数多的、仓库里的真实数据）：两页都画得出来，数都对得上，页面上不报错。"""
+    ready()
+    failed = []
+    for name, change in CASES + [("仓库里的数据", "repo")]:
+        try:
+            if change == "repo":
+                ctx = contextlib.nullcontext(V.DEFAULT_DATA)
+            else:
+                ctx = T.example_copy()
+            with ctx as data:
+                if change and change != "repo":
+                    change(data)
+                v = views_of(data)
+                with opened_web(data) as (go, page, seen):
+                    go()
+                    if v.get("gaps"):
+                        check_gaps(page, v["gaps"])
+                    if v.get("nonacademic"):
+                        check_nonacademic(page, v["nonacademic"])
+                    assert seen["errors"] == [], seen["errors"]
+        except Exception as e:  # noqa: BLE001
+            failed.append((name, f"{type(e).__name__}: {e}"[:400]))
+    assert not failed, "\n".join(f"{n}：{why}" for n, why in failed)
+    print(f"      两页在 {len(CASES) + 1} 份数据上都对得上")
+
+
+def test_banners_match_the_old_dashboard():
+    """页面顶上的提示（示例数据、校验问题等）和旧看板逐个元素一样。"""
+    ready()
+    for name, change in CASES[:3]:
+        with T.example_copy() as data:
+            if change:
+                change(data)
+            with tempfile.TemporaryDirectory() as old, built_web(data) as new, browser() as context:
+                assert B.build(data, old, version=VERSION, log=lambda *_: None) == 0
+                got = []
+                for url in ("file://" + os.path.join(old, B.PAGE_NAME), "file://" + new):
+                    page = context.new_page()
+                    page.goto(url)
+                    page.wait_for_selector("main .view")
+                    got.append(page.eval_on_selector_all(".banner", f"bs => bs.map({SIGNATURE})"))
+                assert got[0] == got[1], name
+
 
 # 一个元素的样子：标签、属性、字。连着的几段字并成一段、空白并成一个空格再比。
 # 有意不同、不比的：随页面状态变的几个属性；SVG 的 xmlns（新前端由浏览器按 SVG 的命名空间建元素）。
@@ -324,38 +450,6 @@ SIGNATURE = """(root) => {
   if (root) walk(root);
   return out;
 }""" % json.dumps(list(IGNORED))
-
-
-def signatures(page):
-    out = {part: page.eval_on_selector(part, SIGNATURE) if page.query_selector(part) else None for part in PARTS}
-    out["banners"] = page.eval_on_selector_all(".banner", f"bs => bs.map({SIGNATURE})")
-    return out
-
-
-def differences(data):
-    """同一份数据，旧看板和新前端在这两页、页面顶上的提示上的不同之处：[(哪一块, 头几处不同)]。"""
-    import difflib
-    with tempfile.TemporaryDirectory() as old, built_web(data) as new, browser() as context:
-        assert B.build(data, old, version=VERSION, log=lambda *_: None) == 0
-        got = {}
-        for name, url in (("old", "file://" + os.path.join(old, B.PAGE_NAME)), ("new", "file://" + new)):
-            page = context.new_page()
-            seen = watch(page)
-            page.goto(url)
-            page.wait_for_selector("main .view")
-            got[name] = signatures(page)
-            assert seen["errors"] == [], f"{name}：{seen['errors']}"
-            page.close()
-    diffs = []
-    for key in got["old"]:
-        a, b = got["old"][key], got["new"][key]
-        if a != b:
-            if isinstance(a, list) and isinstance(b, list):
-                lines = [x for x in difflib.unified_diff(a, b, lineterm="", n=0) if x[:1] in "+-" and x[:3] not in ("+++", "---")]
-            else:
-                lines = [f"- {a!r}", f"+ {b!r}"]
-            diffs.append((key, lines[:12]))
-    return diffs
 
 
 def _poison(data):
@@ -392,48 +486,13 @@ def _crowded_cell(data):
 
 
 # 名字、怎么改示例数据的一份拷贝（None 是不改）
-PARITY_CASES = (
+CASES = (
     [("示例数据", None), ("塞了网页代码的数据", _poison), ("校验问题超过 50 处", _many_problems),
      ("坏得厉害的数据（第 5 步的测试）", T5._break_everything), ("一览表的一格里条数多", _crowded_cell)]
     + [(f"改坏的证据：{name}", change) for name, change, _, _ in T.BROKEN_CASES]
     + [(f"改坏的可比组：{case[0]}", case[1]) for case in T3.BROKEN_GROUPS]
 )
 
-
-def test_two_old_style_pages_match_the_old_dashboard():
-    ready()
-    failed = []
-    for name, change in PARITY_CASES:
-        with T.example_copy() as data:
-            if change:
-                change(data)
-            diffs = differences(data)
-        if diffs:
-            failed.append((name, diffs))
-    assert not failed, "\n".join(f"{name}：\n" + "\n".join(f"  {k}: " + "\n    ".join(lines) for k, lines in diffs) for name, diffs in failed)
-    print(f"      两页新旧对照：{len(PARITY_CASES)} 份数据都一样")
-
-
-def test_two_old_style_pages_match_on_the_repo_data():
-    ready()
-    assert differences(V.DEFAULT_DATA) == []
-
-
-def test_the_comparison_itself_catches_differences():
-    """比的办法本身要管用：少一个字、多一个属性、换一个链接，都要比出来。"""
-    ready()
-    for js in ["document.querySelector('#gaps-count').textContent += '。'",
-               "document.querySelector('#gaps a[href=\"#evidence\"]').setAttribute('href', '#compare')",
-               "document.querySelector('#non-academic .tile').remove()"]:
-        with tempfile.TemporaryDirectory() as old, built_web(EXAMPLE) as new, browser() as context:
-            assert B.build(EXAMPLE, old, version=VERSION, log=lambda *_: None) == 0
-            a = context.new_page()
-            a.goto("file://" + os.path.join(old, B.PAGE_NAME))
-            b = context.new_page()
-            b.goto("file://" + new)
-            b.wait_for_selector("main .view")
-            b.evaluate(js)
-            assert signatures(a) != signatures(b), f"没比出来：{js}"
 
 
 # ---------------------------------------------------------------- 3. 怎么点

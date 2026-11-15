@@ -18,14 +18,20 @@ export const state = reactive({
   palette: false,        // 查找面板开着没有
   legend: false,         // 图例开着没有
   theme: 'light' as Theme,
+  gap: '',               // 数据概览与缺口：点了哪一条缺口
+  only: null as null | { label: string; ids: string[] },   // 证据表：只看这几条（从缺口点过来）
+  naBlock: 'patent',     // 非学术来源：看哪一块
+  naSource: '',          // 非学术来源：这一块里选中的来源
 });
 
 let views: string[] = [];
 let evidenceIds = new Set<string>();
 let groupIds = new Set<string>();
 let marked: Element | null = null;
+let naSources = new Map<string, string>();   // 非学术来源页的来源编号 → 它在哪一块
 
-export function setup(names: string[], evidence: string[], groups: string[], firstGroup: string) {
+export function setup(names: string[], evidence: string[], groups: string[], firstGroup: string, sources: Array<[string, string]> = []) {
+  naSources = new Map(sources);
   views = names;
   evidenceIds = new Set(evidence);
   groupIds = new Set(groups);
@@ -62,6 +68,7 @@ export function setFilter(key: string, value: string) {
 export function clearFilters() {
   for (const k of Object.keys(state.filters)) delete state.filters[k];
   state.query = '';
+  state.only = null;
 }
 
 function focusLater(node: HTMLElement) {
@@ -106,6 +113,12 @@ export async function show(name: string) {
     const head = document.getElementById('cmp-title');
     if (head) head.scrollIntoView({ block: 'nearest' });
     return;
+  }
+  if (naSources.has(name) && views.includes('non-academic')) {   // 非学术来源一次只画一块：先换到那一块、选中那个来源
+    state.view = 'non-academic';
+    state.naBlock = naSources.get(name)!;
+    state.naSource = name;
+    await nextTick();
   }
   const node = name ? document.getElementById(name) : null;
   const view = node?.closest('main .view') as HTMLElement | null;

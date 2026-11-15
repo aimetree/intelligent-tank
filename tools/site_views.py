@@ -23,6 +23,8 @@ import access as A  # noqa: E402
 import build_dashboard as B  # noqa: E402
 import derive  # noqa: E402
 import textmatch  # noqa: E402
+import nonacademic_view as NA  # noqa: E402
+import topicdata as T  # noqa: E402
 import validate as V  # noqa: E402
 from display import TIER_HANDLING, Names, cls  # noqa: E402
 from htmlgen import VOID, Raw  # noqa: E402
@@ -186,6 +188,65 @@ def prune(view):
         b.pop("sources", None)
 
 
+# 新样子（A 2.0）的两页要多几样东西。都在这里由数据算好，前端只管画（Yu 2026-11-15 定“甲”）。
+
+NOT_READY = ("pending", "machine_checked")   # 还不能进报告的核验状态（gaps_view 数“待核、机器已核”用的同一组）
+
+
+def gaps_extras(view):
+    """数据概览与缺口：
+    每条缺口点了以后亮哪些：ev 是相关的证据（缺口里列的证据、列的来源的全部证据；“还不能进报告”那条没有列编号，按核验状态找），
+    src 是缺口里列的来源（一览表里这个来源的膜整行亮）；数据概览的陈述已复核的排前面，同一状态里照编号。"""
+    g = view.get("gaps")
+    if not isinstance(g, dict):
+        return
+    rows = [r for r in view["rows"] if not r["error"] and r["status"] != "void"]
+    for gap in g.get("gaps") or []:
+        ids = set(gap.get("ids") or [])
+        if gap.get("key") == "not_verified" and not ids:
+            gap["ev"] = [r["id"] for r in rows if r["status"] in NOT_READY]
+        else:
+            gap["ev"] = [r["id"] for r in rows if r["id"] in ids or r["source_id"] in ids]
+        gap["src"] = [x for x in gap.get("ids") or [] if x.startswith("SRC-")]
+    g["statements"] = sorted(g.get("statements") or [], key=lambda a: a.get("status") != "reviewed")
+
+
+def nonacademic_extras(view, names):
+    """非学术来源：
+    每块有哪些来源类别（法域表里亮哪几行）；法域表的每一列是不是必查的（题目按 D-96 的四个法域问，没有来源的标出来）；
+    每张来源卡片挑三项放在最上面，其余照旧在“全部登记项目”里；政策法规的事项按来源分好。"""
+    na = view.get("nonacademic")
+    if not isinstance(na, dict):
+        return
+    by_label = {}
+    for key, _, types, _ in T.BLOCKS:
+        labels = [names.enum("source_type", t) for t in types]
+        for b in na.get("blocks") or []:
+            if b["key"] == key:
+                b["types"] = labels
+        for x in labels:
+            by_label[x] = key
+    for r in na.get("matrix") or []:
+        r["block"] = by_label.get(r["type"], "")
+    need = {names.enum("jurisdiction", j) for j in NA.MAIN_JURISDICTIONS}
+    na["cols_need"] = [c in need for c in na.get("cols") or []]
+    na["cols_empty"] = [not any(r["cells"][i] for r in na.get("matrix") or []) for i in range(len(na.get("cols") or []))]
+    f = lambda part, key: names.field(part, key)   # noqa: E731
+    pick = {
+        "patent": [f("doc", "applicants"), f("source", "jurisdiction"), f("doc", "kind")],
+        "policy": [f("source", "jurisdiction"), f("doc", "issued"), f("source", "published"), f("doc", "scope")],
+        "market": [f("source", "jurisdiction"), f("source", "published"), "读到哪里"],
+        "grant": [f("source", "jurisdiction"), f("doc", "host"), f("doc", "amount")],
+    }
+    for b in na.get("blocks") or []:
+        for c in b.get("cards") or []:
+            pairs = dict(c["pairs"])
+            keys = [k for i, k in enumerate(pick.get(b["key"], [])) if k in pairs and k not in pick[b["key"]][:i]]
+            c["facts"] = [[k, pairs[k]] for k in keys][:3]
+            c["events"] = [e for e in na.get("events") or [] if e.get("source") == c["id"]]
+            c["evidence_ids"] = [e["id"] for e in c["evidence"]]
+
+
 def dumps(views):
     """views.json 不缩进：证据几百条时，缩进的写法要大两三倍。同一份数据写出来逐字节相同。"""
     return json.dumps(views, ensure_ascii=False, separators=(",", ":")) + "\n"
@@ -204,6 +265,8 @@ def topic_view(ds, schema, labels, topic_id, version):
     }
     for key in ("compare", "overview", "gaps", "nonacademic"):
         out[key] = to_json(m[key], rows)
+    gaps_extras(out)
+    nonacademic_extras(out, m["names"])
     prune(out)
     out["errors"] = to_json(m["errors"], rows)   # 页面模型都算完才定：哪一页生成不了也记在这里
     out["csv"] = B.evidence_csv(m)

@@ -302,6 +302,8 @@ export interface Gap {
   key: string;
   text: string;
   ids: string[];
+  ev?: string[];   // 点了以后亮哪些证据（site_views.gaps_extras；非学术来源页的缺口没有）
+  src?: string[];  // 缺口里列的来源
 }
 export interface GapsModel {
   table: {
@@ -354,6 +356,7 @@ export interface Relation {
   inferred: boolean;
   status_label: string;
   status: string;
+  ends: [string, string, string];   // 一头、关系、另一头
 }
 export interface DocCard {
   id: string;
@@ -365,7 +368,11 @@ export interface DocCard {
   relations: Relation[];
   verified: string;
   needs_verify: boolean;
+  facts: Array<[string, string]>;   // 放在最上面的三项（site_views.nonacademic_extras）
+  events: NaEvent[];
+  evidence_ids: string[];
 }
+export interface NaEvent { date: string; what: string; where: string; expected: boolean; source: string }
 export interface Block {
   key: string;
   title: string;
@@ -374,6 +381,7 @@ export interface Block {
   sub: string;
   cards: DocCard[];
   evidence: string[];
+  types: string[];
 }
 export interface MarketItem {
   id: string;
@@ -391,13 +399,15 @@ export interface MarketItem {
 }
 export interface NonAcademicModel {
   blocks: Block[];
-  matrix: Array<{ type: string; cells: number[] }>;
+  matrix: Array<{ type: string; cells: number[]; block: string }>;
   cols: string[];
+  cols_need: boolean[];
+  cols_empty: boolean[];
   by_status: Array<[string, number]>;
   evidence_total: number;
   checks: Array<[string, string]>;
   stale: string[];
-  events: Array<{ date: string; what: string; where: string; expected: boolean; source: string }>;
+  events: NaEvent[];
   market: Array<{ key: string; name: string; items: MarketItem[]; scale: number | null }>;
   market_waiting: string[];
   papers: number;

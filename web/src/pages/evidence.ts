@@ -54,12 +54,12 @@ const SHOW_ITEMS = 6;
 // 表里一次先画这么多行，多的点“再显示”：证据上千条时，换页、筛选、选中都不用重画上千行
 export const PAGE_ROWS = 200;
 
-function facet(v: TopicView, key: string, name: string, open: Record<string, boolean>) {
+function facet(v: TopicView, base: Row[], key: string, name: string, open: Record<string, boolean>) {
   const options: FilterOption[] = v.filters[key] || [];
-  const total = v.rows.length || 1;
+  const total = base.length || 1;
   const now = state.filters[key] || '';
   const items = options.map(([code, label]) => {
-    const n = v.rows.filter((r) => matches(r, state.filters, state.query, key) && values(r, key).includes(code)).length;
+    const n = base.filter((r) => matches(r, state.filters, state.query, key) && values(r, key).includes(code)).length;
     return { code, label, n };
   });
   const shown = open[key] ? items : items.slice(0, SHOW_ITEMS);
@@ -249,7 +249,13 @@ export const EvidenceView = defineComponent({
       }
     });
     const spans = computed(() => ranges(props.ctx.view.rows));
-    const shown = computed(() => props.ctx.view.rows.filter((r) => matches(r, state.filters, state.query)));
+    // 从“数据概览与缺口”点“去证据表看这几条”过来时，先只留那几条，筛选和查找在这几条里面做
+    const base = computed(() => {
+      if (!state.only) return props.ctx.view.rows;
+      const keep = new Set(state.only.ids);
+      return props.ctx.view.rows.filter((r) => keep.has(r.id));
+    });
+    const shown = computed(() => base.value.filter((r) => matches(r, state.filters, state.query)));
 
     function copy() {
       const text = tsv(shown.value, props.ctx.names);
@@ -276,14 +282,17 @@ export const EvidenceView = defineComponent({
       const sel = view.rows.find((r) => r.id === state.selected);
       const selAt = sel ? rows.indexOf(sel) : -1;
       const drawn = rows.slice(0, Math.max(limit.value, selAt + 1));
-      const filtered = Object.keys(state.filters).length > 0 || !!state.query;
+      const filtered = Object.keys(state.filters).length > 0 || !!state.query || !!state.only;
       return el('section', attrs,
         el('div', { class: 'ev-layout' },
           el('aside', { class: 'facets', 'aria-label': '筛选' },
             el('div', { class: 'head' }, el('span', { class: 'small mute' }, '筛选'),
               el('span', { class: 'num small mute', id: 'ev-shown' }, `${rows.length} / ${total}`)),
-            MAIN_FACETS.map(([k, n]) => facet(view, k, n, open)),
-            more.value ? MORE_FACETS.map(([k, n]) => facet(view, k, n, open)) : null,
+            state.only ? el('div', { class: 'only', id: 'ev-only', role: 'status' },
+              el('span', null, '只看：', state.only.label, ' ', el('span', { class: 'num mute' }, state.only.ids.length)),
+              h('button', { type: 'button', class: 'btn', 'aria-label': '不再只看这几条', onClick: () => { state.only = null; } }, '×')) : null,
+            MAIN_FACETS.map(([k, n]) => facet(view, base.value, k, n, open)),
+            more.value ? MORE_FACETS.map(([k, n]) => facet(view, base.value, k, n, open)) : null,
             h('button', { type: 'button', class: 'btn', onClick: () => { more.value = !more.value; } }, more.value ? '少一些筛选' : '更多筛选'),
             filtered ? h('button', { type: 'button', class: 'btn', id: 'ev-clear', onClick: clearFilters }, '清除筛选') : null),
           el('div', { class: 'ev-main' },
