@@ -1,0 +1,898 @@
+{
+  "source": {
+    "id": "SRC-000002",
+    "source_type": "paper",
+    "title": "Zwitterionic poly(terphenylene piperidinium) membranes for vanadium redox flow batteries",
+    "creators": "Ivan Salmeron-Sanchez; Pegah Mansouri Bakvand; Anuja Shirole; Juan Ramón Avilés-Moreno; Pilar Ocón; Patric Jannasch; Rakel Wreland Lindström; Amirreza Khataee",
+    "container": "Chemical Engineering Journal, 474 (2023) 145879",
+    "published": "2023-09-04",
+    "identifiers": {
+      "doi": "10.1016/j.cej.2023.145879"
+    },
+    "url": "https://doi.org/10.1016/j.cej.2023.145879",
+    "accessed_at": "2026-11-14",
+    "version_label": "出版版",
+    "language": "en",
+    "access_route": "oa_published",
+    "access_scope": "full",
+    "fetched_by": "member_download",
+    "license": "CC BY 4.0（首页脚注：open access article under the CC BY license，http://creativecommons.org/licenses/by/4.0/）",
+    "license_class": "open",
+    "terms": {
+      "no_scraping": true,
+      "no_ai": true,
+      "note": "出版商的网站保留文本与数据挖掘和 AI 训练的权利，挖掘只对订阅的学术机构的非商业研究开放（《阶段1_样品验证方案》3.1〔VP-06〕，2026-11-12 查）。文章本身是 CC BY 4.0。照 D-87、D-89：成员用浏览器下载，再交给 AI 读；许可照实登记，不作前提",
+      "checked_at": "2026-11-12"
+    },
+    "reading_mode": "ai_assisted",
+    "copy_kept": "project_files",
+    "external_use": "facts",
+    "handling": "成员下载的开放获取出版版，PDF 放在 Project 的文件区，不进仓库；AI 协助阅读；对外只用我们自己的转述和带出处的数值，不放原文片段和原图（D-56）",
+    "use": "evidence",
+    "watch": "补充材料（Word 文件，3 页）传进 Project 的文件区之后，登记成一条补充材料的来源并抽取：表 S1 的电解液吸收率和溶胀，图 S3 的容量损失（《补充 4》3.3）",
+    "topics": [
+      {
+        "topic_id": "TOP-000001",
+        "decision": "included",
+        "found_via": "search",
+        "core_check": {
+          "thickness": "not_reported",
+          "proton_conductivity": "not_reported",
+          "area_resistance": "found",
+          "vanadium_permeability": "not_reported",
+          "ion_selectivity": "not_reported",
+          "oxidative_stability": "found",
+          "fluorine_class": "found",
+          "coulombic_efficiency": "found",
+          "voltage_efficiency": "not_reported",
+          "energy_efficiency": "not_reported",
+          "cycle_number": "found",
+          "capacity_retention": "found",
+          "test_duration": "not_reported",
+          "stack_validation": "not_reported",
+          "membrane_price": "not_reported"
+        }
+      }
+    ],
+    "status": "active",
+    "status_checked_at": "2026-11-15",
+    "registered_by": "claude",
+    "registered_at": "2026-11-15",
+    "notes": "方案附 B 试做名单第 10 篇。发布日期取首页印的上线日期（Available online 4 September 2023）。取得日期写的是 PDF 传进 Project 文件区的那天，成员下载的日期没有记。来源状态只看了 PDF 本身（没有印更正或撤稿的说明），没有到 Crossref 或出版商的页面查，待补查"
+  },
+  "samples": [
+    {
+      "label": "ZW-60%",
+      "role": "studied",
+      "subject_id": "ENT-000004",
+      "facets": {
+        "fluorine_class": "non_fluorinated",
+        "fluorine_basis": "structure",
+        "conduction_type": "amphoteric"
+      },
+      "notes": "原文也写作 ZW-60。60% 两性离子基团（磺烷基化的哌啶鎓）、40% 哌啶鎓。传导类型记成两性是 Claude 的归类，待 Kai 定稿（D-81）"
+    },
+    {
+      "label": "ZW-50%",
+      "role": "studied",
+      "subject_id": "ENT-000004",
+      "facets": {
+        "fluorine_class": "non_fluorinated",
+        "fluorine_basis": "structure",
+        "conduction_type": "amphoteric"
+      },
+      "notes": "原文也写作 ZW-50"
+    },
+    {
+      "label": "ZW-40%",
+      "role": "studied",
+      "subject_id": "ENT-000004",
+      "facets": {
+        "fluorine_class": "non_fluorinated",
+        "fluorine_basis": "structure",
+        "conduction_type": "amphoteric"
+      },
+      "notes": "原文也写作 ZW-40"
+    },
+    {
+      "label": "ZW-0%",
+      "role": "control",
+      "subject_id": "ENT-000004",
+      "facets": {
+        "fluorine_class": "non_fluorinated",
+        "fluorine_basis": "structure",
+        "conduction_type": "anion_exchange"
+      },
+      "notes": "原文也写作 ZW-0。不含两性离子基团、只有哌啶鎓的同系列膜，记成同文对照；传导类型记成阴离子交换是 Claude 的归类，待 Kai 定稿（D-81）"
+    },
+    {
+      "label": "N212",
+      "role": "baseline",
+      "subject_id": "ENT-000003",
+      "baseline_form": "pretreated"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "EV-000002-001",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "created_by": "claude",
+      "created_at": "2026-11-15",
+      "sample_label": "ZW-60%",
+      "subject_id": "ENT-000004",
+      "indicator": "fluorine_class",
+      "level": "material",
+      "content_kind": "category",
+      "category_value": "non_fluorinated",
+      "conditions": {},
+      "evidence_type": "experimental",
+      "obtained_from": "text",
+      "locator": {
+        "page": "4",
+        "section": "2.3",
+        "text": "第 4 页，2.3 节，第 1 句"
+      },
+      "snippet": "A series of zwitterionic poly(terphenylene piperidinium)s were pre­\npared in superacid-mediated Friedel-Crafts type co-polycondensations\nof p-terphenyl and a mixture of Pip and zwPip at a controlled ratio.",
+      "internal_note": "判断理由：聚合物由对三联苯和 N-甲基-4-哌啶酮（及其磺丁基化的两性离子单体 zwPip）缩聚得到，主链是聚（三联苯哌啶鎓），侧链是磺丁基，结构里没有含氟的单元；三氟甲磺酸、三氟乙酸只是缩聚用的酸，不进入聚合物；膜由共聚物的 DMSO 溶液直接浇铸，没有增强层和共混组分。样品名在这一句后面两句（ZW-40%、ZW-50%、ZW-60%），抄不进同一句。摘要里原文自己也称 non-fluorinated。",
+      "source_id": "SRC-000002",
+      "entry_method": "ai",
+      "double_extraction": "agree",
+      "obtained_at": "2026-11-15",
+      "verification_status": "pending",
+      "visibility": "external"
+    },
+    {
+      "id": "EV-000002-002",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "created_by": "claude",
+      "created_at": "2026-11-15",
+      "sample_label": "ZW-50%",
+      "subject_id": "ENT-000004",
+      "indicator": "fluorine_class",
+      "level": "material",
+      "content_kind": "category",
+      "category_value": "non_fluorinated",
+      "conditions": {},
+      "evidence_type": "experimental",
+      "obtained_from": "text",
+      "locator": {
+        "page": "4",
+        "section": "2.3",
+        "text": "第 4 页，2.3 节，第 1 句"
+      },
+      "snippet": "A series of zwitterionic poly(terphenylene piperidinium)s were pre­\npared in superacid-mediated Friedel-Crafts type co-polycondensations\nof p-terphenyl and a mixture of Pip and zwPip at a controlled ratio.",
+      "internal_note": "判断理由：聚合物由对三联苯和 N-甲基-4-哌啶酮（及其磺丁基化的两性离子单体 zwPip）缩聚得到，主链是聚（三联苯哌啶鎓），侧链是磺丁基，结构里没有含氟的单元；三氟甲磺酸、三氟乙酸只是缩聚用的酸，不进入聚合物；膜由共聚物的 DMSO 溶液直接浇铸，没有增强层和共混组分。样品名在这一句后面两句（ZW-40%、ZW-50%、ZW-60%），抄不进同一句。摘要里原文自己也称 non-fluorinated。",
+      "source_id": "SRC-000002",
+      "entry_method": "ai",
+      "double_extraction": "agree",
+      "obtained_at": "2026-11-15",
+      "verification_status": "pending",
+      "visibility": "external"
+    },
+    {
+      "id": "EV-000002-003",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "created_by": "claude",
+      "created_at": "2026-11-15",
+      "sample_label": "ZW-40%",
+      "subject_id": "ENT-000004",
+      "indicator": "fluorine_class",
+      "level": "material",
+      "content_kind": "category",
+      "category_value": "non_fluorinated",
+      "conditions": {},
+      "evidence_type": "experimental",
+      "obtained_from": "text",
+      "locator": {
+        "page": "4",
+        "section": "2.3",
+        "text": "第 4 页，2.3 节，第 1 句"
+      },
+      "snippet": "A series of zwitterionic poly(terphenylene piperidinium)s were pre­\npared in superacid-mediated Friedel-Crafts type co-polycondensations\nof p-terphenyl and a mixture of Pip and zwPip at a controlled ratio.",
+      "internal_note": "判断理由：聚合物由对三联苯和 N-甲基-4-哌啶酮（及其磺丁基化的两性离子单体 zwPip）缩聚得到，主链是聚（三联苯哌啶鎓），侧链是磺丁基，结构里没有含氟的单元；三氟甲磺酸、三氟乙酸只是缩聚用的酸，不进入聚合物；膜由共聚物的 DMSO 溶液直接浇铸，没有增强层和共混组分。样品名在这一句后面两句（ZW-40%、ZW-50%、ZW-60%），抄不进同一句。摘要里原文自己也称 non-fluorinated。",
+      "source_id": "SRC-000002",
+      "entry_method": "ai",
+      "double_extraction": "agree",
+      "obtained_at": "2026-11-15",
+      "verification_status": "pending",
+      "visibility": "external"
+    },
+    {
+      "id": "EV-000002-004",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "created_by": "claude",
+      "created_at": "2026-11-15",
+      "sample_label": "ZW-60%",
+      "subject_id": "ENT-000004",
+      "indicator": "oxidative_stability",
+      "level": "material",
+      "content_kind": "statement",
+      "summary": "把膜浸在 1.6 mol/L 五价钒（VO2+）、2 mol/L 硫酸的溶液里，室温下放了 400 小时以上；浸泡后的核磁共振氢谱和原始样品相比没有特定的变化，原文据此认为聚合物主链和离子基团在这个条件下稳定。",
+      "conditions": {
+        "stability_method": {
+          "reported": "immersing small pieces of membranes in 10 mL of 1.6 M VO2+ in 2 M H2SO4 solution at room temperature for more than 400 h; 1H NMR spectra of immersed and pristine membranes were compared"
+        }
+      },
+      "conditions_locator": {
+        "page": "4",
+        "section": "2.5.4",
+        "text": "第 4 页，2.5.4 节"
+      },
+      "conditions_snippet": "The chemical stability of the different membranes was evaluated by\nimmersing small pieces of membranes in 10 mL of 1.6 M VO+\n2 in 2 M\nH2SO4 solution at room temperature for more than 400 h. To investigate\nany structural changes in the polymers, 1H NMR spectra of immersed\nand pristine membranes were compared.",
+      "evidence_type": "experimental",
+      "obtained_from": "text",
+      "locator": {
+        "page": "9",
+        "section": "3.2.2",
+        "text": "第 9 页，3.2.2 节讲氧化稳定性的一段，第 3 句"
+      },
+      "snippet": "The 1H NMR spectra after the exposure to the oxidative solution showed\nno specific changes compared to those of pristine samples,",
+      "scope_note": "结果只是核磁共振氢谱的定性比较，原文没有给质量损失、电导率变化等数值。",
+      "internal_note": "这一句说的是 the membranes，没有点样品名；记在 ZW-60% 名下的依据是第 8 页图 5 的题注（1H NMR spectra of ZW-60%: (a) initial sample, (b) after the exposure to the oxidative solution）。别的膜的谱图在补充材料图 S4，不在手上，没有另记。来源文本里五价钒写成“VO+ 2”（上下标打散），就是 VO2+。",
+      "source_id": "SRC-000002",
+      "entry_method": "ai",
+      "double_extraction": "agree",
+      "obtained_at": "2026-11-15",
+      "verification_status": "pending",
+      "visibility": "external"
+    },
+    {
+      "id": "EV-000002-005",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "created_by": "claude",
+      "created_at": "2026-11-15",
+      "sample_label": "N212",
+      "subject_id": "ENT-000003",
+      "indicator": "coulombic_efficiency",
+      "level": "component",
+      "content_kind": "numeric",
+      "value_reported": "95",
+      "unit_reported": "%",
+      "value_qualifier": "approx",
+      "value_std": 95.0,
+      "conditions": {
+        "current_density": {
+          "reported": "130 mA cm-2",
+          "value": 130,
+          "unit": "mA/cm2"
+        },
+        "vanadium_conc": {
+          "reported": "1.6 M V3+ as negative electrolyte and 1.6 M VO2+ as positive electrolyte",
+          "value": 1.6,
+          "unit": "mol/L"
+        },
+        "acid": {
+          "reported": "2 M H2SO4",
+          "value": "H2SO4 2 mol/L"
+        },
+        "temperature": {
+          "reported": "room temperature；temperature of 24 °C",
+          "value": 24,
+          "unit": "degC"
+        },
+        "electrode_area": {
+          "reported": "5 cm2",
+          "value": 5,
+          "unit": "cm2"
+        },
+        "electrolyte_volume": {
+          "reported": "13 mL",
+          "value": 13,
+          "unit": "mL"
+        },
+        "cutoff_voltage": {
+          "reported": "1.7 V and 0.8 V",
+          "low": 0.8,
+          "high": 1.7,
+          "unit": "V"
+        },
+        "flow_rate": {
+          "reported": "20 mL min-1（实验部分 2.5.5 节）；40 mL min-1（图 3、图 4 题注）"
+        }
+      },
+      "conditions_locator": {
+        "page": "4",
+        "section": "2.5.5",
+        "text": "第 4 页，2.5.5 节（电流密度、室温、截止电压）；同一节前面几句写了电极面积 5 cm2、每侧 13 mL、2 M H2SO4、流速 20 mL min-1；总钒浓度 1.6 M 见第 2 页 2.1 节和第 6、7 页图 3、图 4 的题注；24 °C 和 40 mL min-1 见图 3、图 4 的题注"
+      },
+      "conditions_snippet": "The\nanolyte was under continuous nitrogen flow and the cell was galva­\nnostatically charged-discharged at 130 mA cm− 2 for 50 cycles at room\ntemperature using an 8-channel battery test system CT2001A (Landt\nInstruments) in the four-wire configuration. To avoid damage to the\nelectrodes, and to preserve the stability of the electrolyte, the upper and\nlower limit of cut-off voltages was set at 1.7 V and 0.8 V",
+      "evidence_type": "experimental",
+      "obtained_from": "text",
+      "locator": {
+        "page": "7",
+        "section": "3.2.2",
+        "text": "第 7 页，3.2.2 节，“Comparing the efficiencies in Fig. 3d”一句"
+      },
+      "snippet": "terionic membranes showed CE over 97%, which was higher than the\nsystem based on N212 (approx. 95%).",
+      "internal_note": "这是 130 mA cm-2 下 50 圈循环测试（图 3d）的库仑效率，原文没有说是哪一圈还是平均；同一个样品这项指标只有这一条，没有记 cycle_index。图 3d 上 N212 的库仑效率大约在 95% 上下，和正文对得上。流速原文两处不一致：实验部分写 20 mL min-1，图 3、图 4 的题注写 40 mL min-1，所以 flow_rate 只写了 reported、没有写 value。温度实验部分写 room temperature，题注写 24 °C，value 取题注的 24。",
+      "source_id": "SRC-000002",
+      "entry_method": "ai",
+      "double_extraction": "agree",
+      "obtained_at": "2026-11-15",
+      "verification_status": "pending",
+      "visibility": "external"
+    },
+    {
+      "id": "EV-000002-006",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "created_by": "claude",
+      "created_at": "2026-11-15",
+      "sample_label": "ZW-60%",
+      "subject_id": "ENT-000004",
+      "indicator": "coulombic_efficiency",
+      "level": "component",
+      "content_kind": "numeric",
+      "value_reported": "96.5",
+      "unit_reported": "%",
+      "value_std": 96.5,
+      "conditions": {
+        "current_density": {
+          "reported": "130 mA cm-2",
+          "value": 130,
+          "unit": "mA/cm2"
+        },
+        "vanadium_conc": {
+          "reported": "1.6 M V3+ as negative electrolyte and 1.6 M VO2+ as positive electrolyte",
+          "value": 1.6,
+          "unit": "mol/L"
+        },
+        "acid": {
+          "reported": "2 M H2SO4",
+          "value": "H2SO4 2 mol/L"
+        },
+        "temperature": {
+          "reported": "room temperature；temperature of 24 °C",
+          "value": 24,
+          "unit": "degC"
+        },
+        "electrode_area": {
+          "reported": "5 cm2",
+          "value": 5,
+          "unit": "cm2"
+        },
+        "electrolyte_volume": {
+          "reported": "13 mL",
+          "value": 13,
+          "unit": "mL"
+        },
+        "cutoff_voltage": {
+          "reported": "1.7 V and 0.8 V",
+          "low": 0.8,
+          "high": 1.7,
+          "unit": "V"
+        },
+        "flow_rate": {
+          "reported": "20 mL min-1（实验部分 2.5.5 节）；40 mL min-1（图 3、图 4 题注）"
+        },
+        "cycle_index": {
+          "reported": "long-term cycling tests (500 cycles) with an average CE"
+        }
+      },
+      "conditions_locator": {
+        "page": "4",
+        "section": "2.5.5",
+        "text": "第 4 页，2.5.5 节（电流密度、室温、截止电压）；同一节前面几句写了电极面积 5 cm2、每侧 13 mL、2 M H2SO4、流速 20 mL min-1；总钒浓度 1.6 M 见第 2 页 2.1 节和第 6、7 页图 3、图 4 的题注；24 °C 和 40 mL min-1 见图 3、图 4 的题注"
+      },
+      "conditions_snippet": "The\nanolyte was under continuous nitrogen flow and the cell was galva­\nnostatically charged-discharged at 130 mA cm− 2 for 50 cycles at room\ntemperature using an 8-channel battery test system CT2001A (Landt\nInstruments) in the four-wire configuration. To avoid damage to the\nelectrodes, and to preserve the stability of the electrolyte, the upper and\nlower limit of cut-off voltages was set at 1.7 V and 0.8 V",
+      "evidence_type": "experimental",
+      "obtained_from": "text",
+      "locator": {
+        "page": "9",
+        "section": "Conclusions",
+        "text": "第 9 页，结论，倒数第 2 句"
+      },
+      "snippet": "the ZW-60% membrane demonstrated long-term\ncycling tests (500 cycles) with an average CE of 96.5% at 130 mA cm− 2",
+      "scope_note": "500 圈长循环测试的平均库仑效率。",
+      "internal_note": "这个数只在结论里出现，结果部分没有。和图对不上：图 4d 上 ZW-60% 的库仑效率 500 圈里大约在 99% 到 100%，只在最后几圈降到 96% 上下；照规定只记正文的数。正文另说含两性离子的膜在 50 圈测试里 CE over 97%，是对一组样品笼统说的，没有记。流速原文两处不一致：实验部分写 20 mL min-1，图 3、图 4 的题注写 40 mL min-1，所以 flow_rate 只写了 reported、没有写 value。温度实验部分写 room temperature，题注写 24 °C，value 取题注的 24。",
+      "source_id": "SRC-000002",
+      "entry_method": "ai",
+      "double_extraction": "agree",
+      "obtained_at": "2026-11-15",
+      "verification_status": "pending",
+      "visibility": "external"
+    },
+    {
+      "id": "EV-000002-007",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "created_by": "claude",
+      "created_at": "2026-11-15",
+      "sample_label": "ZW-60%",
+      "subject_id": "ENT-000004",
+      "indicator": "cycle_number",
+      "level": "component",
+      "content_kind": "numeric",
+      "value_reported": "500",
+      "unit_reported": "cycles",
+      "value_std": 500.0,
+      "conditions": {
+        "current_density": {
+          "reported": "130 mA cm-2",
+          "value": 130,
+          "unit": "mA/cm2"
+        },
+        "vanadium_conc": {
+          "reported": "1.6 M V3+ as negative electrolyte and 1.6 M VO2+ as positive electrolyte",
+          "value": 1.6,
+          "unit": "mol/L"
+        },
+        "acid": {
+          "reported": "2 M H2SO4",
+          "value": "H2SO4 2 mol/L"
+        },
+        "temperature": {
+          "reported": "room temperature；temperature of 24 °C",
+          "value": 24,
+          "unit": "degC"
+        },
+        "electrode_area": {
+          "reported": "5 cm2",
+          "value": 5,
+          "unit": "cm2"
+        },
+        "electrolyte_volume": {
+          "reported": "13 mL",
+          "value": 13,
+          "unit": "mL"
+        },
+        "cutoff_voltage": {
+          "reported": "1.7 V and 0.8 V",
+          "low": 0.8,
+          "high": 1.7,
+          "unit": "V"
+        },
+        "flow_rate": {
+          "reported": "20 mL min-1（实验部分 2.5.5 节）；40 mL min-1（图 3、图 4 题注）"
+        }
+      },
+      "conditions_locator": {
+        "page": "4",
+        "section": "2.5.5",
+        "text": "第 4 页，2.5.5 节（电流密度、室温、截止电压）；同一节前面几句写了电极面积 5 cm2、每侧 13 mL、2 M H2SO4、流速 20 mL min-1；总钒浓度 1.6 M 见第 2 页 2.1 节和第 6、7 页图 3、图 4 的题注；24 °C 和 40 mL min-1 见图 3、图 4 的题注"
+      },
+      "conditions_snippet": "The\nanolyte was under continuous nitrogen flow and the cell was galva­\nnostatically charged-discharged at 130 mA cm− 2 for 50 cycles at room\ntemperature using an 8-channel battery test system CT2001A (Landt\nInstruments) in the four-wire configuration. To avoid damage to the\nelectrodes, and to preserve the stability of the electrolyte, the upper and\nlower limit of cut-off voltages was set at 1.7 V and 0.8 V",
+      "evidence_type": "experimental",
+      "obtained_from": "text",
+      "locator": {
+        "page": "8",
+        "section": "3.2.2",
+        "text": "第 8 页，3.2.2 节，“The high capability retention using ZW-60%”一句"
+      },
+      "snippet": "retention using ZW-60% was observed in the long-term cycling of the\nVRFB (500 cycles of charge/discharge) at 130 mA cm− 2",
+      "internal_note": "最长的一次是 130 mA cm-2 下的 500 圈；另有 50 圈测试和变电流测试（40 到 200 mA cm-2 各 5 圈），不计。流速原文两处不一致：实验部分写 20 mL min-1，图 3、图 4 的题注写 40 mL min-1，所以 flow_rate 只写了 reported、没有写 value。温度实验部分写 room temperature，题注写 24 °C，value 取题注的 24。",
+      "source_id": "SRC-000002",
+      "entry_method": "ai",
+      "double_extraction": "agree",
+      "obtained_at": "2026-11-15",
+      "verification_status": "pending",
+      "visibility": "external"
+    },
+    {
+      "id": "EV-000002-008",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "created_by": "claude",
+      "created_at": "2026-11-15",
+      "sample_label": "N212",
+      "subject_id": "ENT-000003",
+      "indicator": "cycle_number",
+      "level": "component",
+      "content_kind": "numeric",
+      "value_reported": "50",
+      "unit_reported": "cycles",
+      "value_std": 50.0,
+      "conditions": {
+        "current_density": {
+          "reported": "130 mA cm-2",
+          "value": 130,
+          "unit": "mA/cm2"
+        },
+        "vanadium_conc": {
+          "reported": "1.6 M V3+ as negative electrolyte and 1.6 M VO2+ as positive electrolyte",
+          "value": 1.6,
+          "unit": "mol/L"
+        },
+        "acid": {
+          "reported": "2 M H2SO4",
+          "value": "H2SO4 2 mol/L"
+        },
+        "temperature": {
+          "reported": "room temperature；temperature of 24 °C",
+          "value": 24,
+          "unit": "degC"
+        },
+        "electrode_area": {
+          "reported": "5 cm2",
+          "value": 5,
+          "unit": "cm2"
+        },
+        "electrolyte_volume": {
+          "reported": "13 mL",
+          "value": 13,
+          "unit": "mL"
+        },
+        "cutoff_voltage": {
+          "reported": "1.7 V and 0.8 V",
+          "low": 0.8,
+          "high": 1.7,
+          "unit": "V"
+        },
+        "flow_rate": {
+          "reported": "20 mL min-1（实验部分 2.5.5 节）；40 mL min-1（图 3、图 4 题注）"
+        }
+      },
+      "conditions_locator": {
+        "page": "4",
+        "section": "2.5.5",
+        "text": "第 4 页，2.5.5 节（电流密度、室温、截止电压）；同一节前面几句写了电极面积 5 cm2、每侧 13 mL、2 M H2SO4、流速 20 mL min-1；总钒浓度 1.6 M 见第 2 页 2.1 节和第 6、7 页图 3、图 4 的题注；24 °C 和 40 mL min-1 见图 3、图 4 的题注"
+      },
+      "conditions_snippet": "The\nanolyte was under continuous nitrogen flow and the cell was galva­\nnostatically charged-discharged at 130 mA cm− 2 for 50 cycles at room\ntemperature using an 8-channel battery test system CT2001A (Landt\nInstruments) in the four-wire configuration. To avoid damage to the\nelectrodes, and to preserve the stability of the electrolyte, the upper and\nlower limit of cut-off voltages was set at 1.7 V and 0.8 V",
+      "evidence_type": "experimental",
+      "obtained_from": "text",
+      "locator": {
+        "page": "7",
+        "section": "3.2.2",
+        "text": "第 7 页，3.2.2 节，“As seen in Fig. S2”一句"
+      },
+      "snippet": "the VRFB using N212 exhibits a decreasing and increasing rate during 50\ncycles after charge and discharge",
+      "internal_note": "N212 只做了 130 mA cm-2 下的 50 圈测试（图 3c、3d）。流速原文两处不一致：实验部分写 20 mL min-1，图 3、图 4 的题注写 40 mL min-1，所以 flow_rate 只写了 reported、没有写 value。温度实验部分写 room temperature，题注写 24 °C，value 取题注的 24。",
+      "source_id": "SRC-000002",
+      "entry_method": "ai",
+      "double_extraction": "agree",
+      "obtained_at": "2026-11-15",
+      "verification_status": "pending",
+      "visibility": "external"
+    },
+    {
+      "id": "EV-000002-009",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "created_by": "claude",
+      "created_at": "2026-11-15",
+      "sample_label": "ZW-0%",
+      "subject_id": "ENT-000004",
+      "indicator": "cycle_number",
+      "level": "component",
+      "content_kind": "numeric",
+      "value_reported": "50",
+      "unit_reported": "cycles",
+      "value_std": 50.0,
+      "conditions": {
+        "current_density": {
+          "reported": "130 mA cm-2",
+          "value": 130,
+          "unit": "mA/cm2"
+        },
+        "vanadium_conc": {
+          "reported": "1.6 M V3+ as negative electrolyte and 1.6 M VO2+ as positive electrolyte",
+          "value": 1.6,
+          "unit": "mol/L"
+        },
+        "acid": {
+          "reported": "2 M H2SO4",
+          "value": "H2SO4 2 mol/L"
+        },
+        "temperature": {
+          "reported": "room temperature；temperature of 24 °C",
+          "value": 24,
+          "unit": "degC"
+        },
+        "electrode_area": {
+          "reported": "5 cm2",
+          "value": 5,
+          "unit": "cm2"
+        },
+        "electrolyte_volume": {
+          "reported": "13 mL",
+          "value": 13,
+          "unit": "mL"
+        },
+        "cutoff_voltage": {
+          "reported": "1.7 V and 0.8 V",
+          "low": 0.8,
+          "high": 1.7,
+          "unit": "V"
+        },
+        "flow_rate": {
+          "reported": "20 mL min-1（实验部分 2.5.5 节）；40 mL min-1（图 3、图 4 题注）"
+        }
+      },
+      "conditions_locator": {
+        "page": "4",
+        "section": "2.5.5",
+        "text": "第 4 页，2.5.5 节（电流密度、室温、截止电压）；同一节前面几句写了电极面积 5 cm2、每侧 13 mL、2 M H2SO4、流速 20 mL min-1；总钒浓度 1.6 M 见第 2 页 2.1 节和第 6、7 页图 3、图 4 的题注；24 °C 和 40 mL min-1 见图 3、图 4 的题注"
+      },
+      "conditions_snippet": "The\nanolyte was under continuous nitrogen flow and the cell was galva­\nnostatically charged-discharged at 130 mA cm− 2 for 50 cycles at room\ntemperature using an 8-channel battery test system CT2001A (Landt\nInstruments) in the four-wire configuration. To avoid damage to the\nelectrodes, and to preserve the stability of the electrolyte, the upper and\nlower limit of cut-off voltages was set at 1.7 V and 0.8 V",
+      "evidence_type": "experimental",
+      "obtained_from": "text",
+      "locator": {
+        "page": "7",
+        "section": "3.2.2",
+        "text": "第 7 页，3.2.2 节，“Interestingly, the capacity loss”一句"
+      },
+      "snippet": "ZW-0% (1.46 %Qloss/cycle in 50 cycles)",
+      "internal_note": "片段和这个样品的每圈容量损失那一条是同一处。流速原文两处不一致：实验部分写 20 mL min-1，图 3、图 4 的题注写 40 mL min-1，所以 flow_rate 只写了 reported、没有写 value。温度实验部分写 room temperature，题注写 24 °C，value 取题注的 24。",
+      "source_id": "SRC-000002",
+      "entry_method": "ai",
+      "double_extraction": "agree",
+      "obtained_at": "2026-11-15",
+      "verification_status": "pending",
+      "visibility": "external"
+    },
+    {
+      "id": "EV-000002-010",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "created_by": "claude",
+      "created_at": "2026-11-15",
+      "sample_label": "ZW-60%",
+      "subject_id": "ENT-000004",
+      "indicator": "capacity_retention",
+      "level": "component",
+      "content_kind": "numeric",
+      "value_reported": "78.7",
+      "unit_reported": "%",
+      "value_std": 78.7,
+      "conditions": {
+        "current_density": {
+          "reported": "130 mA cm-2",
+          "value": 130,
+          "unit": "mA/cm2"
+        },
+        "vanadium_conc": {
+          "reported": "1.6 M V3+ as negative electrolyte and 1.6 M VO2+ as positive electrolyte",
+          "value": 1.6,
+          "unit": "mol/L"
+        },
+        "acid": {
+          "reported": "2 M H2SO4",
+          "value": "H2SO4 2 mol/L"
+        },
+        "temperature": {
+          "reported": "room temperature；temperature of 24 °C",
+          "value": 24,
+          "unit": "degC"
+        },
+        "electrode_area": {
+          "reported": "5 cm2",
+          "value": 5,
+          "unit": "cm2"
+        },
+        "electrolyte_volume": {
+          "reported": "13 mL",
+          "value": 13,
+          "unit": "mL"
+        },
+        "cutoff_voltage": {
+          "reported": "1.7 V and 0.8 V",
+          "low": 0.8,
+          "high": 1.7,
+          "unit": "V"
+        },
+        "flow_rate": {
+          "reported": "20 mL min-1（实验部分 2.5.5 节）；40 mL min-1（图 3、图 4 题注）"
+        },
+        "cycle_index": {
+          "reported": "after 500 cycles"
+        }
+      },
+      "conditions_locator": {
+        "page": "4",
+        "section": "2.5.5",
+        "text": "第 4 页，2.5.5 节（电流密度、室温、截止电压）；同一节前面几句写了电极面积 5 cm2、每侧 13 mL、2 M H2SO4、流速 20 mL min-1；总钒浓度 1.6 M 见第 2 页 2.1 节和第 6、7 页图 3、图 4 的题注；24 °C 和 40 mL min-1 见图 3、图 4 的题注"
+      },
+      "conditions_snippet": "The\nanolyte was under continuous nitrogen flow and the cell was galva­\nnostatically charged-discharged at 130 mA cm− 2 for 50 cycles at room\ntemperature using an 8-channel battery test system CT2001A (Landt\nInstruments) in the four-wire configuration. To avoid damage to the\nelectrodes, and to preserve the stability of the electrolyte, the upper and\nlower limit of cut-off voltages was set at 1.7 V and 0.8 V",
+      "evidence_type": "experimental",
+      "obtained_from": "text",
+      "locator": {
+        "page": "8",
+        "section": "3.2.2",
+        "text": "第 8 页，3.2.2 节，“Even though a slight loss is observed”一句"
+      },
+      "snippet": "the membrane maintained stable operation, reaching 78.7% of capacity\nretention after 500 cycles.",
+      "scope_note": "原文的定义是第 n 圈放电容量比第 1 圈放电容量（式 7）。",
+      "internal_note": "样品名 ZW-60% 在前一句，抄不进来。摘要里写成 78.7% average capacity retention for 500 VRFB cycles（多了 average 一词），结论里写 approximately 79%，算同一个数，只记这一处。流速原文两处不一致：实验部分写 20 mL min-1，图 3、图 4 的题注写 40 mL min-1，所以 flow_rate 只写了 reported、没有写 value。温度实验部分写 room temperature，题注写 24 °C，value 取题注的 24。",
+      "source_id": "SRC-000002",
+      "entry_method": "ai",
+      "double_extraction": "agree",
+      "obtained_at": "2026-11-15",
+      "verification_status": "pending",
+      "visibility": "external"
+    },
+    {
+      "id": "EV-000002-011",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "created_by": "claude",
+      "created_at": "2026-11-15",
+      "sample_label": "ZW-0%",
+      "subject_id": "ENT-000004",
+      "indicator": "capacity_retention",
+      "level": "component",
+      "content_kind": "numeric",
+      "value_reported": "1.46",
+      "unit_reported": "%/cycle",
+      "conditions": {
+        "current_density": {
+          "reported": "130 mA cm-2",
+          "value": 130,
+          "unit": "mA/cm2"
+        },
+        "vanadium_conc": {
+          "reported": "1.6 M V3+ as negative electrolyte and 1.6 M VO2+ as positive electrolyte",
+          "value": 1.6,
+          "unit": "mol/L"
+        },
+        "acid": {
+          "reported": "2 M H2SO4",
+          "value": "H2SO4 2 mol/L"
+        },
+        "temperature": {
+          "reported": "room temperature；temperature of 24 °C",
+          "value": 24,
+          "unit": "degC"
+        },
+        "electrode_area": {
+          "reported": "5 cm2",
+          "value": 5,
+          "unit": "cm2"
+        },
+        "electrolyte_volume": {
+          "reported": "13 mL",
+          "value": 13,
+          "unit": "mL"
+        },
+        "cutoff_voltage": {
+          "reported": "1.7 V and 0.8 V",
+          "low": 0.8,
+          "high": 1.7,
+          "unit": "V"
+        },
+        "flow_rate": {
+          "reported": "20 mL min-1（实验部分 2.5.5 节）；40 mL min-1（图 3、图 4 题注）"
+        },
+        "cycle_index": {
+          "reported": "in 50 cycles"
+        }
+      },
+      "conditions_locator": {
+        "page": "4",
+        "section": "2.5.5",
+        "text": "第 4 页，2.5.5 节（电流密度、室温、截止电压）；同一节前面几句写了电极面积 5 cm2、每侧 13 mL、2 M H2SO4、流速 20 mL min-1；总钒浓度 1.6 M 见第 2 页 2.1 节和第 6、7 页图 3、图 4 的题注；24 °C 和 40 mL min-1 见图 3、图 4 的题注"
+      },
+      "conditions_snippet": "The\nanolyte was under continuous nitrogen flow and the cell was galva­\nnostatically charged-discharged at 130 mA cm− 2 for 50 cycles at room\ntemperature using an 8-channel battery test system CT2001A (Landt\nInstruments) in the four-wire configuration. To avoid damage to the\nelectrodes, and to preserve the stability of the electrolyte, the upper and\nlower limit of cut-off voltages was set at 1.7 V and 0.8 V",
+      "evidence_type": "experimental",
+      "obtained_from": "text",
+      "locator": {
+        "page": "7",
+        "section": "3.2.2",
+        "text": "第 7 页，3.2.2 节，“Interestingly, the capacity loss”一句"
+      },
+      "snippet": "ZW-0% (1.46 %Qloss/cycle in 50 cycles)",
+      "scope_note": "原文给的是每圈的容量损失，不是保持率；它的定义是（理论容量减第 n 圈放电容量）除以（理论容量乘圈数）（式 8），是相对理论容量算的，不是相对第 1 圈的容量。",
+      "internal_note": "原文单位写的是 %Qloss/cycle，记成 %/cycle。数据在补充材料图 S3，不在手上。流速原文两处不一致：实验部分写 20 mL min-1，图 3、图 4 的题注写 40 mL min-1，所以 flow_rate 只写了 reported、没有写 value。温度实验部分写 room temperature，题注写 24 °C，value 取题注的 24。",
+      "source_id": "SRC-000002",
+      "entry_method": "ai",
+      "double_extraction": "agree",
+      "obtained_at": "2026-11-15",
+      "verification_status": "pending",
+      "visibility": "external"
+    },
+    {
+      "id": "EV-000002-012",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "created_by": "claude",
+      "created_at": "2026-11-15",
+      "sample_label": "ZW-60%",
+      "subject_id": "ENT-000004",
+      "indicator": "area_resistance",
+      "level": "material",
+      "content_kind": "numeric",
+      "value_reported": "0.570",
+      "unit_reported": "ohm*cm2",
+      "value_std": 0.57,
+      "conditions": {
+        "test_solution": {
+          "reported": "2 M H2SO4",
+          "value": "H2SO4 2 mol/L"
+        },
+        "temperature": {
+          "reported": "room temperature"
+        },
+        "direction": "not_reported",
+        "method": {
+          "reported": "Electrochemical Impedance Spectroscopy (EIS) ... four-probe ... high-frequency resistance of the membranes was obtained from the difference of Rw and Rwo (resistances with and without membrane); ASR = (Rw − Rwo)A"
+        }
+      },
+      "conditions_locator": {
+        "page": "5",
+        "section": "2.5.5",
+        "text": "第 5 页，2.5.5 节讲阻抗谱的一段；测试溶液另见第 6 页图 3 题注（ASR of different membranes using 2 M H2SO4 electrolyte）"
+      },
+      "conditions_snippet": "Electrochemical Impedance Spectroscopy (EIS) was employed to\nmeasure the resistivity of the membranes using a four-probe VersaSTAT\n4 workstation in a frequency range of 106 Hz–10 Hz with an amplitude\nperturbation wave of 5 mV. The membranes were soaked in 2 M H2SO4\nsolution for 24 h before assembling the membrane in the flow cell set-up\n(Fuel Cell Technologies (FCT)). The measurements were conducted at\nroom temperature and the high-frequency resistance of the membranes\nwas obtained from the difference of Rw and Rwo (resistances with and\nwithout membrane, respectively).",
+      "evidence_type": "experimental",
+      "obtained_from": "figure_read",
+      "locator": {
+        "page": "6",
+        "figure": "3b",
+        "item": "ZW-60% 的柱子（紫色，右起第 1 根）",
+        "text": "第 6 页，图 3b，ZW-60% 的柱子（紫色，右起第 1 根）"
+      },
+      "figure_read": {
+        "method": "第 6 页按 300 dpi 渲染后裁出图 3b；纵轴 0.0 刻度在第 461 行、1.0 刻度在第 62.5 行（裁图内的像素行），量柱子顶边的像素行，线性插值",
+        "read_by": "claude",
+        "source_data_checked": "not_checked"
+      },
+      "scope_note": "用阻抗谱在装了膜的液流电池夹具里测的膜面电阻，膜先在 2 M H2SO4 里泡 24 小时；数值是从柱状图上读的。",
+      "internal_note": "柱顶约在第 234 行。正文没有给任何一张膜的面电阻数值，没法用正文的数校验量法；只用纵轴 0.2、0.4、0.6、0.8 四个刻度核对过，线性关系对得上。纵轴最小刻度间隔 0.1，按规定取到三位有效数字。测量方向原文没有明说（在液流电池夹具里测，面积用膜的有效截面 5 cm2），所以 direction 写未报告。",
+      "source_id": "SRC-000002",
+      "entry_method": "ai",
+      "double_extraction": "na",
+      "obtained_at": "2026-11-15",
+      "verification_status": "pending",
+      "visibility": "external"
+    },
+    {
+      "id": "EV-000002-013",
+      "topic_id": "TOP-000001",
+      "record_version": 1,
+      "created_by": "claude",
+      "created_at": "2026-11-15",
+      "sample_label": "N212",
+      "subject_id": "ENT-000003",
+      "indicator": "area_resistance",
+      "level": "material",
+      "content_kind": "numeric",
+      "value_reported": "0.205",
+      "unit_reported": "ohm*cm2",
+      "value_std": 0.205,
+      "conditions": {
+        "test_solution": {
+          "reported": "2 M H2SO4",
+          "value": "H2SO4 2 mol/L"
+        },
+        "temperature": {
+          "reported": "room temperature"
+        },
+        "direction": "not_reported",
+        "method": {
+          "reported": "Electrochemical Impedance Spectroscopy (EIS) ... four-probe ... high-frequency resistance of the membranes was obtained from the difference of Rw and Rwo (resistances with and without membrane); ASR = (Rw − Rwo)A"
+        }
+      },
+      "conditions_locator": {
+        "page": "5",
+        "section": "2.5.5",
+        "text": "第 5 页，2.5.5 节讲阻抗谱的一段；测试溶液另见第 6 页图 3 题注（ASR of different membranes using 2 M H2SO4 electrolyte）"
+      },
+      "conditions_snippet": "Electrochemical Impedance Spectroscopy (EIS) was employed to\nmeasure the resistivity of the membranes using a four-probe VersaSTAT\n4 workstation in a frequency range of 106 Hz–10 Hz with an amplitude\nperturbation wave of 5 mV. The membranes were soaked in 2 M H2SO4\nsolution for 24 h before assembling the membrane in the flow cell set-up\n(Fuel Cell Technologies (FCT)). The measurements were conducted at\nroom temperature and the high-frequency resistance of the membranes\nwas obtained from the difference of Rw and Rwo (resistances with and\nwithout membrane, respectively).",
+      "evidence_type": "experimental",
+      "obtained_from": "figure_read",
+      "locator": {
+        "page": "6",
+        "figure": "3b",
+        "item": "N212 的柱子（蓝色，左起第 1 根）",
+        "text": "第 6 页，图 3b，N212 的柱子（蓝色，左起第 1 根）"
+      },
+      "figure_read": {
+        "method": "第 6 页按 300 dpi 渲染后裁出图 3b；纵轴 0.0 刻度在第 461 行、1.0 刻度在第 62.5 行（裁图内的像素行），量柱子顶边的像素行，线性插值",
+        "read_by": "claude",
+        "source_data_checked": "not_checked"
+      },
+      "scope_note": "用阻抗谱在装了膜的液流电池夹具里测的膜面电阻，膜先在 2 M H2SO4 里泡 24 小时；数值是从柱状图上读的。",
+      "internal_note": "柱顶约在第 379 到 380 行。正文没有给任何一张膜的面电阻数值，没法用正文的数校验量法；只用纵轴 0.2、0.4、0.6、0.8 四个刻度核对过，线性关系对得上。纵轴最小刻度间隔 0.1，按规定取到三位有效数字。测量方向原文没有明说（在液流电池夹具里测，面积用膜的有效截面 5 cm2），所以 direction 写未报告。",
+      "source_id": "SRC-000002",
+      "entry_method": "ai",
+      "double_extraction": "na",
+      "obtained_at": "2026-11-15",
+      "verification_status": "pending",
+      "visibility": "external"
+    }
+  ]
+}

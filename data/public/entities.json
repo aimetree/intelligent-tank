@@ -50,5 +50,21 @@
     "identity_status": "candidate",
     "visibility": "external",
     "notes": "商业膜的型号，名称照 SRC-000001 的写法。含氟类别和传导类型照 SRC-000001 引言的说法（Nafion 是全氟磺酸聚合物，是阳离子交换膜）。生产厂家、别的写法（N212、NR212）等读到写明的来源再补，关系带出处（D-49）"
+  },
+  {
+    "id": "ENT-000004",
+    "entity_type": "material_class",
+    "name": "聚（三联苯哌啶鎓）",
+    "name_en": "Poly(terphenylene piperidinium)",
+    "aliases": [
+      "poly(p-terphenylene piperidine)",
+      "poly(terphenylene piperidinium)"
+    ],
+    "facets": {
+      "material_family": "ether_free_aromatic"
+    },
+    "identity_status": "candidate",
+    "visibility": "external",
+    "notes": "材料族。Claude 2026-11-15 登记试做第二篇时建的。归到“无醚键的芳香聚合物”是 Claude 的归类，待 Kai 定稿材料族时确认（D-81）"
   }
 ]
