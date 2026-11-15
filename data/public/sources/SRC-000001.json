@@ -158,8 +158,23 @@
       "entry_method": "ai",
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-002",
@@ -201,8 +216,23 @@
       "entry_method": "ai",
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-003",
@@ -238,8 +268,22 @@
       "entry_method": "ai",
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-004",
@@ -275,8 +319,22 @@
       "entry_method": "ai",
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-005",
@@ -312,8 +370,22 @@
       "entry_method": "ai",
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-006",
@@ -345,8 +417,22 @@
       "entry_method": "ai",
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-007",
@@ -396,8 +482,23 @@
       "entry_method": "ai",
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-008",
@@ -448,8 +549,23 @@
       "entry_method": "ai",
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-009",
@@ -498,8 +614,23 @@
       "entry_method": "ai",
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-010",
@@ -548,8 +679,23 @@
       "entry_method": "ai",
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-011",
@@ -598,8 +744,23 @@
       "entry_method": "ai",
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-012",
@@ -649,8 +810,24 @@
       "entry_method": "ai",
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "unit_converted",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-013",
@@ -700,8 +877,24 @@
       "entry_method": "ai",
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "unit_converted",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-014",
@@ -751,8 +944,24 @@
       "entry_method": "ai",
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "unit_converted",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-015",
@@ -802,8 +1011,24 @@
       "entry_method": "ai",
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "unit_converted",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-016",
@@ -853,8 +1078,24 @@
       "entry_method": "ai",
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "unit_converted",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-017",
@@ -909,7 +1150,23 @@
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
       "verification_status": "pending",
-      "visibility": "external"
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "fail",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "machine_check_failed",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-018",
@@ -965,7 +1222,23 @@
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
       "verification_status": "pending",
-      "visibility": "external"
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "fail",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "machine_check_failed",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-019",
@@ -1011,7 +1284,23 @@
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
       "verification_status": "pending",
-      "visibility": "external"
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "fail",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "machine_check_failed",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-020",
@@ -1058,7 +1347,23 @@
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
       "verification_status": "pending",
-      "visibility": "external"
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "fail",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "machine_check_failed",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-021",
@@ -1133,8 +1438,23 @@
       "entry_method": "ai",
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-022",
@@ -1209,8 +1529,23 @@
       "entry_method": "ai",
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-023",
@@ -1285,8 +1620,23 @@
       "entry_method": "ai",
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-024",
@@ -1361,8 +1711,23 @@
       "entry_method": "ai",
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-025",
@@ -1437,8 +1802,23 @@
       "entry_method": "ai",
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-026",
@@ -1513,8 +1893,23 @@
       "entry_method": "ai",
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-027",
@@ -1589,8 +1984,23 @@
       "entry_method": "ai",
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-028",
@@ -1665,8 +2075,23 @@
       "entry_method": "ai",
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-029",
@@ -1741,8 +2166,23 @@
       "entry_method": "ai",
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-030",
@@ -1821,8 +2261,23 @@
       "entry_method": "ai",
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-031",
@@ -1901,8 +2356,23 @@
       "entry_method": "ai",
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-032",
@@ -1977,8 +2447,23 @@
       "entry_method": "ai",
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-033",
@@ -2053,8 +2538,23 @@
       "entry_method": "ai",
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-034",
@@ -2129,8 +2629,23 @@
       "entry_method": "ai",
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-035",
@@ -2210,8 +2725,24 @@
       "entry_method": "ai",
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "conditions_elsewhere",
+          "multiple_samples_or_tables",
+          "qualified_value"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-036",
@@ -2290,8 +2821,23 @@
       "entry_method": "ai",
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-037",
@@ -2370,8 +2916,23 @@
       "entry_method": "ai",
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-038",
@@ -2446,8 +3007,23 @@
       "entry_method": "ai",
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-039",
@@ -2524,8 +3100,23 @@
       "entry_method": "ai",
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-040",
@@ -2602,8 +3193,23 @@
       "entry_method": "ai",
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-041",
@@ -2682,8 +3288,23 @@
       "entry_method": "ai",
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-042",
@@ -2762,7 +3383,23 @@
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
       "verification_status": "pending",
-      "visibility": "external"
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "fail",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "machine_check_failed",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-043",
@@ -2796,8 +3433,22 @@
       "entry_method": "ai",
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-044",
@@ -2831,8 +3482,22 @@
       "entry_method": "ai",
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "pass",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-045",
@@ -2900,8 +3565,23 @@
       "entry_method": "ai",
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-046",
@@ -2937,8 +3617,22 @@
       "entry_method": "ai",
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-047",
@@ -2974,8 +3668,22 @@
       "entry_method": "ai",
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-048",
@@ -3011,8 +3719,22 @@
       "entry_method": "ai",
       "double_extraction": "agree",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "pass",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "medium",
+        "reasons": [
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-049",
@@ -3066,8 +3788,24 @@
       "entry_method": "ai",
       "double_extraction": "na",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "na",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "figure_read",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-050",
@@ -3148,8 +3886,24 @@
       "entry_method": "ai",
       "double_extraction": "na",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "na",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "figure_read",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-051",
@@ -3230,8 +3984,24 @@
       "entry_method": "ai",
       "double_extraction": "na",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "na",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "figure_read",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-052",
@@ -3312,8 +4082,24 @@
       "entry_method": "ai",
       "double_extraction": "na",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "na",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "figure_read",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-053",
@@ -3394,8 +4180,24 @@
       "entry_method": "ai",
       "double_extraction": "na",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "na",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "figure_read",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-054",
@@ -3476,8 +4278,24 @@
       "entry_method": "ai",
       "double_extraction": "na",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "na",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "figure_read",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-055",
@@ -3558,8 +4376,24 @@
       "entry_method": "ai",
       "double_extraction": "na",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "na",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "figure_read",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-056",
@@ -3640,8 +4474,24 @@
       "entry_method": "ai",
       "double_extraction": "na",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "na",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "figure_read",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-057",
@@ -3722,8 +4572,24 @@
       "entry_method": "ai",
       "double_extraction": "na",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "na",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "figure_read",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-058",
@@ -3804,8 +4670,24 @@
       "entry_method": "ai",
       "double_extraction": "na",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "na",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "figure_read",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-059",
@@ -3886,8 +4768,24 @@
       "entry_method": "ai",
       "double_extraction": "na",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "na",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "figure_read",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-060",
@@ -3968,8 +4866,24 @@
       "entry_method": "ai",
       "double_extraction": "na",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "na",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "figure_read",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-061",
@@ -4050,8 +4964,24 @@
       "entry_method": "ai",
       "double_extraction": "na",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "na",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "figure_read",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-062",
@@ -4132,8 +5062,24 @@
       "entry_method": "ai",
       "double_extraction": "na",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "na",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "figure_read",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-063",
@@ -4214,8 +5160,24 @@
       "entry_method": "ai",
       "double_extraction": "na",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "na",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "figure_read",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-064",
@@ -4296,8 +5258,24 @@
       "entry_method": "ai",
       "double_extraction": "na",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "na",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "figure_read",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-065",
@@ -4378,8 +5356,24 @@
       "entry_method": "ai",
       "double_extraction": "na",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "na",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "figure_read",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-066",
@@ -4460,8 +5454,24 @@
       "entry_method": "ai",
       "double_extraction": "na",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "na",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "figure_read",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-067",
@@ -4542,8 +5552,24 @@
       "entry_method": "ai",
       "double_extraction": "na",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "na",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "figure_read",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-068",
@@ -4624,8 +5650,24 @@
       "entry_method": "ai",
       "double_extraction": "na",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "na",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "figure_read",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-069",
@@ -4706,8 +5748,24 @@
       "entry_method": "ai",
       "double_extraction": "na",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "na",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "figure_read",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-070",
@@ -4788,8 +5846,24 @@
       "entry_method": "ai",
       "double_extraction": "na",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "na",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "figure_read",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-071",
@@ -4870,8 +5944,24 @@
       "entry_method": "ai",
       "double_extraction": "na",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "na",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "figure_read",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-072",
@@ -4952,8 +6042,24 @@
       "entry_method": "ai",
       "double_extraction": "na",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "na",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "figure_read",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-073",
@@ -5034,8 +6140,24 @@
       "entry_method": "ai",
       "double_extraction": "na",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "na",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "figure_read",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-074",
@@ -5116,8 +6238,24 @@
       "entry_method": "ai",
       "double_extraction": "na",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "na",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "figure_read",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-075",
@@ -5198,8 +6336,24 @@
       "entry_method": "ai",
       "double_extraction": "na",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "na",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "figure_read",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-076",
@@ -5280,8 +6434,24 @@
       "entry_method": "ai",
       "double_extraction": "na",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "na",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "figure_read",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-077",
@@ -5362,8 +6532,24 @@
       "entry_method": "ai",
       "double_extraction": "na",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "na",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "figure_read",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-078",
@@ -5444,8 +6630,24 @@
       "entry_method": "ai",
       "double_extraction": "na",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "na",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "figure_read",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-079",
@@ -5526,8 +6728,24 @@
       "entry_method": "ai",
       "double_extraction": "na",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "na",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "figure_read",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-080",
@@ -5608,8 +6826,24 @@
       "entry_method": "ai",
       "double_extraction": "na",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "na",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "figure_read",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-081",
@@ -5690,8 +6924,24 @@
       "entry_method": "ai",
       "double_extraction": "na",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "na",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "figure_read",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-082",
@@ -5772,8 +7022,24 @@
       "entry_method": "ai",
       "double_extraction": "na",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "na",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "figure_read",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-083",
@@ -5854,8 +7120,24 @@
       "entry_method": "ai",
       "double_extraction": "na",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "na",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "figure_read",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-084",
@@ -5936,8 +7218,24 @@
       "entry_method": "ai",
       "double_extraction": "na",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "na",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "figure_read",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-085",
@@ -6018,8 +7316,24 @@
       "entry_method": "ai",
       "double_extraction": "na",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "na",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "figure_read",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-086",
@@ -6100,8 +7414,24 @@
       "entry_method": "ai",
       "double_extraction": "na",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "na",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "figure_read",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-087",
@@ -6182,8 +7512,24 @@
       "entry_method": "ai",
       "double_extraction": "na",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "na",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "figure_read",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-088",
@@ -6264,8 +7610,24 @@
       "entry_method": "ai",
       "double_extraction": "na",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "na",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "figure_read",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-089",
@@ -6346,8 +7708,24 @@
       "entry_method": "ai",
       "double_extraction": "na",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "na",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "figure_read",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-090",
@@ -6428,8 +7806,24 @@
       "entry_method": "ai",
       "double_extraction": "na",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "na",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "figure_read",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     },
     {
       "id": "EV-000001-091",
@@ -6510,8 +7904,24 @@
       "entry_method": "ai",
       "double_extraction": "na",
       "obtained_at": "2026-11-15",
-      "verification_status": "pending",
-      "visibility": "external"
+      "verification_status": "machine_checked",
+      "visibility": "external",
+      "machine_check": {
+        "identifier": "pass",
+        "snippet": "na",
+        "value_unit": "na",
+        "at": "2026-11-15"
+      },
+      "risk": {
+        "tier": "high",
+        "reasons": [
+          "figure_read",
+          "conditions_elsewhere",
+          "multiple_samples_or_tables"
+        ],
+        "set_by": "script",
+        "set_at": "2026-11-15"
+      }
     }
   ]
 }
