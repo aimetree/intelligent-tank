@@ -2,6 +2,8 @@ name: 网页前端
 
 # 改了前端、导出脚本或看板的脚本就跑：类型检查、单元测试、构建，再用 Chrome 测新前端（数和数据对得上、两页和旧看板对照、点一遍、深浅两套的对比度）。
 # 在 main 上，把用仓库里的 data/ 构建的在线版（页面加 site-data/）和离线版（一个网页文件）存成这次运行的附件。构建产物不进仓库。
+# 在 main 上还发布到 GitHub Pages（Yu 2026-11-15 定先公开）：根目录是仓库 data/ 的数据，example/ 是虚构的示例数据（五页都有内容）。
+# 要先在仓库的 Settings → Pages 里把 Source 选成 GitHub Actions，发布那一步才能成。
 # 只读仓库。除了装依赖，不联网取别的东西。
 on:
   push:
@@ -80,3 +82,36 @@ jobs:
           path: web/offline/index.html
           retention-days: 14
           if-no-files-found: error
+      - name: 拼出要发布到 GitHub Pages 的网站：根目录用仓库的数据，example/ 用示例数据
+        if: steps.name.outputs.sha != ''
+        run: |
+          rm -rf ../_site && mkdir -p ../_site/example
+          cp -r dist/. ../_site/
+          cp -r dist/. ../_site/example/
+          rm -rf ../_site/example/site-data
+          python3 ../tools/export_site_data.py --data ../tools/tests/example --out ../_site/example/site-data
+          touch ../_site/.nojekyll
+      - name: 把网站交给 GitHub Pages
+        if: steps.name.outputs.sha != ''
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+
+  pages:
+    name: 发布到 GitHub Pages
+    needs: web
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v5
