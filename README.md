@@ -20,7 +20,7 @@
 | `docs/03_技术与开发/` | 设计方案（对内 dashboard 与对外报告）；数据结构的字段规格（v0.1、v0.2、v0.3）；开发蓝图；样品阶段脚本的任务卡与进度；示范案例库；报告写法 skill |
 | `docs/90_资料归档/` | 交接资料的 Markdown 转录 |
 | `archive/Intelligence_Handoff_2026-11-09/` | 交接包原件（含 5 个 Word 文件，其中两份历史稿内容相同） |
-| `data/` | 证据库的数据文件。现在有字段的机器可读定义（`schema/`，规格 v0.3）、空白模板（`templates/`）、显示名表，和学术样品的题目卡、指标字典（草稿，待 Yu 验收）；还没有来源和证据。说明见 `data/README.md` |
+| `data/` | 证据库的数据文件。现在有字段的机器可读定义（`schema/`，规格 v0.3）、空白模板（`templates/`）、显示名表，和学术样品的题目卡、指标字典（Yu 2026-11-14 验收）；还没有来源和证据。说明见 `data/README.md` |
 | `tools/` | 脚本：`validate.py` 校验 `data/`，`make_templates.py` 由 schema 生成模板；登记与机器核对用的 `ids.py`（分配编号）、`compare_extractions.py`（两遍抽取的比对）、`check_identifiers.py`（标识能否解析，要联网）、`machine_check.py`（机器核对和风险档预填）；`derive.py` 算派生值（标准单位下的值、与同文基准之比、派生指标）；`review_sheet.py` 管专业复核用的复核单（起草、给人看、变成对话里的点选题、把复核人的回答写回数据）；`build_dashboard.py` 从 `data/` 生成对内看板（只读的静态网页，五页，样式和页面脚本在 `dashboard/`；总览、对标视图、数据概览与缺口、非学术来源各在 `overview_view.py`、`compare_view.py`、`gaps_view.py`、`nonacademic_view.py`，图在 `charts.py`，都是脚本直接写 SVG，不用图表库）；`report_export.py` 管报告这一侧：从正文收集引用的编号、发出前检查、写出附录证据表、全部证据的数据文件和对标图；`access.py` 是取数的一层：看板、导出、复核单读数据都走它（查、比、取证据、看关联四类），不直接读数据文件；`migrate.py` 在改了 schema 之后把旧的数据文件升到新的规格版本；`tests/` 是测试和一组虚构的示例数据。怎么配合见 `data/README.md` |
 | `.github/workflows/` | GitHub Actions：`checks.yml` 跑校验和测试，生成看板并在 `main` 上存成可下载的附件；`identifiers.yml` 跑要联网的标识解析 |
 
